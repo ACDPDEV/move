@@ -1,0 +1,10 @@
+---
+import Header from "./Header.astro";
+---
+
+<main class="flex flex-col w-screen h-screen overflow-hidden bg-black text-white p-3">
+	<Header />
+	<article class="w-full h-full overflow-scroll">
+		<slot />
+	</article>
+</main>

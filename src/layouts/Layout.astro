@@ -1,3 +1,6 @@
+---
+import MainCointainer from '../components/MainCointainer.astro';
+---
 <!doctype html>
 <html lang="en">
 	<head>
@@ -8,7 +11,9 @@
 		<title>Astro Basics</title>
 	</head>
 	<body>
-		<slot />
+		<MainCointainer>
+			<slot />
+		</MainCointainer>
 	</body>
 </html>
 
