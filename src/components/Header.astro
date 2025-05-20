@@ -1,16 +1,22 @@
 ---
 import HeaderTab from "./HeaderTab.astro";
+import HeaderButton from "./HeaderButton.astro";
+import { IconBrandGithub } from "@tabler/icons-react";
+import { IconPaperclip } from "@tabler/icons-react";
 ---
 <header class="flex flex-row justify-between items-center pb-3">
     <ul class="flex flex-row w-fit h-fit p-1 gap-2 bg-[#27272a] rounded-lg">
-        <HeaderTab href="/">Home</HeaderTab>
-        <HeaderTab href="/simulators">Simulators</HeaderTab>
-        <HeaderTab href="/about">About</HeaderTab>
-        <HeaderTab href="/contact">Contact</HeaderTab>
-        <HeaderTab href="/donate">Donate</HeaderTab>
+        <HeaderTab href="/">Inicio</HeaderTab>
+        <HeaderTab href="/simulators">Simuladores</HeaderTab>
+        <HeaderTab href="/about">Acerca de</HeaderTab>
+        <HeaderTab href="/contact">Contacto</HeaderTab>
     </ul>
-    <ul class="flex flex-row gap-4">
-        <li><a href="/github">GitHub</a></li>
-        <li><a href="/paper">Paper</a></li>
+    <ul class="flex flex-row gap-2">
+        <HeaderButton href="https://github.com/acdpdev/fencytec-simulator-platform">
+            <IconBrandGithub className="stroke-stone-300" />
+        </HeaderButton>
+        <HeaderButton href="/paper">
+            <IconPaperclip className="stroke-stone-300" />
+        </HeaderButton>
     </ul>
 </header>
