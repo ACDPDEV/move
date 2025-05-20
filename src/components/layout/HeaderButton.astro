@@ -1,0 +1,6 @@
+---
+const { href } = Astro.props;
+---
+<a class="flex justify-center items-center p-2 rounded-xl bg-[rgba(39,39,42,0.75)] backdrop-blur-md shadow-md shadow-[rgba(0,0,0,0.5)]" href={href}>
+    <slot />
+</a>

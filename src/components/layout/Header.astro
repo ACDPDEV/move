@@ -1,0 +1,22 @@
+---
+import HeaderTab from "@/components/layout/HeaderTab.astro";
+import HeaderButton from "@/components/layout/HeaderButton.astro";
+import { IconBrandGithub } from "@tabler/icons-react";
+import { IconPaperclip } from "@tabler/icons-react";
+---
+<header class="flex flex-row w-full h-10 top-0 left-0 right-0 p-3 mt-3 fixed justify-between items-center">
+    <ul class="flex flex-row w-fit h-fit p-1 gap-2 bg-[rgba(39,39,42,0.75)] backdrop-blur-md rounded-lg shadow-md shadow-[rgba(0,0,0,0.5)]">
+        <HeaderTab href="/">Inicio</HeaderTab>
+        <HeaderTab href="/simulators">Simuladores</HeaderTab>
+        <HeaderTab href="/about">Acerca de</HeaderTab>
+        <HeaderTab href="/contact">Contacto</HeaderTab>
+    </ul>
+    <ul class="flex flex-row gap-2">
+        <HeaderButton href="https://github.com/acdpdev/move">
+            <IconBrandGithub className="stroke-stone-400 hover:stroke-white hover:scale-110 transition-all" />
+        </HeaderButton>
+        <HeaderButton href="/paper">
+            <IconPaperclip className="stroke-stone-400 hover:stroke-white hover:scale-110 transition-all" />
+        </HeaderButton>
+    </ul>
+</header>
