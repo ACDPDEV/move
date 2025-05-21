@@ -1,0 +1,169 @@
+---
+import MainCointainer from '@/components/layout/MainCointainer.astro';
+import '@/styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+		<meta name="generator" content={Astro.generator} />
+		<title>MOVE</title>
+	</head>
+	<body>
+		<MainCointainer>
+			<article class="markdown-body w-2xl h-full">
+				<slot />
+			</article>
+		</MainCointainer>
+	</body>
+</html>
+
+<style is:global>
+	html,
+	body {
+		font-family: "Ubuntu", sans-serif;
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	/* markdown.css */
+	.markdown-body {
+	line-height: 1.75;
+	color: #ccc;
+	max-width: 720px;
+	margin: 0 auto;
+	padding: 1rem;
+	}
+
+	/* Títulos */
+	.markdown-body h1 {
+	font-size: 2.25rem;
+	margin-bottom: 1rem;
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 0.3rem;
+	}
+
+	.markdown-body h2 {
+	font-size: 1.75rem;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 0.3rem;
+	}
+
+	.markdown-body h3 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+	margin-bottom: 0.75rem;
+	}
+
+	.markdown-body h4,
+	.markdown-body h5,
+	.markdown-body h6 {
+	font-size: 1.25rem;
+	margin-top: 1rem;
+	}
+
+	/* Párrafos */
+	.markdown-body p {
+	margin: 1rem 0;
+	}
+
+	/* Listas */
+	.markdown-body ul,
+	.markdown-body ol {
+	padding-left: 2rem;
+	margin: 1rem 0;
+	}
+
+	.markdown-body li {
+	margin-bottom: 0.5rem;
+	}
+
+	/* Citas */
+	.markdown-body blockquote {
+	margin: 1rem 0;
+	padding: 0.75rem 1rem;
+	background: #f0f0f0;
+	border-left: 4px solid #ccc;
+	color: #555;
+	font-style: italic;
+	}
+
+	/* Código en línea */
+	.markdown-body code {
+	background: #f4f4f4;
+	padding: 0.2em 0.4em;
+	font-family: monospace;
+	border-radius: 4px;
+	}
+
+	/* Bloques de código */
+	.markdown-body pre {
+	background: #272822;
+	color: #f8f8f2;
+	padding: 1rem;
+	border-radius: 6px;
+	overflow-x: auto;
+	}
+
+	.markdown-body pre code {
+	background: none;
+	color: inherit;
+	font-size: 0.9rem;
+	}
+
+	/* Tablas */
+	.markdown-body table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.5rem 0;
+	}
+
+	.markdown-body th,
+	.markdown-body td {
+	border: 1px solid #ddd;
+	padding: 0.5rem 1rem;
+	text-align: left;
+	}
+
+	.markdown-body th {
+	background: #f9f9f9;
+	font-weight: bold;
+	}
+
+	/* Imágenes */
+	.markdown-body img {
+	max-width: 100%;
+	height: auto;
+	}
+
+	/* Enlaces */
+	.markdown-body a {
+	color: #0066cc;
+	text-decoration: underline;
+	}
+
+	.markdown-body a:hover {
+	text-decoration: none;
+	}
+
+	/* Separador */
+	.markdown-body hr {
+	margin: 2rem 0;
+	border: none;
+	border-top: 1px solid #ccc;
+	}
+
+	/* Checkboxes */
+	.markdown-body input[type="checkbox"] {
+	margin-right: 0.5rem;
+	}
+
+</style>
