@@ -1,6 +1,10 @@
 ---
 const { href } = Astro.props;
+const { pathname } = Astro.url;
 ---
-<a class="flex justify-center items-center p-2 rounded-xl bg-[rgba(39,39,42,0.75)] backdrop-blur-md shadow-md shadow-[rgba(0,0,0,0.5)]" href={href}>
-    <slot />
+<a class=`flex justify-center items-center p-2 rounded-xl ${href===pathname ? "bg-[rgba(0,0,0,0.9)] border-2 border-[rgb(39,39,42)]" : "bg-[rgba(39,39,42,0.75)]"} backdrop-blur-md shadow-md shadow-[rgba(0,0,0,0.5)]` href={href}>
+    <slot name="icon" />
+    <label class =`ml-2 text-sm text-stone-400 ${pathname===href ? "" : "hidden"}` >
+        <slot />
+    </label>
 </a>
