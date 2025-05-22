@@ -15,7 +15,7 @@ function GridResults({simulators}: {simulators: {
                 ? (
                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {simulators.map((simulator) => (
-                            <a href={simulator.href} className="flex flex-col gap-2 bg-stone-950 border border-stone-800 rounded-md p-4 shadow-md shadow-[rgba(0,0,0,0.5)]" key={simulator.name}>
+                            <a href={simulator.href} className="flex flex-col gap-2 bg-stone-950 border border-stone-800 rounded-md p-4 shadow-md shadow-[rgba(0,0,0,0.5)] h-fit" key={simulator.name}>
                                 <span className="flex flex-row justify-between">
                                     <h2 className="font-bold text-xl">{simulator.name}</h2>
                                     <Badge>{simulator.area}</Badge>
