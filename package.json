@@ -9,7 +9,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/image": "^0.18.0",
     "@astrojs/mdx": "^4.2.6",
     "@astrojs/react": "^4.2.7",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
