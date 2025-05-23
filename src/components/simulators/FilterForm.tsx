@@ -10,9 +10,9 @@ function FilterForm() {
     const filterData = (data: Simulator[]) => {
         return data.filter((simulator: Simulator) => {
             return(
-                simulator.name.includes(inputQuery) ||
-                simulator.description.includes(inputQuery) ||
-                simulator.area.includes(inputQuery)
+                simulator.name.toLowerCase().includes(inputQuery.toLowerCase()) ||
+                simulator.description.toLowerCase().includes(inputQuery.toLowerCase()) ||
+                simulator.area.toLowerCase().includes(inputQuery.toLowerCase())
             )
         })
     }
