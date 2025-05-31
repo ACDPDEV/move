@@ -1,9 +1,13 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import FilterForm from '@/components/simulators/FilterForm';
+import CategoriesAccordion from '@/components/simulators/CategoriesAccordion.astro';
+import { getCollection } from 'astro:content';
+const simulatorsCollection = await getCollection('simulators');
 ---
 <Layout>
-    <div>
-        <FilterForm client:only="react" />
-    </div>
+    <article class="flex flex-row w-full h-full">
+       <CategoriesAccordion />
+       <FilterForm data={simulatorsCollection} client:only="react" />
+    </article>
 </Layout>

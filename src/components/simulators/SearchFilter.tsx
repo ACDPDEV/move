@@ -1,5 +1,4 @@
 import { IconSearch } from "@tabler/icons-react";
-import { useState } from "react";
 
 function SearchFilter(
     {getInput, setInput}: {
