@@ -2,7 +2,9 @@
 name: Radiactividad
 description: Simulador de desintegración alfa, beta y gamma en núcleos inestables
 href: /simulators/radiactividad/
-area: Física Moderna/Radiactividad
+area:
+    - Física Moderna
+    - Radiactividad
 image: radiactividad.png
 ---
 La **radiactividad** es un fenómeno en el que núcleos atómicos inestables emiten partículas o radiación para estabilizarse.

@@ -1,5 +1,26 @@
 ---
-// Pendiente
+import { getCollection } from 'astro:content';
+const simulatorsCollection = await getCollection('simulators');
+const areas = simulatorsCollection.map(simulator => simulator.data.area);
+
+function areasToTreeAreas(areas: string[][]): Record<string, any> {
+  const tree: Record<string, any> = {};
+
+  for (const parts of areas) {
+    let level = tree;
+
+    for (const part of parts) {
+      if (!level[part]) {
+        level[part] = {};
+      }
+      level = level[part];
+    }
+  }
+
+  return tree;
+}
+const categoriesTree = areasToTreeAreas(areas);
+
 ---
 <section class="max-w-xl mx-auto mt-8 space-y-4">
     <details>
@@ -8,7 +29,7 @@
         <span></span>
       </summary>
       <ul>
-
+        {JSON.stringify(categoriesTree, null, 2)}
       </ul>
     </details>
 </section>

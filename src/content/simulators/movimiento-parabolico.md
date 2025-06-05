@@ -2,7 +2,9 @@
 name: Movimiento Parabólico
 description: Simulador de lanzamiento de proyectiles en dos dimensiones
 href: /simulators/parabolico/
-area: Mecánica/Cinemática
+area: 
+    - Mecánica
+    - Cinemática
 image: parabolico.png
 ---
 El **movimiento parabólico** combina dos movimientos simultáneos:

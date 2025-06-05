@@ -2,7 +2,9 @@
 name: Ley de Ohm
 description: Simulador de circuitos eléctricos simples con control de voltaje y resistencia
 href: /simulators/circuito-ohm/
-area: Electricidad/Circuitos
+area: 
+  - Electricidad
+  - Circuitos
 image: circuito-ohm.png
 ---
 La **Ley de Ohm** establece la relación entre el voltaje \( V \), la corriente \( I \) y la resistencia \( R \):

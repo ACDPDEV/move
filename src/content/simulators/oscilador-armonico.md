@@ -2,7 +2,9 @@
 name: Oscilador Armónico
 description: Simulación de un resorte ideal con movimiento armónico simple
 href: /simulators/oscilador-armonico/
-area: Mecánica/Ondas
+area: 
+    - Mecánica
+    - Ondas
 image: oscilador-armonico.png
 ---
 El **Movimiento Armónico Simple (MAS)** es un tipo de movimiento periódico donde la fuerza restauradora es proporcional al desplazamiento, como en un resorte ideal.

@@ -2,7 +2,9 @@
 name: MRU
 description: Simulador de movimientos de recursos útiles
 href: /simulators/mru/
-area: Mecánica/Cinemática
+area: 
+    - Mecánica
+    - Cinemática
 image: mru.png
 ---
 El **Movimiento Rectilíneo Uniforme (MRU)** es aquel en el que un objeto se desplaza en línea recta con **velocidad constante**. Esto significa que no hay aceleración: la distancia recorrida es directamente proporcional al tiempo.

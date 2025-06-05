@@ -5,7 +5,7 @@ const simulators = defineCollection({
     name: z.string(),
     description: z.string(),
     href: z.string(),
-    area: z.string(),
+    area: z.array(z.string().min(1).nonempty()),
     image: z.string(),
   }),
 });

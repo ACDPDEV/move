@@ -2,7 +2,8 @@
 name: Reflexión de la Luz
 description: Simulador de rayos reflejados en superficies planas y curvas
 href: /simulators/reflexion-luz/
-area: Óptica
+area: 
+    - Óptica
 image: reflexion-luz.png
 ---
 La **reflexión** es el cambio de dirección que experimenta un rayo de luz al chocar con una superficie.

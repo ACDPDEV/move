@@ -2,7 +2,9 @@
 name: Leyes de Newton
 description: Simulador interactivo para visualizar las tres leyes del movimiento
 href: /simulators/leyes-newton/
-area: Mecánica/Dinámica
+area: 
+    - Mecánica
+    - Dinámica
 image: leyes-newton.png
 ---
 Las **leyes de Newton** explican cómo interactúan las fuerzas con el movimiento de los cuerpos.
