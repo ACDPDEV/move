@@ -8,6 +8,6 @@ const simulatorsCollection = await getCollection('simulators');
 <Layout>
     <article class="flex flex-row w-full h-full">
        <CategoriesAccordion />
-       <FilterForm data={simulatorsCollection} client:only="react" />
+       <FilterForm data={simulatorsCollection} client:load />
     </article>
 </Layout>

@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
-import react from '@astrojs/react';
+import preact from '@astrojs/preact';
 
 import mdx from '@astrojs/mdx';
 
@@ -13,5 +13,5 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react(), mdx()]
+  integrations: [preact(), mdx()]
 });
