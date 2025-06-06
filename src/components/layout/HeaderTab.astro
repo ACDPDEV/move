@@ -3,6 +3,6 @@ const { href } = Astro.props;
 const currentPage = Astro.url.pathname;
 ---
 
-<a class=`flex justify-center items-center py-1 px-6 rounded-md ${currentPage === href ? 'bg-black text-stone-200' : 'bg-transparent text-stone-400 hover:bg-stone-800 hover:text-stone-200'} transition-all` href={href}>
+<a class=`flex justify-center items-center py-1 px-6 rounded-md ${(href === "/" && currentPage === href) || (href !== "/" && currentPage.includes(href)) ? 'bg-black text-stone-200' : 'bg-transparent text-stone-400 hover:bg-stone-800 hover:text-stone-200'} transition-all` href={href}>
     <slot />
 </a>
