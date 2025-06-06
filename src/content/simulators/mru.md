@@ -10,9 +10,9 @@ image: mru.png
 El **Movimiento Rectilíneo Uniforme (MRU)** es aquel en el que un objeto se desplaza en línea recta con **velocidad constante**. Esto significa que no hay aceleración: la distancia recorrida es directamente proporcional al tiempo.
 
 **Ecuación principal:**
-\[
+```
 x = x_0 + v \cdot t
-\]
+```
 
 **Parámetros que puedes controlar en este simulador:**
 - Posición inicial \( x_0 \)
