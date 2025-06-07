@@ -1,0 +1,19 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SimulatorRenderer from '@/components/simulators/SimulatorRenderer';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const simulators = await getCollection('simulators');
+  return simulators.map((simulator) => ({
+    params: { slug: simulator.slug },
+    props: { simulator },
+  }));
+}
+
+const { simulator } = Astro.props;
+---
+
+<Layout title={simulator.data.name} >
+    <SimulatorRenderer slug={simulator.slug} client:load />
+</Layout>
