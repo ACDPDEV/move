@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { ComponentType } from 'preact';
+import { Loader } from '@/components/simulators/Loader';
 
 const ComponentMap: Record<string, () => Promise<any>> = {
     "ley-de-ohm": () => import("@/components/simulators/ley-de-ohm/Simulator.tsx"),
-    "leyes-newton": () => import("@/components/simulators/leyes-de-newton/Simulator.tsx"),
+    "leyes-de-newton": () => import("@/components/simulators/leyes-de-newton/Simulator.tsx"),
     "movimiento-parabolico": () => import("@/components/simulators/movimiento-parabolico/Simulator.tsx"),
-    "mru": () => import("@/components/simulators/mru/Simulator.tsx"),
+    "mru": () => import("@/components/simulators/mru/Simulator"),
     "oscilador-armonico": () => import("@/components/simulators/oscilador-armonico/Simulator.tsx"),
-    "parabolico": () => import("@/components/simulators/movimiento-parabolico/Simulator.tsx"),
     "radioactividad": () => import("@/components/simulators/radioactividad/Simulator.tsx"),
-    "reflexion-luz": () => import("@/components/simulators/reflexion-de-la-luz/Simulator.tsx"),
+    "reflexion-de-la-luz": () => import("@/components/simulators/reflexion-de-la-luz/Simulator.tsx"),
 }
 
 function SimulatorRenderer({ slug }: { slug: string }) {
@@ -43,7 +43,7 @@ function SimulatorRenderer({ slug }: { slug: string }) {
     }, [slug]);
 
     if (loading) {
-        return <div>Cargando simulador...</div>;
+        return <Loader />;
     }
 
     if (error) {
