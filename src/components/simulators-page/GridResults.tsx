@@ -10,7 +10,7 @@ function GridResults({data}: {data: CollectionEntry<"simulators">[]}) {
                     {data.map((simulator) => (
                         <li key={simulator.id}>
                             <a 
-                                href={"/simulators/preview/" + simulator.slug}
+                                href={`/simulators/preview/${simulator.slug}/`}
                                 className="flex flex-col gap-2 bg-stone-950 border border-stone-800 rounded-md p-4 shadow-md shadow-[rgba(0,0,0,0.5)] h-fit hover:bg-stone-900 transition-colors"
                             >
                                 <span className="flex flex-row justify-between items-start">
