@@ -1,15 +1,34 @@
-import { useCanvas } from "@/hooks/useCanvas";
+import { Application, Assets, Container, Sprite } from 'pixi.js';
+import { useEffect, useRef } from 'preact/hooks';
 
-function Canvas<T extends RenderingContext>(
-    { draw, contextId = "2d", resize = false, ...props }: {
-        draw: (ctx: T, frameCount: number) => void,
-        contextId?: string
-        resize?: boolean
+function Canvas(
+    { preload, setup, loop }: {
+        preload: () => Promise<void>,
+        setup: (app: Application, canvas: HTMLCanvasElement, container: HTMLDivElement) => Promise<void>
+        loop: (app: Application) => void
     }
-) {
-    const canvasRef = useCanvas<T>(draw, contextId, resize);
+){
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
-    return <canvas class="w-full h-full" ref={canvasRef} {...props} />;
+    useEffect(() => {
+        const app = new Application();
+        (async () => {
+            try {
+                await setup(app, canvasRef.current, containerRef.current);
+                await preload();
+                loop(app);
+            } catch (error) {
+                console.error('Error creating PixiJS application:', error);
+            }
+        })();
+    }, []);
+
+    return (
+        <div ref={containerRef} class="w-full h-full">
+            <canvas ref={canvasRef} />
+        </div>
+    );
 }
 
 export { Canvas };
