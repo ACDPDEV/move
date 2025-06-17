@@ -1,5 +1,5 @@
 import { Assets, Sprite, type Application, type Ticker } from 'pixi.js';
-import { Movil, MovilInterface } from '@/lib/physicsUtils';
+import { Movil, MovilInterface } from '@/components/simulators/mru/classes/Movil';
 import { Vector1D } from '@/lib/physicsUtils';
 
 async function preload() {
