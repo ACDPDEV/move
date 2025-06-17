@@ -1,11 +1,11 @@
-import { Application, Assets, Container, Sprite } from 'pixi.js';
 import { useEffect, useRef } from 'preact/hooks';
+import { Ticker } from 'pixi.js';
 
 function Canvas(
     { preload, setup, loop }: {
         preload: () => Promise<void>,
         setup: (app: Application, canvas: HTMLCanvasElement, container: HTMLDivElement) => Promise<void>
-        loop: (app: Application) => void
+        loop: (app: Application, ticker: Ticker) => void
     }
 ){
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -13,11 +13,12 @@ function Canvas(
 
     useEffect(() => {
         const app = new Application();
+        const ticker = new Ticker();
         (async () => {
             try {
                 await setup(app, canvasRef.current, containerRef.current);
                 await preload();
-                loop(app);
+                ticker.add(() => loop(app, ticker));
             } catch (error) {
                 console.error('Error creating PixiJS application:', error);
             }
