@@ -20,4 +20,4 @@ class Movil implements MovilInterface {
     
 }
 
-import { Movil, MovilInterface } from "@/components/simulators/mru/entities/Movil";
+export { Movil, MovilInterface }
