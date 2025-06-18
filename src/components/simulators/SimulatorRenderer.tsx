@@ -55,7 +55,7 @@ function SimulatorRenderer({ slug }: { slug: string }) {
         return <div>Simulador no disponible</div>;
     }
 
-    return <Component />;
+    return <Component slug={slug} />;
 }
 
 export default SimulatorRenderer;
