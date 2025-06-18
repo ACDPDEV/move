@@ -1,6 +1,8 @@
 import { Assets, Sprite, type Application, type Ticker } from 'pixi.js';
-import { Movil, MovilInterface } from '@/components/simulators/mru/entities/Movil';
+import { Movil } from '@/components/simulators/mru/entities/Movil';
 import { Vector1D } from '@/lib/physicsUtils';
+
+const movil = new Movil(new Vector1D(0), new Vector1D(0), new Vector1D(1));
 
 async function preload() {
 }
@@ -10,11 +12,12 @@ async function setup(app: Application, canvas: HTMLCanvasElement, container: HTM
         backgroundColor: "#333",
         canvas: canvas,
         resizeTo: container,
+        autoStart: true,
+        sharedTicker: false,
     });
-    const movil = Movil(Vector1D(0), Vector1D(0), Vector1D(0));
 };
-function loop(app: Application, time: Ticker) {
-
+function loop(app: Application) {
+    movil.update(app.ticker.deltaTime);
 }
 
 export { preload, setup, loop };
