@@ -7,53 +7,60 @@ class Vector2D {
         this.y = y;
     }
 
-    add(vector: Vector2D): void {
+    add(vector: Vector2D): Vector2D {
         this.x += vector.x;
         this.y += vector.y;
+        return this;
     }
 
-    sub(vector: Vector2D): void {
+    sub(vector: Vector2D): Vector2D {
         this.x -= vector.x;
         this.y -= vector.y;
+        return this;
     }
 
-    mul(vector: Vector2D): void {
+    mul(vector: Vector2D): Vector2D {
         this.x *= vector.x;
         this.y *= vector.y;
+        return this;
     }
 
-    div(vector: Vector2D): void {
+    div(vector: Vector2D): Vector2D {
         if (vector.x === 0 || vector.y === 0) {
             throw new Error("Division by zero");
         }
         this.x /= vector.x;
         this.y /= vector.y;
+        return this;
     }
 
     mag(): number {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
-    normalize(): void {
+    normalize(): Vector2D {
         const mag = this.mag();
         if (mag === 0) {
             throw new Error("Cannot normalize a zero vector");
         }
         this.x /= mag;
         this.y /= mag;
+        return this;
     }
 
-    scale(scale: number): void {
+    scale(scale: number): Vector2D {
         this.x *= scale;
         this.y *= scale;
+        return this;
     }
 
-    setMag(mag: number): void {
+    setMag(mag: number): Vector2D {
         if (this.x === 0 && this.y === 0) {
             throw new Error("Cannot set magnitude of a zero vector");
         }
         this.normalize();
         this.scale(mag);
+        return this;
     }
     
     angle(): number {
@@ -61,26 +68,30 @@ class Vector2D {
         return Math.atan2(this.y, this.x);
     }
 
-    rotate(angle: number): void {
+    rotate(angle: number): Vector2D {
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
         const newX = this.x * cos - this.y * sin;
         const newY = this.x * sin + this.y * cos;
         this.x = newX;
         this.y = newY;
+        return this;
     }
 
-    invert(): void {
+    invert(): Vector2D {
         this.x *= -1;
         this.y *= -1;
+        return this;
     }
 
-    invertX(): void {
+    invertX(): Vector2D {
         this.x *= -1;
+        return this;
     }
 
-    invertY(): void {
+    invertY(): Vector2D {
         this.y *= -1;
+        return this;
     }
 
     copy(): Vector2D {
