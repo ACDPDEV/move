@@ -1,69 +1,62 @@
-interface Vector1DInterface {
-    x: number;
-    add(vector: Vector1D): void;
-    sub(vector: Vector1D): void;
-    mul(vector: Vector1D): void;
-    div(vector: Vector1D): void;
-    mag(): number;
-    normalize(): void;
-    scale(scale: number): void;
-    setMag(mag: number): void;
-    invert(): void;
-    copy(): Vector1D;
-    toString(type?: "object" | "tuple" | "objectWithLabel"): string;
-}
-
-class Vector1D implements Vector1DInterface {
+class Vector1D {
     x: number;
 
     constructor(x: number) {
         this.x = x;
     }
 
-    add(vector: Vector1D): void {
+    add(vector: Vector1D): Vector1D {
         this.x += vector.x;
+        return this
     }
 
-    sub(vector: Vector1D): void {
+    sub(vector: Vector1D): Vector1D {
         this.x -= vector.x;
+        return this
     }
 
-    mul(vector: Vector1D): void {
+    mul(vector: Vector1D): Vector1D {
         this.x *= vector.x;
+        return this
     }
 
-    div(vector: Vector1D): void {
+    div(vector: Vector1D): Vector1D {
         if (vector.x === 0) {
             throw new Error("Division by zero");
         }
         this.x /= vector.x;
+        return this
     }
 
     mag(): number {
         return Math.abs(this.x);
     }
 
-    normalize(): void {
+    normalize(): Vector1D {
         const mag = this.mag();
         if (mag === 0) {
             throw new Error("Cannot normalize a zero vector");
         }
         this.x = this.x >= 0 ? 1 : -1;
+        return this
     }
 
-    scale(scale: number): void {
+    scale(scale: number): Vector1D {
         this.x *= scale;
+        return this
     }
 
-    setMag(mag: number): void {
+    setMag(mag: number): Vector1D {
         if (this.x === 0) {
             throw new Error("Cannot set magnitude of a zero vector");
         }
         this.x = this.x >= 0 ? mag : -mag;
+        return this
     }
 
-    invert(): void {
+    invert(): Vector1D {
         this.x *= -1;
+        return this
     }
 
     copy(): Vector1D {
@@ -83,7 +76,6 @@ class Vector1D implements Vector1DInterface {
         throw new Error("Invalid type");
     }
 
-    // ✅ Métodos estáticos fuera de la interface
     static add(vectors: Vector1D[]): Vector1D {
         if (vectors.length === 0) throw new Error("No vectors provided");
         const result = vectors[0].copy();
@@ -128,8 +120,8 @@ class Vector1D implements Vector1DInterface {
     }
 
     static fromMag(mag: number, direction: boolean): Vector1D {
-        direction ? x = mag : -mag;
-        return new Vector1D(x);
+        direction ? mag = -mag : null;
+        return new Vector1D(mag);
     }
 }
 

@@ -163,8 +163,8 @@ class Vector2D {
     }
 
     static distance(vector1: Vector2D, vector2: Vector2D): number {
-        dx = vector1.x - vector2.x;
-        dy = vector1.y - vector2.y;
+        const dx = vector1.x - vector2.x;
+        const dy = vector1.y - vector2.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
