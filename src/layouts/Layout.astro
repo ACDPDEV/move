@@ -29,4 +29,36 @@ import '@/styles/global.css';
 		width: 100%;
 		height: 100%;
 	}
+
+	html {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(50, 50, 50, 0.15) transparent;
+		transition: scrollbar-color 0.3s ease;
+	}
+
+	html:hover {
+		scrollbar-color: rgba(50, 50, 50, 0.25) transparent;
+	}
+
+	html::-webkit-scrollbar {
+		width: 3px;
+	}
+
+	html::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	html::-webkit-scrollbar-thumb {
+		background: rgba(50, 50, 50, 0.15);
+		border-radius: 1.5px;
+		transition: background 0.3s ease;
+	}
+
+	html:hover::-webkit-scrollbar-thumb {
+		background: rgba(50, 50, 50, 0.25);
+	}
+
+	html::-webkit-scrollbar-thumb:hover {
+		background: rgba(50, 50, 50, 0.25);
+	}
 </style>
