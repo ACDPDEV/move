@@ -47,7 +47,7 @@ class GraphicsAPIDetector {
   private detectWebGL(): void {
     try {
       const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const gl: WebGL2RenderingContext | WebGLRenderingContext = canvas.getContext('webgl') || canvas.getContext('webgl2') as WebGL2RenderingContext | WebGLRenderingContext;
       
       if (gl) {
         this.results.webgl.supported = true;
