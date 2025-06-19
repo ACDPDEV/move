@@ -17,11 +17,7 @@ function Canvas(
             try {
                 await setup(app, canvasRef.current as HTMLCanvasElement, containerRef.current as HTMLDivElement);
                 await preload();
-                app.ticker.add(
-                    () => {
-                        loop(app)
-                    }
-                );
+                loop(app);
             } catch (error) {
                 console.error('Error creating PixiJS application:', error);
             }
