@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'preact/hooks';
 import { Application } from 'pixi.js'
 
 function Canvas(
-    { preload, setup, loop }: {
+    { app, preload, setup, loop }: {
+        app: Application,
         preload: () => Promise<void>,
         setup: (app: Application, canvas: HTMLCanvasElement, container: HTMLDivElement) => Promise<void>
         loop: (app: Application) => void
@@ -12,7 +13,6 @@ function Canvas(
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        const app = new Application();
         (async () => {
             try {
                 await setup(app, canvasRef.current as HTMLCanvasElement, containerRef.current as HTMLDivElement);

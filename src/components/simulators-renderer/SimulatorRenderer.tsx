@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { ComponentType } from 'preact';
-import { Loader } from '@/components/simulators/Loader';
+import { Loader } from '@/components/simulators-renderer/Loader';
 import { GraphicsAPIDetector, type BrowserSupport } from '@/lib/graphicsSupport';
 
 const ComponentMap: Record<string, () => Promise<any>> = {
-    "ley-de-ohm": () => import("@/components/simulators/ley-de-ohm/Simulator.tsx"),
-    "leyes-de-newton": () => import("@/components/simulators/leyes-de-newton/Simulator.tsx"),
-    "movimiento-parabolico": () => import("@/components/simulators/movimiento-parabolico/Simulator.tsx"),
-    "mru": () => import("@/components/simulators/mru/Simulator"),
-    "oscilador-armonico": () => import("@/components/simulators/oscilador-armonico/Simulator.tsx"),
-    "radioactividad": () => import("@/components/simulators/radioactividad/Simulator.tsx"),
-    "reflexion-de-la-luz": () => import("@/components/simulators/reflexion-de-la-luz/Simulator.tsx"),
+    "ley-de-ohm": () => import("@/simulators/ley-de-ohm/Simulator.tsx"),
+    "leyes-de-newton": () => import("@/simulators/leyes-de-newton/Simulator.tsx"),
+    "movimiento-parabolico": () => import("@/simulators/movimiento-parabolico/Simulator.tsx"),
+    "mru": () => import("@/simulators/mru/Simulator"),
+    "oscilador-armonico": () => import("@/simulators/oscilador-armonico/Simulator"),
+    "radioactividad": () => import("@/simulators/radioactividad/Simulator"),
+    "reflexion-de-la-luz": () => import("@/simulators/reflexion-de-la-luz/Simulator"),
 }
 
 function SimulatorRenderer({ slug }: { slug: string }) {

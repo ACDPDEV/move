@@ -15,14 +15,14 @@ class Movil  {
     }
     update(ticker: Ticker): void {
         /* Enfoque 1: Fórmulas de MRUV usando tiempo con iniciales a  */
-        this.velocity = this.initialVelocity.copy().add(this.acceleration.copy().scale(ticker.lastTime/1000));
-        this.position = this.initialPosition.copy().add(this.velocity.copy().scale(1/2*(ticker.lastTime/1000)**2));
+        // this.velocity = this.initialVelocity.copy().add(this.acceleration.copy().scale(ticker.lastTime/1000));
+        // this.position = this.initialPosition.copy().add(this.velocity.copy().scale(1/2*(ticker.lastTime/1000)**2));
         /* Enfoque 2: Usando el bucle con deltaTime */
-        // this.position.add(
-        //     this.velocity.add(
-        //         this.acceleration.copy().scale(ticker.deltaTime/60 / pixel/frame a pixel/s */)
-        //     )
-        // )
+        this.position.add(
+            this.velocity.add(
+                this.acceleration.copy().scale(ticker.deltaTime/60 /* pixel/frame a pixel/s */)
+            )
+        )
     }
     draw(app: Application): void {
        
