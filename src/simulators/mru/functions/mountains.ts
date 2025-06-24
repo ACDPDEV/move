@@ -1,7 +1,7 @@
 import { Graphics } from 'pixi.js';
 import type { Application } from 'pixi.js';
 
-function addMountains(app: Application) {
+function addMountains(app: Application, velocity: number, acceleration: number) {
   // Create two mountain groups where one will be on the screen and the other will be off screen.
   // When the first group moves off screen, it will be moved to the right of the second group.
   const group1 = createMountainGroup(app);
@@ -16,8 +16,8 @@ function addMountains(app: Application) {
   // Animate the mountain groups
   app.ticker.add((time) => {
     // Calculate the amount of distance to move the mountain groups per tick.
-    const dx = time.deltaTime * 0.5;
-
+    const dx = time.deltaTime * 1/100 * velocity;
+    velocity += acceleration * time.deltaTime;
     // Move the mountain groups leftwards.
     group1.x -= dx;
     group2.x -= dx;
