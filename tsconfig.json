@@ -8,6 +8,7 @@
     "dist"
   ],
   "compilerOptions": {
+    "target": "es2015",
     "baseUrl": ".",
     "paths": {
       "@/*": [
