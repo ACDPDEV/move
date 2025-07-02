@@ -10,12 +10,16 @@
   "compilerOptions": {
     "target": "es2015",
     "baseUrl": ".",
+    "moduleResolution": "node",
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "preact/hooks": ["./node_modules/preact/hooks/dist/hooks.module.js"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "preact",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   }
 }
