@@ -33,16 +33,14 @@ function MRUSimulator({ slug }: { slug: string }) {
     // Contexto de simulación
     const { 
         state: { isPlaying, entities, time, fps, speed },
-        actions: {
-            play, 
-            pause, 
-            setSpeed, 
-            updateTime, 
-            updateFPS, 
-            updateEntities,
-            updateEntity,
-            resetSimulation
-        }
+        play, 
+        pause, 
+        setSpeed, 
+        updateTime, 
+        updateFPS, 
+        updateEntities,
+        updateEntity,
+        resetSimulation
     } = useSimulation();
 
     // Hook usePixiApp con configuración completa
