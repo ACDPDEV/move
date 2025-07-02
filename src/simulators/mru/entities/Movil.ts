@@ -1,7 +1,4 @@
 import { Vector2D } from "@/lib/physicsUtils";
-import type { Application, Ticker } from "pixi.js";
-import { Graphics } from "pixi.js";
-import graphicsPool from "../utils/GraphicsPool";
 
 export interface IMovilProps {
     id?: string;  // Make id optional
@@ -20,7 +17,6 @@ class Movil {
     private initialPosition: Vector2D;
     private initialVelocity: Vector2D;
     private initialAcceleration: Vector2D;
-    graphics: Graphics | null = null;
     private _radius: number;
     private _color: number;
 
@@ -62,25 +58,10 @@ class Movil {
         this.position.y += this.velocity.y * deltaTime;
     }
 
-    /**
-     * Dibuja el móvil en el escenario de PixiJS
-     * @param app Instancia de la aplicación PixiJS
-     */
-    draw(app: Application): void {
-        if (!this.graphics || this.graphics.destroyed) {
-            // Get a graphics object from the pool
-            this.graphics = graphicsPool.get();
-            app.stage.addChild(this.graphics);
-        }
+    draw(): void {
         
-        this.graphics.clear();
-        this.graphics.beginFill(this.color);
-        this.graphics.drawCircle(0, 0, this.radius);
-        this.graphics.endFill();
-        
-        // Update position
-        this.graphics.position.set(this.position.x, this.position.y);
     }
+    
     
     /**
      * Reinicia el móvil a su posición y velocidad iniciales
@@ -95,11 +76,7 @@ class Movil {
      * Clean up resources when the entity is destroyed
      */
     destroy(): void {
-        if (this.graphics) {
-            // Return the graphics object to the pool
-            graphicsPool.release(this.graphics);
-            this.graphics = null;
-        }
+
     }
 
     /**
