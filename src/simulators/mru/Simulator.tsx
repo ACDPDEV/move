@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import TimeControls from "./components/TimeControls";
 import { SimulationProvider, useSimulation } from "./context/SimulationContext";
 import { Movil } from "./entities/Movil";
+import { MRUSimulatorWithCanvas } from "@/simulators/mru/SimulatorWithCanvas";
 
 /**
  * Contenedor principal que envuelve el simulador con el contexto
@@ -12,7 +13,7 @@ import { Movil } from "./entities/Movil";
 function MRUSimulatorContainer({ slug }: { slug: string }) {
     return (
         <SimulationProvider>
-            <MRUSimulator slug={slug} />
+            <MRUSimulatorWithCanvas />
         </SimulationProvider>
     );
 }
