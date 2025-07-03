@@ -60,19 +60,27 @@ const initialState: SimulationState = {
   entities: [
     new Movil({
       id: 'm1',
-      position: new Vector2D(100, 300),
-      velocity: new Vector2D(50, 0),     // MRU: velocidad constante
-      acceleration: new Vector2D(0, 0),  // Sin aceleración
-      radius: 15,
-      color: 0xFF5733  // Naranja
+      position: new Vector2D(100, 100),
+      velocity: new Vector2D(1, 0),    
+      acceleration: new Vector2D(0, 1),  
+      radius: 5,
+      color: "#FF5733"   
     }),
     new Movil({
       id: 'm2',
-      position: new Vector2D(100, 400),
-      velocity: new Vector2D(30, 0),     // Velocidad inicial menor
-      acceleration: new Vector2D(5, 0),  // MRUV: con aceleración
-      radius: 15,
-      color: 0x33A1FF  // Azul
+      position: new Vector2D(100, 30),
+      velocity: new Vector2D(0, 1),     
+      acceleration: new Vector2D(0, 1),  
+      radius: 5,
+      color: "#33A1FF"   
+    }),
+    new Movil({
+      id: 'm3',
+      position: new Vector2D(200, 100),
+      velocity: new Vector2D(-10, -2),     
+      acceleration: new Vector2D(2, -0.5),  
+      radius: 5,
+      color: "#FFFFFF"   
     })
   ]
 };
@@ -128,7 +136,7 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
           velocity: new Vector2D(0, 0),
           acceleration: new Vector2D(0, 0),
           radius: 10,
-          color: Math.floor(Math.random() * 0xFFFFFF),
+          color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16),
           ...updates
         });
         
