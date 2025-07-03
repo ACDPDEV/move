@@ -3,8 +3,10 @@ import type { Movil } from '../entities/Movil';
 
 function useDraw(
     updateFPS: (fps: number) => void,
-    updateEntities: (entities: Movil[]) => void,
-    updateTime: (time: number) => void
+    entities: Movil[],
+    updateTime: (time: number) => void,
+    speed: number,
+    isPlaying: boolean
 ) {
     
     const lastTimeRef = useRef<number>(0);
@@ -16,7 +18,7 @@ function useDraw(
     return useCallback((ctx: CanvasRenderingContext2D, frameCount: number) => {
         const canvas = ctx.canvas;
         const now = performance.now();
-        const deltaTime = now - (lastTimeRef.current || now - 16); 
+        const deltaMS = now - (lastTimeRef.current || now - 16);
         lastTimeRef.current = now;
         
         frameCountRef.current++;
@@ -26,22 +28,27 @@ function useDraw(
             lastFpsUpdateRef.current = now;
         }
         
-        counterRef.current += deltaTime / 1000;
+        const deltaTime = fpsRef.current / 60 * speed;
+
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        ctx.fillStyle = 'white';
-        ctx.font = '20px Arial';
-        ctx.fillText(`Counter: ${counterRef.current.toFixed(2)}`, 20, 30);
-        ctx.fillText(`FPS: ${fpsRef.current}`, 20, 60);
-        ctx.fillText(`Delta: ${deltaTime.toFixed(2)}ms`, 20, 90);
-
+        if (isPlaying) {
+            counterRef.current += deltaMS / 1000 * speed;
+            updateTime(counterRef.current);
+        }
         updateFPS(fpsRef.current);
-        updateTime(counterRef.current);
-    }, []);
+
+        entities.forEach(entity => {
+            if (isPlaying) {
+                entity.update(deltaTime);
+            }
+            entity.draw(ctx);
+        });
+    }, [updateFPS, updateTime, entities, speed, isPlaying]);
 }
 
 export { useDraw };
