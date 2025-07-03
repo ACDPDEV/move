@@ -2,6 +2,7 @@ import { Vector2D } from '@/lib/physicsUtils';
 import { Movil, type IMovilProps } from '@/simulators/mru/entities/Movil';
 import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarRightCollapseFilled, IconPlus, IconTrash } from '@tabler/icons-preact';
 import { useState } from 'preact/hooks';
+import { AxisVectorInput } from './CoordinatesInput';
 
 interface SidebarProps {
     isOpen: boolean;
@@ -36,7 +37,7 @@ function Sidebar({
             velocity: new Vector2D(Math.random() * 50 + 10, 0), // Velocidad aleatoria
             acceleration: new Vector2D(0, 0),
             radius: 15,
-            color: Math.floor(Math.random() * 0xFFFFFF) // Color aleatorio
+            color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16) // Color aleatorio
         });
         
         onEntityChange(newEntityId, {
@@ -63,7 +64,7 @@ function Sidebar({
     const handleInputChange = (
         entityId: string, 
         property: keyof IMovilProps, 
-        value: number,
+        value: number | string,
         vectorComponent?: 'x' | 'y'
     ) => {
         if (!onEntityChange) return;
@@ -76,12 +77,14 @@ function Sidebar({
         if (vectorComponent && (property === 'position' || property === 'velocity' || property === 'acceleration')) {
             const currentVector = entity[property] as Vector2D;
             const newVector = new Vector2D(
-                vectorComponent === 'x' ? value : currentVector.x,
-                vectorComponent === 'y' ? value : currentVector.y
+                vectorComponent === 'x' ? Number(value) : currentVector.x,
+                vectorComponent === 'y' ? Number(value) : currentVector.y
             );
             updates[property] = newVector;
-        } else if (property === 'radius' || property === 'color') {
-            updates[property] = value as number;
+        } else if (property === 'radius') {
+            updates[property] = Number(value);
+        } else if (property === 'color') {
+            updates[property] = String(value);
         }
 
         onEntityChange(entityId, updates);
@@ -159,103 +162,11 @@ function Sidebar({
 
                                     <div class="space-y-4">
                                         {/* Posición */}
-                                        <div>
-                                            <label class="block text-sm font-medium text-stone-300 mb-2">
-                                                Posición (x, y)
-                                            </label>
-                                            <div class="flex gap-2">
-                                                <input
-                                                    type="number"
-                                                    value={entity.position?.x?.toFixed(1) || '0'}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'position', 
-                                                        parseFloat((e.target as HTMLInputElement).value) || 0,
-                                                        'x'
-                                                    )}
-                                                    class="flex-1 px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
-                                                    step="0.1"
-                                                />
-                                                <input
-                                                    type="number"
-                                                    value={entity.position?.y?.toFixed(1) || '0'}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'position', 
-                                                        parseFloat((e.target as HTMLInputElement).value) || 0,
-                                                        'y'
-                                                    )}
-                                                    class="flex-1 px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
-                                                    step="0.1"
-                                                />
-                                            </div>
-                                        </div>
-
+                                        <AxisVectorInput typeVector="position" entity={entity} handleInputChange={handleInputChange} />
                                         {/* Velocidad */}
-                                        <div>
-                                            <label class="block text-sm font-medium text-stone-300 mb-2">
-                                                Velocidad (vx, vy)
-                                            </label>
-                                            <div class="flex gap-2">
-                                                <input
-                                                    type="number"
-                                                    value={entity.velocity?.x?.toFixed(1) || '0'}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'velocity', 
-                                                        parseFloat((e.target as HTMLInputElement).value) || 0,
-                                                        'x'
-                                                    )}
-                                                    class="flex-1 px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
-                                                    step="0.1"
-                                                />
-                                                <input
-                                                    type="number"
-                                                    value={entity.velocity?.y?.toFixed(1) || '0'}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'velocity', 
-                                                        parseFloat((e.target as HTMLInputElement).value) || 0,
-                                                        'y'
-                                                    )}
-                                                    class="flex-1 px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
-                                                    step="0.1"
-                                                />
-                                            </div>
-                                        </div>
-
+                                        <AxisVectorInput typeVector="velocity" entity={entity} handleInputChange={handleInputChange} />
                                         {/* Aceleración */}
-                                        <div>
-                                            <label class="block text-sm font-medium text-stone-300 mb-2">
-                                                Aceleración (ax, ay)
-                                            </label>
-                                            <div class="flex gap-2">
-                                                <input
-                                                    type="number"
-                                                    value={entity.acceleration?.x?.toFixed(1) || '0'}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'acceleration', 
-                                                        parseFloat((e.target as HTMLInputElement).value) || 0,
-                                                        'x'
-                                                    )}
-                                                    class="flex-1 px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
-                                                    step="0.1"
-                                                />
-                                                <input
-                                                    type="number"
-                                                    value={entity.acceleration?.y?.toFixed(1) || '0'}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'acceleration', 
-                                                        parseFloat((e.target as HTMLInputElement).value) || 0,
-                                                        'y'
-                                                    )}
-                                                    class="flex-1 px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
-                                                    step="0.1"
-                                                />
-                                            </div>
-                                        </div>
+                                        <AxisVectorInput typeVector="acceleration" entity={entity} handleInputChange={handleInputChange} />
 
                                         {/* Radio y Color */}
                                         <div class="flex gap-4">
@@ -283,11 +194,11 @@ function Sidebar({
                                                 </label>
                                                 <input
                                                     type="color"
-                                                    value={colorToHex(entity.color || 0xFFFFFF)}
+                                                    value={entity.color}
                                                     onChange={(e) => handleInputChange(
                                                         entity.id!, 
                                                         'color', 
-                                                        hexToColor((e.target as HTMLInputElement).value)
+                                                        (e.target as HTMLInputElement).value
                                                     )}
                                                     class="w-full h-8 bg-stone-700 border border-stone-600 rounded cursor-pointer"
                                                 />
@@ -298,12 +209,6 @@ function Sidebar({
                                         <div class="mt-3 pt-3 border-t border-stone-700">
                                             <div class="text-xs text-stone-400 space-y-1">
                                                 <div>ID: {entity.id}</div>
-                                                <div>
-                                                    Velocidad: {Math.sqrt(
-                                                        (entity.velocity?.x || 0) ** 2 + 
-                                                        (entity.velocity?.y || 0) ** 2
-                                                    ).toFixed(2)} u/s
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
