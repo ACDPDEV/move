@@ -29,7 +29,7 @@ function MRUSimulator({ slug }: { slug: string }) {
         resetSimulation
     } = useSimulation();
     
-    const draw = useDraw(updateFPS, updateEntities, updateTime);
+    const draw = useDraw(updateFPS, entities, updateTime, speed, isPlaying);
 
     const handlePlayPause = useCallback(() => {
         if (isPlaying) {
@@ -96,18 +96,7 @@ function MRUSimulator({ slug }: { slug: string }) {
                 
                 <div className="bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm">
                     <div className="font-mono">
-                        FPS: {Math.round(fps)} | Tiempo: {time.toFixed(2)}s
-                    </div>
-                </div>
-                
-                <div className="bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm">
-                    Velocidad: {speed.toFixed(1)}x | Entidades: {entities.length}
-                </div>
-                
-                <div className="bg-green-600/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm">
-                    <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-white rounded-full" />
-                        Sistema listo
+                        FPS: {Math.round(fps)}
                     </div>
                 </div>
             </div>
