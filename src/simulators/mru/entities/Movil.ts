@@ -6,7 +6,7 @@ export interface IMovilProps {
     velocity: Vector2D;
     acceleration: Vector2D;
     radius?: number;
-    color?: number;
+    color?: string;
 }
 
 class Movil {
@@ -18,14 +18,14 @@ class Movil {
     private initialVelocity: Vector2D;
     private initialAcceleration: Vector2D;
     private _radius: number;
-    private _color: number;
+    private _color: string;
 
     // Getters públicos para acceder a las propiedades privadas
     get radius(): number {
         return this._radius;
     }
 
-    get color(): number {
+    get color(): string {
         return this._color;
     }
 
@@ -35,7 +35,7 @@ class Movil {
         velocity, 
         acceleration = new Vector2D(0, 0),
         radius = 10, 
-        color = 0xFF0000 
+        color = "#000000"
     }: IMovilProps) {
         this.id = id;
         this.position = position.copy();
@@ -50,16 +50,20 @@ class Movil {
 
     update(deltaTime: number): void {
         // Apply acceleration to velocity
-        this.velocity.x += this.acceleration.x * deltaTime;
-        this.velocity.y += this.acceleration.y * deltaTime;
+        this.velocity.x += this.acceleration.x * deltaTime / 60;
+        this.velocity.y += this.acceleration.y * deltaTime / 60;
 
         // Update position based on velocity
-        this.position.x += this.velocity.x * deltaTime;
-        this.position.y += this.velocity.y * deltaTime;
+        this.position.x += this.velocity.x * deltaTime / 60;
+        this.position.y += this.velocity.y * deltaTime / 60;
     }
 
-    draw(): void {
-        
+    draw(ctx: CanvasRenderingContext2D): void {
+        ctx.beginPath();
+        ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
     }
     
     
@@ -76,7 +80,14 @@ class Movil {
      * Clean up resources when the entity is destroyed
      */
     destroy(): void {
-
+        this.position = null;
+        this.velocity = null;
+        this.acceleration = null;
+        this.initialPosition = null;
+        this.initialVelocity = null;
+        this.initialAcceleration = null;
+        this._radius = null;
+        this._color = null;
     }
 
     /**
@@ -96,7 +107,7 @@ class Movil {
         Velocidad: (${this.velocity.x.toFixed(2)}, ${this.velocity.y.toFixed(2)})
         Aceleración: (${this.acceleration.x.toFixed(2)}, ${this.acceleration.y.toFixed(2)})
         Radio: ${this.radius}
-        Color: #${this.color.toString(16).padStart(6, '0')}
+        Color: ${this.color}
         `;
     }
 }
