@@ -1,4 +1,5 @@
 import { Vector2D } from '@/lib/physicsUtils';
+import { useState } from 'preact/hooks';
 import { Movil, type IMovilProps } from '@/simulators/mru/entities/Movil';
 import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarRightCollapseFilled, IconPlus, IconTrash } from '@tabler/icons-preact';
 import { AxisVectorInput } from './CoordinatesInput';
@@ -7,8 +8,8 @@ interface SidebarProps {
     isOpen: boolean;
     onToggle: () => void;
     entities: Movil[];
-    onEntityChange?: (id: string, updates: Partial<IMovilProps>) => void;
-    onEntityDelete?: (id: string) => void;
+    onEntityChange: (id: string, updates: Partial<Movil>) => void;
+    onEntityDelete: (id: string) => void;
 }
 
 /**
@@ -22,6 +23,17 @@ function Sidebar({
     onEntityChange,
     onEntityDelete
 }: SidebarProps) {
+    // Estado local para los inputs de radio, color y vectoriales por entidad
+    const [radiusInputs, setRadiusInputs] = useState<{ [id: string]: string }>({});
+    const [colorInputs, setColorInputs] = useState<{ [id: string]: string }>({});
+    type VectorInputsType = {
+        [id: string]: {
+            position?: { x?: string; y?: string };
+            velocity?: { x?: string; y?: string };
+            acceleration?: { x?: string; y?: string };
+        };
+    };
+    const [vectorInputs, setVectorInputs] = useState<VectorInputsType>({});
 
     /**
      * Maneja la adición de una nueva entidad
@@ -33,9 +45,9 @@ function Sidebar({
         
         // Llamar directamente a onEntityChange con las propiedades necesarias
         onEntityChange(newEntityId, {
-            position: new Vector2D(100, 300 + entities.length * 80),
-            velocity: new Vector2D(Math.random() * 50 + 10, 0),
-            acceleration: new Vector2D(0, 0),
+            position: new Vector2D(Math.random() * 800, Math.random() * 600),
+            velocity: new Vector2D(Math.random() * 800, Math.random() * 600),
+            acceleration: new Vector2D(Math.random() * 800, Math.random() * 600),
             radius: 15,
             color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0')
         });
@@ -64,10 +76,10 @@ function Sidebar({
         const entity = entities.find(e => e.id === entityId);
         if (!entity) return;
 
-        let updates: Partial<IMovilProps> = {};
+        let updates: Partial<Movil> = {};
 
         if (vectorComponent && (property === 'position' || property === 'velocity' || property === 'acceleration')) {
-            // Para vectores, crear un nuevo vector con el componente actualizado
+            if (value === "") return;
             const currentVector = entity[property] as Vector2D;
             const newVector = new Vector2D(
                 vectorComponent === 'x' ? Number(value) : currentVector.x,
@@ -75,12 +87,13 @@ function Sidebar({
             );
             updates[property] = newVector;
         } else if (property === 'radius') {
+            if (value === "") return;
             updates.radius = Number(value);
         } else if (property === 'color') {
+            if (value === "") return;
             updates.color = String(value);
         }
 
-        // Solo enviar las actualizaciones específicas
         onEntityChange(entityId, updates);
     };
 
@@ -128,38 +141,123 @@ function Sidebar({
                                         <h3 class="text-lg font-semibold text-white">
                                             Móvil {index + 1}
                                         </h3>
-                                        {onEntityDelete && (
-                                            <button
-                                                onClick={() => handleDeleteEntity(entity.id!)}
-                                                class="p-1 rounded hover:bg-red-600 transition-colors text-red-400 hover:text-white"
-                                                aria-label="Eliminar móvil"
-                                                title="Eliminar móvil"
-                                            >
-                                                <IconTrash size={16} />
-                                            </button>
-                                        )}
+                                        <button
+                                            onClick={() => handleDeleteEntity(entity.id!)}
+                                            class="p-1 rounded hover:bg-red-600 transition-colors text-red-400 hover:text-white"
+                                            aria-label="Eliminar móvil"
+                                            title="Eliminar móvil"
+                                        >
+                                            <IconTrash size={16} />
+                                        </button>
                                     </div>
 
                                     <div class="space-y-4">
                                         {/* Posición */}
+                                        {/* Posición */}
                                         <AxisVectorInput 
                                             typeVector="position" 
                                             entity={entity} 
-                                            handleInputChange={handleInputChange} 
+                                            handleInputChange={(id, property, value, vectorComponent) => {
+                                                // Guardar valor local SOLO para propiedades vectoriales
+                                                if (property === 'position' || property === 'velocity' || property === 'acceleration') {
+                                                    setVectorInputs(inputs => ({
+                                                        ...inputs,
+                                                        [id]: {
+                                                            ...inputs[id],
+                                                            [property]: {
+                                                                ...((inputs[id]?.[property as 'position' | 'velocity' | 'acceleration']) ?? {}),
+                                                                [vectorComponent!]: value === '' ? '' : String(value)
+                                                            }
+                                                        }
+                                                    }));
+                                                }
+                                            }}
+                                            vectorInputs={vectorInputs[entity.id!]?.position}
+                                            onBlurVector={(id, property, value, vectorComponent) => {
+                                                if (value !== '' && !isNaN(Number(value))) {
+                                                    handleInputChange(id, property, Number(value), vectorComponent);
+                                                }
+                                                setVectorInputs(inputs => {
+                                                    const copy = { ...inputs };
+                                                    if (copy[id] && copy[id][property as 'position' | 'velocity' | 'acceleration']) {
+                                                        copy[id][property as 'position' | 'velocity' | 'acceleration'] = {
+                                                            ...copy[id][property as 'position' | 'velocity' | 'acceleration'],
+                                                            [vectorComponent!]: undefined
+                                                        };
+                                                    }
+                                                    return copy;
+                                                });
+                                            }}
                                         />
-                                        
                                         {/* Velocidad */}
                                         <AxisVectorInput 
                                             typeVector="velocity" 
                                             entity={entity} 
-                                            handleInputChange={handleInputChange} 
+                                            handleInputChange={(id, property, value, vectorComponent) => {
+                                                if (property === 'position' || property === 'velocity' || property === 'acceleration') {
+                                                    setVectorInputs(inputs => ({
+                                                        ...inputs,
+                                                        [id]: {
+                                                            ...inputs[id],
+                                                            [property]: {
+                                                                ...((inputs[id]?.[property as 'position' | 'velocity' | 'acceleration']) ?? {}),
+                                                                [vectorComponent!]: value === '' ? '' : String(value)
+                                                            }
+                                                        }
+                                                    }));
+                                                }
+                                            }}
+                                            vectorInputs={vectorInputs[entity.id!]?.velocity}
+                                            onBlurVector={(id, property, value, vectorComponent) => {
+                                                if (value !== '' && !isNaN(Number(value))) {
+                                                    handleInputChange(id, property, Number(value), vectorComponent);
+                                                }
+                                                setVectorInputs(inputs => {
+                                                    const copy = { ...inputs };
+                                                    if (copy[id] && copy[id][property as 'position' | 'velocity' | 'acceleration']) {
+                                                        copy[id][property as 'position' | 'velocity' | 'acceleration'] = {
+                                                            ...copy[id][property as 'position' | 'velocity' | 'acceleration'],
+                                                            [vectorComponent!]: undefined
+                                                        };
+                                                    }
+                                                    return copy;
+                                                });
+                                            }}
                                         />
-                                        
                                         {/* Aceleración */}
                                         <AxisVectorInput 
                                             typeVector="acceleration" 
                                             entity={entity} 
-                                            handleInputChange={handleInputChange} 
+                                            handleInputChange={(id, property, value, vectorComponent) => {
+                                                if (property === 'position' || property === 'velocity' || property === 'acceleration') {
+                                                    setVectorInputs(inputs => ({
+                                                        ...inputs,
+                                                        [id]: {
+                                                            ...inputs[id],
+                                                            [property]: {
+                                                                ...((inputs[id]?.[property as 'position' | 'velocity' | 'acceleration']) ?? {}),
+                                                                [vectorComponent!]: value === '' ? '' : String(value)
+                                                            }
+                                                        }
+                                                    }));
+                                                }
+                                            }}
+                                            vectorInputs={vectorInputs[entity.id!]?.acceleration}
+                                            onBlurVector={(id, property, value, vectorComponent) => {
+                                                if (value !== '' && !isNaN(Number(value))) {
+                                                    handleInputChange(id, property, Number(value), vectorComponent);
+                                                }
+                                                setVectorInputs(inputs => {
+                                                    const copy = { ...inputs };
+                                                    if (copy[id] && copy[id][property as 'position' | 'velocity' | 'acceleration']) {
+                                                        copy[id][property as 'position' | 'velocity' | 'acceleration'] = {
+                                                            ...copy[id][property as 'position' | 'velocity' | 'acceleration'],
+                                                            [vectorComponent!]: undefined
+                                                        };
+                                                    }
+                                                    return copy;
+                                                });
+                                            }}
                                         />
 
                                         {/* Radio y Color */}
@@ -170,12 +268,22 @@ function Sidebar({
                                                 </label>
                                                 <input
                                                     type="number"
-                                                    value={entity.radius || 10}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'radius', 
-                                                        parseFloat((e.target as HTMLInputElement).value) || 10
-                                                    )}
+                                                    value={radiusInputs[entity.id!] ?? entity.radius ?? ""}
+                                                    onInput={(e) => {
+                                                        const val = (e.target as HTMLInputElement).value;
+                                                        setRadiusInputs(inputs => ({ ...inputs, [entity.id!]: val }));
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        const val = (e.target as HTMLInputElement).value;
+                                                        if (val !== "" && !isNaN(Number(val))) {
+                                                            handleInputChange(entity.id!, 'radius', Number(val));
+                                                        }
+                                                        setRadiusInputs(inputs => {
+                                                            const copy = { ...inputs };
+                                                            delete copy[entity.id!];
+                                                            return copy;
+                                                        });
+                                                    }}
                                                     class="w-full px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
                                                     min="5"
                                                     max="50"
@@ -188,12 +296,22 @@ function Sidebar({
                                                 </label>
                                                 <input
                                                     type="color"
-                                                    value={entity.color}
-                                                    onChange={(e) => handleInputChange(
-                                                        entity.id!, 
-                                                        'color', 
-                                                        (e.target as HTMLInputElement).value
-                                                    )}
+                                                    value={colorInputs[entity.id!] ?? entity.color}
+                                                    onInput={(e) => {
+                                                        const val = (e.target as HTMLInputElement).value;
+                                                        setColorInputs(inputs => ({ ...inputs, [entity.id!]: val }));
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        const val = (e.target as HTMLInputElement).value;
+                                                        if (val !== "") {
+                                                            handleInputChange(entity.id!, 'color', val);
+                                                        }
+                                                        setColorInputs(inputs => {
+                                                            const copy = { ...inputs };
+                                                            delete copy[entity.id!];
+                                                            return copy;
+                                                        });
+                                                    }}
                                                     class="w-full h-8 bg-stone-700 border border-stone-600 rounded cursor-pointer"
                                                 />
                                             </div>

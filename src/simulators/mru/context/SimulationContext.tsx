@@ -4,22 +4,36 @@ import type { JSX } from 'preact';
 import { Vector2D } from '@/lib/physicsUtils';
 import { Movil, type IMovilProps } from '../entities/Movil';
 
-// DEFINICIONES DE TIPOS
+//* DEFINICIONES DE TIPOS
 
 /**
  * Estado de la simulación
- * Contiene toda la información del estado actual de la simulación
+ * @interface SimulationState
  */
 type SimulationState = {
-  time: number;        // Tiempo transcurrido en segundos
-  fps: number;         // Frames por segundo actuales
-  speed: number;       // Multiplicador de velocidad de simulación
-  isPlaying: boolean;  // Si la simulación está reproduciéndose
-  entities: Movil[];   // Array de entidades en la simulación
+  /** Tiempo transcurrido en segundos */
+  time: number;
+  /** Frames por segundo actuales */
+  fps: number;
+  /** Multiplicador de velocidad de simulación (0.1 - 3.0) */
+  speed: number;
+  /** Si la simulación está reproduciéndose */
+  isPlaying: boolean;
+  /** Array de entidades en la simulación */
+  entities: Movil[];
 };
 
 /**
- * Acciones disponibles para modificar el estado de la simulación
+ * Acciones disponibles para el reducer de simulación
+ * @description Tipos de acciones:
+ * - `PLAY`: Inicia la simulación
+ * - `PAUSE`: Pausa la simulación
+ * - `SET_SPEED`: Actualiza el factor de velocidad (limitado entre 0.1 y 3.0)
+ * - `UPDATE_TIME`: Actualiza el tiempo transcurrido en segundos
+ * - `UPDATE_FPS`: Actualiza el número de frames por segundo
+ * - `UPDATE_ENTITIES`: Reemplaza todas las entidades
+ * - `UPDATE_ENTITY`: Actualiza una entidad específica por ID (crea nueva si no existe)
+ * - `RESET`: Reinicia la simulación al estado inicial
  */
 type SimulationAction =
   | { type: 'PLAY' }
@@ -33,24 +47,41 @@ type SimulationAction =
 
 /**
  * Interfaz del contexto de simulación
- * Define todos los métodos y propiedades disponibles para los componentes
+ * @interface SimulationContextType
  */
 interface SimulationContextType {
+  /** Estado actual de la simulación */
   state: SimulationState;
+  /** Inicia la simulación */
   play: () => void;
+  /** Pausa la simulación */
   pause: () => void;
+  /** Actualiza el factor de velocidad */
   setSpeed: (speed: number) => void;
+  /** Actualiza el tiempo transcurrido */
   updateTime: (time: number) => void;
+  /** Actualiza los frames por segundo */
   updateFPS: (fps: number) => void;
+  /** Reemplaza todas las entidades */
   updateEntities: (entities: Movil[]) => void;
+  /** Actualiza una entidad específica */
   updateEntity: (id: string, updates: Partial<IMovilProps>) => void;
+  /** Reinicia la simulación */
   resetSimulation: () => void;
 }
 
-// ESTADO INICIAL
+//* ESTADO INICIAL
 
 /**
- * Estado inicial de la simulación con dos móviles de ejemplo
+ * Estado inicial de la simulación con tres móviles de ejemplo
+ * @constant initialState
+ * @description Configuración inicial con tres móviles que demuestran diferentes tipos de movimiento
+ * @example
+ * ```ts
+ * // Móvil 1 (rojo): Movimiento horizontal con aceleración vertical
+ * // Móvil 2 (azul): Movimiento vertical con aceleración vertical
+ * // Móvil 3 (blanco): Movimiento diagonal con aceleración compleja
+ * ```
  */
 const initialState: SimulationState = {
   time: 0,
@@ -60,44 +91,52 @@ const initialState: SimulationState = {
   entities: [
     new Movil({
       id: 'm1',
-      position: new Vector2D(100, 100),
-      velocity: new Vector2D(1, 0),    
-      acceleration: new Vector2D(0, 1),  
+      position: { x: 100, y: 100 },
+      velocity: { x: 1, y: 0 },    
+      acceleration: { x: 0, y: 1 },
       radius: 5,
       color: "#FF5733"   
     }),
     new Movil({
       id: 'm2',
-      position: new Vector2D(100, 30),
-      velocity: new Vector2D(0, 1),     
-      acceleration: new Vector2D(0, 1),  
+      position: { x: 100, y: 30 },
+      velocity: { x: 0, y: 1 },     
+      acceleration: { x: 0, y: 1 },
       radius: 5,
       color: "#33A1FF"   
     }),
     new Movil({
       id: 'm3',
-      position: new Vector2D(200, 100),
-      velocity: new Vector2D(-10, -2),     
-      acceleration: new Vector2D(2, -0.5),  
+      position: { x: 200, y: 100 },
+      velocity: { x: -10, y: -2 },     
+      acceleration: { x: 2, y: -0.5 },
       radius: 5,
       color: "#FFFFFF"   
     })
   ]
 };
 
-// CONTEXTO
+//* CONTEXTO
 
 /**
  * Contexto de React para la simulación
- * Inicialmente undefined, debe usarse dentro de un SimulationProvider
+ * @constant SimulationContext
+ * @description Contexto que proporciona acceso global al estado y acciones de la simulación
  */
 const SimulationContext = createContext<SimulationContextType | undefined>(undefined);
 
-// REDUCER
+//* REDUCER
 
 /**
  * Reducer que maneja todas las acciones del estado de simulación
- * Implementa la lógica de actualización de estado de forma inmutable
+ * @param state Estado actual de la simulación
+ * @param action Acción a realizar
+ * @returns Nuevo estado de la simulación
+ * @example
+ * ```ts
+ * const newState = simulationReducer(currentState, { type: 'PLAY' });
+ * const speedState = simulationReducer(currentState, { type: 'SET_SPEED', payload: 2.0 });
+ * ```
  */
 function simulationReducer(state: SimulationState, action: SimulationAction): SimulationState {
   switch (action.type) {
@@ -132,9 +171,9 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
         // Si la entidad no existe, crear una nueva
         const newEntity = new Movil({
           id,
-          position: new Vector2D(100, 300),
-          velocity: new Vector2D(0, 0),
-          acceleration: new Vector2D(0, 0),
+          position: { x: 100, y: 300 },
+          velocity: { x: 0, y: 0 },
+          acceleration: { x: 0, y: 0 },
           radius: 10,
           color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0'),
           ...updates
@@ -145,8 +184,7 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
           entities: [...state.entities, newEntity]
         };
       }
-      
-      // Actualizar entidad existente - AQUÍ ESTÁ EL FIX
+    
       const existingEntity = state.entities[entityIndex];
       const newEntities = [...state.entities];
       
@@ -170,11 +208,11 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
       }
       
       if (updates.radius !== undefined) {
-        existingEntity._radius = updates.radius;
+        existingEntity.radius = updates.radius;
       }
       
       if (updates.color !== undefined) {
-        existingEntity._color = updates.color;
+        existingEntity.color = updates.color;
       }
       
       return {
@@ -202,16 +240,23 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
   }
 }
 
-// PROVIDER
+//* PROVIDER
 
 /**
  * Proveedor del contexto de simulación
- * Envuelve los componentes hijos y les proporciona acceso al estado y acciones
+ * @param children Componentes hijos que tendrán acceso al contexto
+ * @returns Elemento proveedor con el contexto de simulación
+ * @example
+ * ```tsx
+ * <SimulationProvider>
+ *   <SimulationCanvas />
+ *   <SimulationControls />
+ * </SimulationProvider>
+ * ```
  */
 export function SimulationProvider({ children }: { children: JSX.Element }) {
   const [state, dispatch] = useReducer(simulationReducer, initialState);
   
-  // Acciones memoizadas para evitar renders innecesarios
   const play = useCallback(() => {
     dispatch({ type: 'PLAY' });
   }, []);
@@ -244,7 +289,6 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     dispatch({ type: 'RESET' });
   }, []);
 
-  // Valor del contexto memoizado para optimización
   const contextValue = useMemo(() => ({
     state,
     play,
@@ -274,14 +318,24 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
   );
 }
 
-// HOOK PERSONALIZADO
+//* CUSTOM HOOK
 
 /**
  * Hook personalizado para acceder al contexto de simulación
- * Proporciona una interfaz limpia y validación de uso correcto
- * 
- * @throws Error si se usa fuera de un SimulationProvider
  * @returns Objeto con el estado y acciones de la simulación
+ * @throws {Error} Si se usa fuera de un SimulationProvider
+ * @example
+ * ```ts
+ * const { state, play, pause } = useSimulation();
+ * 
+ * // Usar el estado
+ * console.log(state.isPlaying, state.time);
+ * 
+ * // Controlar la simulación
+ * play();
+ * pause();
+ * setSpeed(2.0);
+ * ```
  */
 export function useSimulation(): SimulationContextType {
   const context = useContext(SimulationContext);
