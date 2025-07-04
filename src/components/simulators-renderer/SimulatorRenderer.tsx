@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { ComponentType } from 'preact';
 import { Loader } from '@/components/simulators-renderer/Loader';
-import { GraphicsAPIDetector, type BrowserSupport } from '@/lib/graphicsSupport';
 
 const ComponentMap: Record<string, () => Promise<any>> = {
     "ley-de-ohm": () => import("@/simulators/ley-de-ohm/Simulator.tsx"),
