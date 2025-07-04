@@ -17,16 +17,25 @@ class Movil {
     private initialPosition: Vector2D;
     private initialVelocity: Vector2D;
     private initialAcceleration: Vector2D;
-    private _radius: number;
-    private _color: string;
+    public _radius: number;  // Hacer público para permitir mutación
+    public _color: string;   // Hacer público para permitir mutación
 
-    // Getters públicos para acceder a las propiedades privadas
+    // Getters públicos para acceder a las propiedades
     get radius(): number {
         return this._radius;
     }
 
     get color(): string {
         return this._color;
+    }
+
+    // Setters públicos para permitir mutación
+    set radius(value: number) {
+        this._radius = value;
+    }
+
+    set color(value: string) {
+        this._color = value;
     }
 
     constructor({ 
@@ -80,14 +89,22 @@ class Movil {
      * Clean up resources when the entity is destroyed
      */
     destroy(): void {
-        this.position = null;
-        this.velocity = null;
-        this.acceleration = null;
-        this.initialPosition = null;
-        this.initialVelocity = null;
-        this.initialAcceleration = null;
-        this._radius = null;
-        this._color = null;
+        // @ts-ignore - Permitir asignación undefined para cleanup
+        this.position = undefined;
+        // @ts-ignore
+        this.velocity = undefined;
+        // @ts-ignore
+        this.acceleration = undefined;
+        // @ts-ignore
+        this.initialPosition = undefined;
+        // @ts-ignore
+        this.initialVelocity = undefined;
+        // @ts-ignore
+        this.initialAcceleration = undefined;
+        // @ts-ignore
+        this._radius = undefined;
+        // @ts-ignore
+        this._color = undefined;
     }
 
     /**

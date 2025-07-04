@@ -12,14 +12,12 @@
     "baseUrl": ".",
     "moduleResolution": "node",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "preact/hooks": ["./node_modules/preact/hooks/dist/hooks.module.js"]
+      "@/*": ["./src/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   }
 }

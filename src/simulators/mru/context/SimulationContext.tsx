@@ -136,7 +136,7 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
           velocity: new Vector2D(0, 0),
           acceleration: new Vector2D(0, 0),
           radius: 10,
-          color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16),
+          color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0'),
           ...updates
         });
         
@@ -146,25 +146,36 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
         };
       }
       
-      // Actualizar entidad existente
+      // Actualizar entidad existente - AQUÍ ESTÁ EL FIX
       const existingEntity = state.entities[entityIndex];
-      const updatedEntity = new Movil({
-        ...existingEntity,
-        ...updates,
-        // Asegurar que los vectores se mantengan como instancias de Vector2D
-        position: updates.position instanceof Vector2D 
-          ? updates.position 
-          : existingEntity.position,
-        velocity: updates.velocity instanceof Vector2D 
-          ? updates.velocity 
-          : existingEntity.velocity,
-        acceleration: updates.acceleration instanceof Vector2D 
-          ? updates.acceleration 
-          : existingEntity.acceleration
-      });
-      
       const newEntities = [...state.entities];
-      newEntities[entityIndex] = updatedEntity;
+      
+      // Actualizar directamente las propiedades del objeto existente
+      if (updates.position) {
+        existingEntity.position = updates.position instanceof Vector2D 
+          ? updates.position 
+          : new Vector2D(updates.position.x, updates.position.y);
+      }
+      
+      if (updates.velocity) {
+        existingEntity.velocity = updates.velocity instanceof Vector2D 
+          ? updates.velocity 
+          : new Vector2D(updates.velocity.x, updates.velocity.y);
+      }
+      
+      if (updates.acceleration) {
+        existingEntity.acceleration = updates.acceleration instanceof Vector2D 
+          ? updates.acceleration 
+          : new Vector2D(updates.acceleration.x, updates.acceleration.y);
+      }
+      
+      if (updates.radius !== undefined) {
+        existingEntity._radius = updates.radius;
+      }
+      
+      if (updates.color !== undefined) {
+        existingEntity._color = updates.color;
+      }
       
       return {
         ...state,
@@ -173,9 +184,17 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
     }
     
     case 'RESET':
+      // Resetear todas las entidades a su estado inicial
+      const resetEntities = state.entities.map(entity => {
+        entity.reset();
+        return entity;
+      });
+      
       return {
-        ...initialState,
-        entities: initialState.entities.map(entity => new Movil(entity))
+        ...state,
+        time: 0,
+        isPlaying: false,
+        entities: resetEntities
       };
       
     default:

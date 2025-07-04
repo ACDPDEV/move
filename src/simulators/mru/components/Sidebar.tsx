@@ -1,7 +1,6 @@
 import { Vector2D } from '@/lib/physicsUtils';
 import { Movil, type IMovilProps } from '@/simulators/mru/entities/Movil';
 import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarRightCollapseFilled, IconPlus, IconTrash } from '@tabler/icons-preact';
-import { useState } from 'preact/hooks';
 import { AxisVectorInput } from './CoordinatesInput';
 
 interface SidebarProps {
@@ -31,21 +30,14 @@ function Sidebar({
         if (!onEntityChange) return;
         
         const newEntityId = `movil-${Date.now()}`;
-        const newEntity = new Movil({
-            id: newEntityId,
-            position: new Vector2D(100, 300 + entities.length * 80), // Posición escalonada
-            velocity: new Vector2D(Math.random() * 50 + 10, 0), // Velocidad aleatoria
+        
+        // Llamar directamente a onEntityChange con las propiedades necesarias
+        onEntityChange(newEntityId, {
+            position: new Vector2D(100, 300 + entities.length * 80),
+            velocity: new Vector2D(Math.random() * 50 + 10, 0),
             acceleration: new Vector2D(0, 0),
             radius: 15,
-            color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16) // Color aleatorio
-        });
-        
-        onEntityChange(newEntityId, {
-            position: newEntity.position,
-            velocity: newEntity.velocity,
-            acceleration: newEntity.acceleration,
-            radius: newEntity.radius,
-            color: newEntity.color
+            color: "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0')
         });
     };
 
@@ -75,6 +67,7 @@ function Sidebar({
         let updates: Partial<IMovilProps> = {};
 
         if (vectorComponent && (property === 'position' || property === 'velocity' || property === 'acceleration')) {
+            // Para vectores, crear un nuevo vector con el componente actualizado
             const currentVector = entity[property] as Vector2D;
             const newVector = new Vector2D(
                 vectorComponent === 'x' ? Number(value) : currentVector.x,
@@ -82,26 +75,13 @@ function Sidebar({
             );
             updates[property] = newVector;
         } else if (property === 'radius') {
-            updates[property] = Number(value);
+            updates.radius = Number(value);
         } else if (property === 'color') {
-            updates[property] = String(value);
+            updates.color = String(value);
         }
 
+        // Solo enviar las actualizaciones específicas
         onEntityChange(entityId, updates);
-    };
-
-    /**
-     * Convierte un número hexadecimal a string hex para input color
-     */
-    const colorToHex = (color: number): string => {
-        return `#${color.toString(16).padStart(6, '0')}`;
-    };
-
-    /**
-     * Convierte un string hex a número hexadecimal
-     */
-    const hexToColor = (hex: string): number => {
-        return parseInt(hex.replace('#', ''), 16);
     };
 
     return (
@@ -162,11 +142,25 @@ function Sidebar({
 
                                     <div class="space-y-4">
                                         {/* Posición */}
-                                        <AxisVectorInput typeVector="position" entity={entity} handleInputChange={handleInputChange} />
+                                        <AxisVectorInput 
+                                            typeVector="position" 
+                                            entity={entity} 
+                                            handleInputChange={handleInputChange} 
+                                        />
+                                        
                                         {/* Velocidad */}
-                                        <AxisVectorInput typeVector="velocity" entity={entity} handleInputChange={handleInputChange} />
+                                        <AxisVectorInput 
+                                            typeVector="velocity" 
+                                            entity={entity} 
+                                            handleInputChange={handleInputChange} 
+                                        />
+                                        
                                         {/* Aceleración */}
-                                        <AxisVectorInput typeVector="acceleration" entity={entity} handleInputChange={handleInputChange} />
+                                        <AxisVectorInput 
+                                            typeVector="acceleration" 
+                                            entity={entity} 
+                                            handleInputChange={handleInputChange} 
+                                        />
 
                                         {/* Radio y Color */}
                                         <div class="flex gap-4">
@@ -209,6 +203,9 @@ function Sidebar({
                                         <div class="mt-3 pt-3 border-t border-stone-700">
                                             <div class="text-xs text-stone-400 space-y-1">
                                                 <div>ID: {entity.id}</div>
+                                                <div>Pos: ({entity.position.x.toFixed(1)}, {entity.position.y.toFixed(1)})</div>
+                                                <div>Vel: ({entity.velocity.x.toFixed(1)}, {entity.velocity.y.toFixed(1)})</div>
+                                                <div>Acc: ({entity.acceleration.x.toFixed(1)}, {entity.acceleration.y.toFixed(1)})</div>
                                             </div>
                                         </div>
                                     </div>
