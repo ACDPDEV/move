@@ -284,7 +284,7 @@ function Sidebar({
                                                             return copy;
                                                         });
                                                     }}
-                                                    class="w-full px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500"
+                                                    class="w-full px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
                                                     min="5"
                                                     max="50"
                                                     step="1"
@@ -321,9 +321,9 @@ function Sidebar({
                                         <div class="mt-3 pt-3 border-t border-stone-700">
                                             <div class="text-xs text-stone-400 space-y-1">
                                                 <div>ID: {entity.id}</div>
-                                                <div>Pos: ({entity.position.x.toFixed(1)}, {entity.position.y.toFixed(1)})</div>
-                                                <div>Vel: ({entity.velocity.x.toFixed(1)}, {entity.velocity.y.toFixed(1)})</div>
-                                                <div>Acc: ({entity.acceleration.x.toFixed(1)}, {entity.acceleration.y.toFixed(1)})</div>
+                                                <div>Pos: ({Math.sqrt(entity.position.x ** 2 + entity.position.y ** 2).toFixed(1)}, {entity.position.angle().toFixed(1)}º)</div>
+                                                <div>Vel: ({Math.sqrt(entity.velocity.x ** 2 + entity.velocity.y ** 2).toFixed(1)}, {entity.velocity.angle().toFixed(1)}º)</div>
+                                                <div>Acc: ({Math.sqrt(entity.acceleration.x ** 2 + entity.acceleration.y ** 2).toFixed(1)}, {entity.acceleration.angle().toFixed(1)}º)</div>
                                             </div>
                                         </div>
                                     </div>

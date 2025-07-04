@@ -1,3 +1,5 @@
+
+import { useState, useEffect } from 'preact/hooks';
 import { IconClockRecord, IconPlayerPause, IconPlayerPlay, IconReload } from '@tabler/icons-preact';
 
 interface TimeControlsProps {
@@ -28,14 +30,29 @@ function TimeControls({
     onSpeedDown
 }: TimeControlsProps) {
 
+    // Estado local para el input de velocidad
+    const [speedInput, setSpeedInput] = useState<string>(() => speed.toFixed(1));
+
+    // Sincroniza el input local si cambia el prop speed
+    useEffect(() => {
+        setSpeedInput(speed.toFixed(1));
+    }, [speed]);
+
     /**
      * Maneja el cambio directo de velocidad mediante input
      */
-    const handleSpeedInputChange = (event: Event) => {
+    const handleSpeedInput = (event: Event) => {
+        const target = event.target as HTMLInputElement;
+        setSpeedInput(target.value);
+    };
+
+    const handleSpeedBlur = (event: Event) => {
         const target = event.target as HTMLInputElement;
         const newSpeed = parseFloat(target.value);
         if (!isNaN(newSpeed) && newSpeed >= 0.1 && newSpeed <= 3) {
             onSpeedChange(newSpeed);
+        } else {
+            setSpeedInput(speed.toFixed(1)); // Restaura valor válido
         }
     };
 
@@ -62,15 +79,15 @@ function TimeControls({
                 >
                     -
                 </button>
-                
                 <input
                     type="number"
                     min="0.1"
                     max="3"
                     step="0.1"
-                    value={speed.toFixed(1)}
-                    onChange={handleSpeedInputChange}
-                    class="w-12 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500"
+                    value={speedInput}
+                    onInput={handleSpeedInput}
+                    onBlur={handleSpeedBlur}
+                    class="w-12 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
                 />
                 
                 <span class="text-xs text-stone-400">x</span>
