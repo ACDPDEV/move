@@ -1,5 +1,5 @@
 import { Vector2D } from '@/lib/physicsUtils';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { Movil, type IMovilProps } from '@/simulators/mru/entities/Movil';
 import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarRightCollapseFilled, IconPlus, IconTrash } from '@tabler/icons-preact';
 import { AxisVectorInput } from './CoordinatesInput';
@@ -97,6 +97,8 @@ function Sidebar({
         onEntityChange(entityId, updates);
     };
 
+    const reverseEntities = useMemo(() => entities.slice().reverse(), [entities]);
+
     return (
         <>
             {/* Botón de toggle */}
@@ -122,24 +124,27 @@ function Sidebar({
                 <div class="p-4 h-full overflow-y-auto">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-white">Control de Móviles</h2>
-                        <button 
-                            onClick={handleAddEntity}
-                            class="p-2 rounded-full hover:bg-stone-700 transition-colors bg-stone-800 text-white"
-                            aria-label="Añadir móvil"
-                            title="Agregar nuevo móvil"
-                        >
-                            <IconPlus size={20} />
-                        </button>
                     </div>
 
-                    {entities.length > 0 ? (
+                    <button 
+                        onClick={handleAddEntity}
+                        class="p-2 w-full rounded-md hover:bg-stone-700 border border-stone-600 transition-colors bg-stone-800 text-white mb-2"
+                        aria-label="Añadir móvil"
+                        title="Agregar nuevo móvil"
+                    >
+                        <span class="flex items-center gap-2">
+                            <IconPlus />
+                            Añadir Móvil
+                        </span>
+                    </button>
+                    {reverseEntities.length > 0 ? (
                         <div class="space-y-4">
-                            {entities.map((entity, index) => (
+                            {reverseEntities.map((entity, index) => (
                                 <div key={entity.id || index} class="bg-stone-800 p-4 rounded-lg border border-stone-700">
                                     {/* Header de la entidad */}
                                     <div class="flex justify-between items-center mb-4">
                                         <h3 class="text-lg font-semibold text-white">
-                                            Móvil {index + 1}
+                                            Móvil {reverseEntities.length - index}
                                         </h3>
                                         <button
                                             onClick={() => handleDeleteEntity(entity.id!)}
