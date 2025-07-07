@@ -3,8 +3,7 @@ import Sidebar from "@/simulators/mru/components/Sidebar";
 import TimeControls from "@/simulators/mru/components/TimeControls";
 import { SimulationProvider, useSimulation } from "@/simulators/mru/context/SimulationContext";
 import { Movil } from "@/simulators/mru/entities/Movil";
-import { useDraw } from "@/simulators/mru/hooks/useDraw"
-import { Canvas } from "@/components/simulators-renderer/Canvas";
+import Canvas from "@/simulators/mru/components/Canvas";
 
 function MRUSimulatorContainer({ slug }: { slug: string }) {
     return (
@@ -28,8 +27,6 @@ function MRUSimulator({ slug }: { slug: string }) {
         updateEntity,
         resetSimulation
     } = useSimulation();
-    
-    const draw = useDraw(updateFPS, entities, updateTime, speed, isPlaying);
 
     const handlePlayPause = useCallback(() => {
         if (isPlaying) {
@@ -64,7 +61,7 @@ function MRUSimulator({ slug }: { slug: string }) {
 
     return (
         <div className="relative w-full h-full bg-stone-900">
-            <Canvas draw={draw} style={{ width: '100%', height: '100%' }} />
+            <Canvas style={{ width: '100%', height: '100%' }} />
             
             <TimeControls
                 isPlaying={isPlaying}
