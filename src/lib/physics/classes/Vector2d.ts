@@ -64,7 +64,7 @@ class Vector2D {
     }
     
     angle(): number {
-        if (this.x === 0 && this.y === 0) throw new Error("Cannot calculate angle of zero vector");
+        if (this.x === 0 && this.y === 0) return 0; 
         return Math.atan2(this.y, this.x);
     }
 
