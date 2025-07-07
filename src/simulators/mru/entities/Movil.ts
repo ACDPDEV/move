@@ -16,9 +16,11 @@ class Movil {
     acceleration: Vector2D;
     radius: number;
     color: string;
-    private initialPosition: Vector2D;
-    private initialVelocity: Vector2D;
-    private initialAcceleration: Vector2D;
+    initialPosition: Vector2D;
+    initialVelocity: Vector2D;
+    initialAcceleration: Vector2D;
+    absolutePosition: Vector2D;
+    absoluteRadius: number;
 
     constructor({ 
         id,
@@ -35,7 +37,9 @@ class Movil {
         this.initialPosition = this.position.copy();
         this.initialVelocity = this.velocity.copy();
         this.initialAcceleration = this.acceleration.copy();
+        this.absolutePosition = this.position.copy();
         this.radius = radius;
+        this.absoluteRadius = this.radius;
         this.color = color;
     }
 
@@ -47,9 +51,15 @@ class Movil {
         this.position.y += this.velocity.y * deltaTime / 60;
     }
 
+    absoluteMoveAndScale(deltaPosition: { x: number, y: number }, scale: number): void {
+        this.absolutePosition.x = (this.position.x + deltaPosition.x) * scale;
+        this.absolutePosition.y = (this.position.y * -1 + deltaPosition.y) * scale;
+        this.absoluteRadius = this.radius * scale;
+    }
+
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.beginPath();
-        ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+        ctx.arc(this.absolutePosition.x, this.absolutePosition.y, this.absoluteRadius, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
         ctx.closePath();
