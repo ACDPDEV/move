@@ -326,9 +326,9 @@ function Sidebar({
                                         <div class="mt-3 pt-3 border-t border-stone-700">
                                             <div class="text-xs text-stone-400 space-y-1">
                                                 <div>ID: {entity.id}</div>
-                                                <div>Pos: ({Math.sqrt(entity.position.x ** 2 + entity.position.y ** 2).toFixed(1)}, {entity.position.angle().toFixed(1) * (180 / Math.PI)}º)</div>
-                                                <div>Vel: ({Math.sqrt(entity.velocity.x ** 2 + entity.velocity.y ** 2).toFixed(1)}, {entity.velocity.angle().toFixed(1) * (180 / Math.PI)}º)</div>
-                                                <div>Acc: ({Math.sqrt(entity.acceleration.x ** 2 + entity.acceleration.y ** 2).toFixed(1)}, {entity.acceleration.angle().toFixed(1) * (180 / Math.PI)}º)</div>
+                                                <div>Pos: ({Math.sqrt(entity.position.x ** 2 + entity.position.y ** 2).toFixed(1)}, {(entity.position.angle() * (180 / Math.PI)).toFixed(1)}º)</div>
+                                                <div>Vel: ({Math.sqrt(entity.velocity.x ** 2 + entity.velocity.y ** 2).toFixed(1)}, {(entity.velocity.angle() * (180 / Math.PI)).toFixed(1)}º)</div>
+                                                <div>Acc: ({Math.sqrt(entity.acceleration.x ** 2 + entity.acceleration.y ** 2).toFixed(1)}, {(entity.acceleration.angle() * (180 / Math.PI)).toFixed(1)}º)</div>
                                             </div>
                                         </div>
                                     </div>
