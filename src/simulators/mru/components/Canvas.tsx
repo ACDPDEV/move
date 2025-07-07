@@ -55,7 +55,7 @@ function runTicker(
         ticker.lastFpsUpdate = now;
     }
     
-    ticker.deltaTime = ticker.fps / 60 * speed;
+    ticker.deltaTime = 60 / ticker.fps * speed;
 
     if (isPlaying) {
         ticker.timeCount += ticker.deltaMS / 1000 * speed;
