@@ -64,7 +64,54 @@ class Movil {
         ctx.fill();
         ctx.closePath();
     }
-    
+
+   drawVelocityVector(ctx: CanvasRenderingContext2D, scale: number): void {
+        const endX = this.absolutePosition.x + this.velocity.x * scale;
+        const endY = this.absolutePosition.y - this.velocity.y * scale;
+
+        ctx.beginPath();
+        ctx.moveTo(this.absolutePosition.x, this.absolutePosition.y);
+        ctx.lineTo(endX, endY);
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.closePath();
+        // Draw arrowhead as a triangle
+        const arrowSize = this.absoluteRadius * 0.5;
+        const angle = Math.atan2(endY - this.absolutePosition.y, endX - this.absolutePosition.x);
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(endX - arrowSize * Math.cos(angle - Math.PI / 6), endY - arrowSize * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(endX - arrowSize * Math.cos(angle + Math.PI / 6), endY - arrowSize * Math.sin(angle + Math.PI / 6));
+        ctx.lineTo(endX, endY);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    drawAccelerationVector(ctx: CanvasRenderingContext2D, scale: number): void {
+        const endX = this.absolutePosition.x + this.acceleration.x * scale;
+        const endY = this.absolutePosition.y - this.acceleration.y * scale;
+
+        ctx.beginPath();
+        ctx.moveTo(this.absolutePosition.x, this.absolutePosition.y);
+        ctx.lineTo(endX, endY);
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.closePath();
+        // Draw arrowhead as a triangle
+        const arrowSize = this.absoluteRadius * 0.5;
+        const angle = Math.atan2(endY - this.absolutePosition.y, endX - this.absolutePosition.x);
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(endX - arrowSize * Math.cos(angle - Math.PI / 6), endY - arrowSize * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(endX - arrowSize * Math.cos(angle + Math.PI / 6), endY - arrowSize * Math.sin(angle + Math.PI / 6));
+        ctx.lineTo(endX, endY);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
     
     reset(): void {
         this.position = this.initialPosition.copy();
