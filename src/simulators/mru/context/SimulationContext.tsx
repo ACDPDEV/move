@@ -21,6 +21,8 @@ type SimulationState = {
   isPlaying: boolean;
   /** Array de entidades en la simulación */
   entities: Movil[];
+  /** Si se muestran los vectores de posición, velocidad y aceleración */
+  showVectors: boolean;
 };
 
 /**
@@ -34,6 +36,7 @@ type SimulationState = {
  * - `UPDATE_ENTITIES`: Reemplaza todas las entidades
  * - `UPDATE_ENTITY`: Actualiza una entidad específica por ID (crea nueva si no existe)
  * - `RESET`: Reinicia la simulación al estado inicial
+ * - `SET_SHOW_VECTORS`: Cambia si se muestran los vectores
  */
 type SimulationAction =
   | { type: 'PLAY' }
@@ -43,7 +46,8 @@ type SimulationAction =
   | { type: 'UPDATE_FPS'; payload: number }
   | { type: 'UPDATE_ENTITIES'; payload: Movil[] }
   | { type: 'UPDATE_ENTITY'; payload: { id: string; updates: Partial<IMovilProps> } }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'SET_SHOW_VECTORS'; payload: boolean };
 
 /**
  * Interfaz del contexto de simulación
@@ -68,6 +72,8 @@ interface SimulationContextType {
   updateEntity: (id: string, updates: Partial<IMovilProps>) => void;
   /** Reinicia la simulación */
   resetSimulation: () => void;
+  /** Cambia si se muestran los vectores */
+  setShowVectors: (show: boolean) => void;
 }
 
 //* ESTADO INICIAL
@@ -113,7 +119,8 @@ const initialState: SimulationState = {
       radius: 5,
       color: "#FFFFFF"   
     })
-  ]
+  ],
+  showVectors: false
 };
 
 //* CONTEXTO
@@ -142,19 +149,14 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
   switch (action.type) {
     case 'PLAY':
       return { ...state, isPlaying: true };
-      
     case 'PAUSE':
       return { ...state, isPlaying: false };
-      
     case 'SET_SPEED':
       return { ...state, speed: Math.max(0.1, Math.min(3, action.payload)) };
-      
     case 'UPDATE_TIME':
       return { ...state, time: action.payload };
-      
     case 'UPDATE_FPS':
       return { ...state, fps: action.payload };
-      
     case 'UPDATE_ENTITIES':
       return { 
         ...state, 
@@ -162,7 +164,6 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
           entity instanceof Movil ? entity : new Movil(entity)
         ) 
       };
-      
     case 'UPDATE_ENTITY': {
       const { id, updates } = action.payload;
       const entityIndex = state.entities.findIndex(e => e.id === id);
@@ -220,7 +221,6 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
         entities: newEntities
       };
     }
-    
     case 'RESET':
       // Resetear todas las entidades a su estado inicial
       const resetEntities = state.entities.map(entity => {
@@ -234,7 +234,8 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
         isPlaying: false,
         entities: resetEntities
       };
-      
+    case 'SET_SHOW_VECTORS':
+      return { ...state, showVectors: action.payload };
     default:
       return state;
   }
@@ -289,6 +290,10 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     dispatch({ type: 'RESET' });
   }, []);
 
+  const setShowVectors = useCallback((show: boolean) => {
+    dispatch({ type: 'SET_SHOW_VECTORS', payload: show });
+  }, []);
+
   const contextValue = useMemo(() => ({
     state,
     play,
@@ -299,6 +304,7 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     updateEntities,
     updateEntity,
     resetSimulation,
+    setShowVectors,
   }), [
     state,
     play,
@@ -309,6 +315,7 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     updateEntities,
     updateEntity,
     resetSimulation,
+    setShowVectors,
   ]);
 
   return (
