@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'preact/hooks';
-import { IconClockRecord, IconPlayerPause, IconPlayerPlay, IconReload } from '@tabler/icons-preact';
+import { IconEye, IconEyeOff, IconPlayerPause, IconPlayerPlay, IconReload } from '@tabler/icons-preact';
+import { useSimulation } from '@/simulators/mru/context/SimulationContext';
 
 interface TimeControlsProps {
     isPlaying: boolean;
@@ -30,6 +31,8 @@ function TimeControls({
     onSpeedDown
 }: TimeControlsProps) {
 
+    const { state: { showVectors }, setShowVectors } = useSimulation();
+
     // Estado local para el input de velocidad
     const [speedInput, setSpeedInput] = useState<string>(() => speed.toFixed(1));
 
@@ -54,6 +57,10 @@ function TimeControls({
         } else {
             setSpeedInput(speed.toFixed(1)); // Restaura valor válido
         }
+    };
+
+    const handleShowVectorsChange = () => {
+        setShowVectors(!showVectors);
     };
 
     return (
@@ -108,11 +115,10 @@ function TimeControls({
             <div class="flex items-center gap-2">
                 <button 
                     class="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105" 
-                    onClick={onStep}
-                    title="Avanzar un paso"
-                    disabled={isPlaying}
+                    onClick={handleShowVectorsChange}
+                    title="{showVectors ? 'Ocultar' : 'Mostrar'} vectores"
                 >
-                    <IconClockRecord size={20} />
+                    {showVectors ? <IconEye size={20} /> : <IconEyeOff size={20} />}
                 </button>
                 
                 <button 
