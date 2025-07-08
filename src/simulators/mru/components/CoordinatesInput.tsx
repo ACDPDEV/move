@@ -62,7 +62,12 @@ function AxisVectorInput({
     return (
         <div class="flex flex-row h-fit w-full items-center gap-2">
             <label class="text-sm font-medium text-stone-300">
-                {typeVector.charAt(0).toUpperCase() + typeVector.slice(1)}:
+                {
+                    typeVector === 'position' ? 'Posición' :
+                    typeVector === 'velocity' ? 'Velocidad' :
+                    typeVector === 'acceleration' ? 'Acceleración' :
+                    'Vector'
+                }:
             </label>
             <div class="grid grid-cols-2 grid-rows-1 gap-1">
                 <AxisCoordinateInput typeVector={typeVector} axis="x" entity={entity} handleInputChange={handleInputChange} vectorInputs={vectorInputs} onBlurVector={onBlurVector} />
