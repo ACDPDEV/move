@@ -37,6 +37,14 @@ function resizeCanvas($canvas: HTMLCanvasElement): void {
   }
 }
 
+const CANVAS_CONFIG = {
+    MIN_SCALE: 0.1,
+    MAX_SCALE: 10,
+    GRID_SIZE: 100,
+    ZOOM_SENSITIVITY: 0.001,
+    MAX_GRID_LINES: 50
+};
+
 function runTicker(
     ticker: Ticker,
     speed: number,
@@ -64,6 +72,8 @@ function runTicker(
     updateFPS(ticker.fps);
 }
 
+
+
 function Canvas(
     { style }: {
         style?: JSX.CSSProperties
@@ -80,7 +90,7 @@ function Canvas(
         deltaMS: 0,
         deltaTime: 0,
     });
-    const { state: { isPlaying, entities, speed },
+    const { state: { isPlaying, entities, speed, showVectors },
         updateFPS, updateTime } = useSimulation();
     const MouseRef = useRef<MouseState>({
         isDown: false,
@@ -89,9 +99,87 @@ function Canvas(
         deltaPosition: { x: 0, y: 0 },
     });
     const AbsolutePlaneRef = useRef<AbsolutePlaneState>({
-        position: { x: 0, y: 0 },
+        position: { x: 300, y: 300 },
         scale: 1,
     });
+    const drawGrid = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+        const rect = canvas.getBoundingClientRect();
+        const gridSize = CANVAS_CONFIG.GRID_SIZE * AbsolutePlaneRef.current.scale;
+        
+        if (gridSize < 10 || gridSize > rect.width / 2) return;
+        
+        const absolutePos = {
+            x: AbsolutePlaneRef.current.position.x * AbsolutePlaneRef.current.scale,
+            y: AbsolutePlaneRef.current.position.y * AbsolutePlaneRef.current.scale,
+        };
+        
+        ctx.strokeStyle = '#789';
+        ctx.lineWidth = 0.5;
+        
+        // Líneas verticales
+        const startX = Math.floor(-absolutePos.x / gridSize) * gridSize;
+        const endX = startX + Math.ceil(rect.width / gridSize + 1) * gridSize;
+        
+        for (let x = startX; x <= endX; x += gridSize) {
+            const canvasX = absolutePos.x + x;
+            if (canvasX >= 0 && canvasX <= rect.width) {
+                ctx.beginPath();
+                ctx.moveTo(canvasX, 0);
+                ctx.lineTo(canvasX, rect.height);
+                ctx.stroke();
+            }
+        }
+        
+        // Líneas horizontales
+        const startY = Math.floor(-absolutePos.y / gridSize) * gridSize;
+        const endY = startY + Math.ceil(rect.height / gridSize + 1) * gridSize;
+        
+        for (let y = startY; y <= endY; y += gridSize) {
+            const canvasY = absolutePos.y + y;
+            if (canvasY >= 0 && canvasY <= rect.height) {
+                ctx.beginPath();
+                ctx.moveTo(0, canvasY);
+                ctx.lineTo(rect.width, canvasY);
+                ctx.stroke();
+            }
+        }
+    };
+
+    const drawAxes = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+        const rect = canvas.getBoundingClientRect();
+        const absolutePos = {
+            x: AbsolutePlaneRef.current.position.x * AbsolutePlaneRef.current.scale,
+            y: AbsolutePlaneRef.current.position.y * AbsolutePlaneRef.current.scale,
+        };
+        
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        
+        // Eje X
+        if (absolutePos.y >= 0 && absolutePos.y <= rect.height) {
+            ctx.beginPath();
+            ctx.moveTo(0, absolutePos.y);
+            ctx.lineTo(rect.width, absolutePos.y);
+            ctx.stroke();
+        }
+        
+        // Eje Y
+        if (absolutePos.x >= 0 && absolutePos.x <= rect.width) {
+            ctx.beginPath();
+            ctx.moveTo(absolutePos.x, 0);
+            ctx.lineTo(absolutePos.x, rect.height);
+            ctx.stroke();
+        }
+        
+        // Origen
+        if (absolutePos.x >= -10 && absolutePos.x <= rect.width + 10 && 
+            absolutePos.y >= -10 && absolutePos.y <= rect.height + 10) {
+            ctx.beginPath();
+            ctx.fillStyle = '#FFFFFF';
+            ctx.arc(absolutePos.x, absolutePos.y, Math.max(4, AbsolutePlaneRef.current.scale * 3), 0, Math.PI * 2);
+            ctx.fill();
+        }
+    };
 
     useEffect(() => {
     
@@ -112,34 +200,41 @@ function Canvas(
             Mouse.startPosition = { x: event.offsetX, y: event.offsetY };
             Mouse.currentPosition = { x: event.offsetX, y: event.offsetY };
         };
+        
         const handleMouseMove = (event: MouseEvent) => {
             if (!Mouse.isDown) return;
-            Mouse.deltaPosition = {
-                x: event.offsetX - Mouse.currentPosition.x,
-                y: event.offsetY - Mouse.currentPosition.y,
-            };
+            
+            const deltaX = event.offsetX - Mouse.currentPosition.x;
+            const deltaY = event.offsetY - Mouse.currentPosition.y;
+            
+            Mouse.deltaPosition = { x: deltaX, y: deltaY };
             Mouse.currentPosition = { x: event.offsetX, y: event.offsetY };
-            AbsolutePlane.position.x += Mouse.deltaPosition.x;
-            AbsolutePlane.position.y += Mouse.deltaPosition.y;
-
-            console.log('Mouse: ', Mouse.deltaPosition);
-            console.log('PlaneRelativePosition: ', AbsolutePlane);
+            
+            AbsolutePlane.position.x += deltaX / AbsolutePlane.scale;
+            AbsolutePlane.position.y += deltaY / AbsolutePlane.scale;
         };
-        const handleMouseUp = (event: MouseEvent) => {
+        
+        const handleMouseUp = () => {
             Mouse.isDown = false;
             Mouse.deltaPosition = { x: 0, y: 0 };
-            Mouse.startPosition = { x: 0, y: 0 };
-            Mouse.currentPosition = { x: 0, y: 0 };
-            console.log('Mouse Up: ', AbsolutePlane);
         };
-        const handleScroll = (event: WheelEvent) => {
-            AbsolutePlane.scale += event.deltaY / 100;
-            console.log('PlaneAbsolute: ', AbsolutePlane);
+        
+        const handleWheel = (event: WheelEvent) => {
+            event.preventDefault();
+            
+            const zoomFactor = event.deltaY * CANVAS_CONFIG.ZOOM_SENSITIVITY;
+            const newScale = Math.max(
+                CANVAS_CONFIG.MIN_SCALE,
+                Math.min(CANVAS_CONFIG.MAX_SCALE, AbsolutePlane.scale - zoomFactor)
+            );
+            
+            AbsolutePlane.scale = newScale;
         };
+        
         $canvas.addEventListener('mousedown', handleMouseDown);
         $canvas.addEventListener('mousemove', handleMouseMove);
         $canvas.addEventListener('mouseup', handleMouseUp);
-        $canvas.addEventListener('wheel', handleScroll);
+        $canvas.addEventListener('wheel', handleWheel);
 
         const render = () => {
             runTicker(ticker, speed, isPlaying, updateFPS, updateTime);
@@ -154,58 +249,8 @@ function Canvas(
                 y: AbsolutePlane.position.y * AbsolutePlane.scale,
             };
             
-            // (0, 0) origen del plano
-            ctx.beginPath();
-            ctx.fillStyle = '#FFFFFF';
-            ctx.arc(absolutePositionWithScale.x, absolutePositionWithScale.y, AbsolutePlane.scale * 2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // eje x
-            ctx.beginPath();
-            ctx.moveTo(0, absolutePositionWithScale.y);
-            ctx.lineTo($canvas.width, absolutePositionWithScale.y);
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            // eje y
-            ctx.beginPath();
-            ctx.moveTo(absolutePositionWithScale.x, 0);
-            ctx.lineTo(absolutePositionWithScale.x, $canvas.height);
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            // paralelas al eje x cada 100u
-            for (let i = 0; i < $canvas.height; i += AbsolutePlane.scale * 100) {
-                ctx.beginPath();
-                ctx.moveTo(0, absolutePositionWithScale.y + i);
-                ctx.lineTo($canvas.width, absolutePositionWithScale.y + i);
-                ctx.strokeStyle = '#FFFFFF';
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(0, absolutePositionWithScale.y - i);
-                ctx.lineTo($canvas.width, absolutePositionWithScale.y - i);
-                ctx.strokeStyle = '#FFFFFF';
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-            }
-            // paralelas al eje y cada 100u
-            for (let i = 0; i < $canvas.width; i += AbsolutePlane.scale * 100) {
-                ctx.beginPath();
-                ctx.moveTo(absolutePositionWithScale.x + i, 0);
-                ctx.lineTo(absolutePositionWithScale.x + i, $canvas.height);
-                ctx.strokeStyle = '#FFFFFF';
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(absolutePositionWithScale.x - i, 0);
-                ctx.lineTo(absolutePositionWithScale.x - i, $canvas.height);
-                ctx.strokeStyle = '#FFFFFF';
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-            }
+            drawGrid(ctx, $canvas);
+            drawAxes(ctx, $canvas);
 
             entities.forEach(entity => {
                 if (isPlaying) {
@@ -213,6 +258,10 @@ function Canvas(
                 }
                 entity.absoluteMoveAndScale(AbsolutePlane.position, AbsolutePlane.scale);
                 entity.draw(ctx);
+                if (showVectors) {
+                    entity.drawVelocityVector(ctx, AbsolutePlane.scale);
+                    entity.drawAccelerationVector(ctx, AbsolutePlane.scale);
+                }
             });
 
             animationFrameId = window.requestAnimationFrame(render)
@@ -226,7 +275,7 @@ function Canvas(
             $canvas.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('resize', handleResize);
         }
-    }, [isPlaying, speed, entities, updateFPS, updateTime])
+    }, [isPlaying, speed, entities, updateFPS, updateTime, showVectors])
     
     return <canvas ref={canvasRef} style={style} />
 }
