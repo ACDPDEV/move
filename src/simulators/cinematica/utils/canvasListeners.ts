@@ -10,9 +10,12 @@ function listenCanvasEvents($canvas: HTMLCanvasElement) {
     // Event listeners
     window.addEventListener('resize', handleResize);
 
-    return [
-        { type: 'resize', handler: handleResize },
-    ];
+    // Cleanup function
+    const cleanup = () => {
+        window.removeEventListener('resize', handleResize);
+    };
+
+    return cleanup;
 }
 
 function listenMouseEvents(
@@ -64,12 +67,14 @@ function listenMouseEvents(
     $canvas.addEventListener('mouseup', handleMouseUp);
     $canvas.addEventListener('wheel', handleWheel);
 
-    return [
-        { type: 'mousedown', handler: handleMouseDown },
-        { type: 'mousemove', handler: handleMouseMove },
-        { type: 'mouseup', handler: handleMouseUp },
-        { type: 'wheel', handler: handleWheel },
-    ];
+    const cleanup = () => {
+        $canvas.removeEventListener('mousedown', handleMouseDown);
+        $canvas.removeEventListener('mousemove', handleMouseMove);
+        $canvas.removeEventListener('mouseup', handleMouseUp);
+        $canvas.removeEventListener('wheel', handleWheel);
+    };
+
+    return cleanup;
 }
 
 function listenEvents(
@@ -78,10 +83,16 @@ function listenEvents(
     AbsolutePlane: AbsolutePlaneState,
     CANVAS_CONFIG: CanvasConfig,
 ) {
-    const canvasListeners = listenCanvasEvents($canvas);
-    const mouseListeners = listenMouseEvents($canvas, Mouse, AbsolutePlane, CANVAS_CONFIG);
+    const cleanupCanvas = listenCanvasEvents($canvas);
+    const cleanupMouse = listenMouseEvents($canvas, Mouse, AbsolutePlane, CANVAS_CONFIG);
 
-    return [...canvasListeners, ...mouseListeners];
+    // Combined cleanup function
+    const cleanup = () => {
+        cleanupCanvas();
+        cleanupMouse();
+    };
+
+    return cleanup;
 }
 
 export {

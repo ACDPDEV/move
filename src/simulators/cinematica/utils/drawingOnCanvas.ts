@@ -1,4 +1,5 @@
-import type { AbsolutePlaneState, CanvasConfig } from '@/simulators/cinematica/types';
+import type { AbsolutePlaneState, CanvasConfig, Ticker } from '@/simulators/cinematica/types';
+import { Movil } from '@/simulators/cinematica/entities/Movil';
 
 function drawGrid(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, AbsolutePlaneState: AbsolutePlaneState, CANVAS_CONFIG: CanvasConfig): void {
     const rect = canvas.getBoundingClientRect();
@@ -44,42 +45,71 @@ function drawGrid(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, Abso
 }
 
 function drawAxes(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, AbsolutePlaneState: AbsolutePlaneState): void {
-        const rect = canvas.getBoundingClientRect();
-        const absolutePos = {
-            x: AbsolutePlaneState.position.x * AbsolutePlaneState.scale,
-            y: AbsolutePlaneState.position.y * AbsolutePlaneState.scale,
-        };
-        
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 2;
-        
-        // Eje X
-        if (absolutePos.y >= 0 && absolutePos.y <= rect.height) {
-            ctx.beginPath();
-            ctx.moveTo(0, absolutePos.y);
-            ctx.lineTo(rect.width, absolutePos.y);
-            ctx.stroke();
-        }
-        
-        // Eje Y
-        if (absolutePos.x >= 0 && absolutePos.x <= rect.width) {
-            ctx.beginPath();
-            ctx.moveTo(absolutePos.x, 0);
-            ctx.lineTo(absolutePos.x, rect.height);
-            ctx.stroke();
-        }
-        
-        // Origen
-        if (absolutePos.x >= -10 && absolutePos.x <= rect.width + 10 && 
-            absolutePos.y >= -10 && absolutePos.y <= rect.height + 10) {
-            ctx.beginPath();
-            ctx.fillStyle = '#FFFFFF';
-            ctx.arc(absolutePos.x, absolutePos.y, Math.max(4, AbsolutePlaneState.scale * 3), 0, Math.PI * 2);
-            ctx.fill();
-        }
+    const rect = canvas.getBoundingClientRect();
+    const absolutePos = {
+        x: AbsolutePlaneState.position.x * AbsolutePlaneState.scale,
+        y: AbsolutePlaneState.position.y * AbsolutePlaneState.scale,
     };
+    
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    
+    // Eje X
+    if (absolutePos.y >= 0 && absolutePos.y <= rect.height) {
+        ctx.beginPath();
+        ctx.moveTo(0, absolutePos.y);
+        ctx.lineTo(rect.width, absolutePos.y);
+        ctx.stroke();
+    }
+    
+    // Eje Y
+    if (absolutePos.x >= 0 && absolutePos.x <= rect.width) {
+        ctx.beginPath();
+        ctx.moveTo(absolutePos.x, 0);
+        ctx.lineTo(absolutePos.x, rect.height);
+        ctx.stroke();
+    }
+    
+    // Origen
+    if (absolutePos.x >= -10 && absolutePos.x <= rect.width + 10 && 
+        absolutePos.y >= -10 && absolutePos.y <= rect.height + 10) {
+        ctx.beginPath();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.arc(absolutePos.x, absolutePos.y, Math.max(4, AbsolutePlaneState.scale * 3), 0, Math.PI * 2);
+        ctx.fill();
+    }
+};
+
+function clearCanvas(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawEntities(
+    ctx: CanvasRenderingContext2D,
+    entities: any[],
+    AbsolutePlane: AbsolutePlaneState,
+    Ticker: Ticker,
+    showVectors: boolean,
+    isPlaying: boolean,
+) {
+    entities.forEach(entity => {
+        if (isPlaying) {
+            entity.update(Ticker.deltaTime);
+        }
+        entity.absoluteMoveAndScale(AbsolutePlane.position, AbsolutePlane.scale);
+        entity.draw(ctx);
+        if (showVectors) {
+            entity.drawVelocityVector(ctx, AbsolutePlane.scale);
+            entity.drawAccelerationVector(ctx, AbsolutePlane.scale);
+        }
+    });
+}
 
 export {
     drawGrid,
     drawAxes,
+    clearCanvas,
+    drawEntities,
 };
