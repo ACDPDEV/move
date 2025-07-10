@@ -1,7 +1,6 @@
 ---
 name: Ley de Ohm
 description: Simulador de circuitos eléctricos simples con control de voltaje y resistencia
-href: /simulators/circuito-ohm/
 area: 
   - Electricidad
   - Circuitos

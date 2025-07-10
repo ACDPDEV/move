@@ -1,7 +1,6 @@
 ---
 name: Radiactividad
 description: Simulador de desintegración alfa, beta y gamma en núcleos inestables
-href: /simulators/radiactividad/
 area:
     - Física Moderna
     - Radiactividad

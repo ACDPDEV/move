@@ -1,7 +1,6 @@
 ---
 name: Oscilador Armónico
 description: Simulación de un resorte ideal con movimiento armónico simple
-href: /simulators/oscilador-armonico/
 area: 
     - Mecánica
     - Ondas

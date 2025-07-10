@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'preact/hooks';
 import { IconEye, IconEyeOff, IconPlayerPause, IconPlayerPlay, IconReload } from '@tabler/icons-preact';
-import { useSimulation } from '@/simulators/mru/context/SimulationContext';
+import { useSimulation } from '@/simulators/cinematica/context/SimulationContext';
 
 interface TimeControlsProps {
     isPlaying: boolean;

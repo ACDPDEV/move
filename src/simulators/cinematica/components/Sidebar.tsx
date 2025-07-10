@@ -1,6 +1,6 @@
 import { Vector2D } from '@/lib/physicsUtils';
 import { useMemo, useState } from 'preact/hooks';
-import { Movil, type IMovilProps } from '@/simulators/mru/entities/Movil';
+import { Movil, type IMovilProps } from '@/simulators/cinematica/entities/Movil';
 import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarRightCollapseFilled, IconPlus, IconTrash } from '@tabler/icons-preact';
 import { AxisVectorInput } from './CoordinatesInput';
 

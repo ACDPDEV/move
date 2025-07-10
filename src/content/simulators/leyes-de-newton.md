@@ -1,7 +1,6 @@
 ---
 name: Leyes de Newton
 description: Simulador interactivo para visualizar las tres leyes del movimiento
-href: /simulators/leyes-newton/
 area: 
     - Mecánica
     - Dinámica

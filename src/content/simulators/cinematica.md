@@ -1,7 +1,6 @@
 ---
-name: MRU
+name: Cinemática
 description: Simulador de movimientos de recursos útiles
-href: /simulators/mru/
 area: 
     - Mecánica
     - Cinemática

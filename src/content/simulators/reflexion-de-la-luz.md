@@ -1,7 +1,6 @@
 ---
 name: Reflexión de la Luz
 description: Simulador de rayos reflejados en superficies planas y curvas
-href: /simulators/reflexion-luz/
 area: 
     - Óptica
 image: reflexion-luz.png

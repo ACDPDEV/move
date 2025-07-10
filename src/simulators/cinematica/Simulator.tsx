@@ -1,9 +1,9 @@
 import { useCallback, useState } from "preact/hooks";
-import Sidebar from "@/simulators/mru/components/Sidebar";
-import TimeControls from "@/simulators/mru/components/TimeControls";
-import { SimulationProvider, useSimulation } from "@/simulators/mru/context/SimulationContext";
-import { Movil } from "@/simulators/mru/entities/Movil";
-import Canvas from "@/simulators/mru/components/Canvas";
+import Sidebar from "@/simulators/cinematica/components/Sidebar";
+import TimeControls from "@/simulators/cinematica/components/TimeControls";
+import { SimulationProvider, useSimulation } from "@/simulators/cinematica/context/SimulationContext";
+import { Movil } from "@/simulators/cinematica/entities/Movil";
+import Canvas from "@/simulators/cinematica/components/Canvas";
 
 function MRUSimulatorContainer({ slug }: { slug: string }) {
     return (
