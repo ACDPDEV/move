@@ -28,9 +28,21 @@ interface CanvasConfig {
     MAX_GRID_LINES: number;
 }
 
+interface TimeControlsProps {
+    isPlaying: boolean;
+    time: number;
+    speed: number;
+    onPlayPause: () => void;
+    onReset: () => void;
+    onSpeedChange: (speed: number) => void;
+    onSpeedUp: () => void;
+    onSpeedDown: () => void;
+}
+
 export type {
     Ticker,
     MouseState,
     AbsolutePlaneState,
     CanvasConfig,
+    TimeControlsProps,
 }

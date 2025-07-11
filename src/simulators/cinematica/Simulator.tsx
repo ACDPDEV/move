@@ -28,26 +28,7 @@ function MRUSimulator({ slug }: { slug: string }) {
         resetSimulation
     } = useSimulation();
 
-    const handlePlayPause = useCallback(() => {
-        if (isPlaying) {
-            pause();
-        } else {
-            play();
-        }
-    }, [isPlaying, play, pause]);
-
-    const handleSpeedChange = useCallback((newSpeed: number) => {
-        const clampedSpeed = Math.max(0.1, Math.min(3, newSpeed));
-        setSpeed(clampedSpeed);
-    }, [setSpeed]);
-
-    const handleReset = useCallback(() => {
-        resetSimulation();
-    }, [resetSimulation]);
     
-    const handleStep = useCallback(() => {
-        if (isPlaying) return;
-    }, [isPlaying]);
     
     const handleEntityChange = useCallback((id: string, updates: Partial<Movil>) => {
         updateEntity(id, updates);
@@ -63,17 +44,7 @@ function MRUSimulator({ slug }: { slug: string }) {
         <div className="relative w-full h-full bg-stone-900">
             <Canvas style={{ width: '100%', height: '100%' }} />
             
-            <TimeControls
-                isPlaying={isPlaying}
-                onPlayPause={handlePlayPause}
-                onReset={handleReset}
-                onStep={handleStep}
-                time={time}
-                speed={speed}
-                onSpeedChange={handleSpeedChange}
-                onSpeedUp={() => handleSpeedChange(speed + 0.1)}
-                onSpeedDown={() => handleSpeedChange(speed - 0.1)}
-            />
+            <TimeControls />
             
             <Sidebar
                 isOpen={isSidebarOpen}
