@@ -23,6 +23,14 @@ type SimulationState = {
   entities: Movil[];
   /** Si se muestran los vectores de posición, velocidad y aceleración */
   showVectors: boolean;
+  /** Estado del plano absoluto (posición y escala) */
+  plane: {
+    x: number;
+    y: number;
+    scale: number;
+  };
+  /** Indica si el plano fue reseteado recientemente */
+  isReset: boolean;
 };
 
 /**
@@ -36,7 +44,9 @@ type SimulationState = {
  * - `UPDATE_ENTITIES`: Reemplaza todas las entidades
  * - `UPDATE_ENTITY`: Actualiza una entidad específica por ID (crea nueva si no existe)
  * - `RESET`: Reinicia la simulación al estado inicial
- * - `SET_SHOW_VECTORS`: Cambia si se muestran los vectores
+ * - `UPDATE_SHOW_VECTORS`: Cambia si se muestran los vectores
+ * - `UPDATE_PLANE`: Actualiza la posición y escala del plano
+ * - `UPDATE_IS_RESET`: Cambia el estado isReset
  */
 type SimulationAction =
   | { type: 'PLAY' }
@@ -47,7 +57,9 @@ type SimulationAction =
   | { type: 'UPDATE_ENTITIES'; payload: Movil[] }
   | { type: 'UPDATE_ENTITY'; payload: { id: string; updates: Partial<IMovilProps> } }
   | { type: 'RESET' }
-  | { type: 'SET_SHOW_VECTORS'; payload: boolean };
+  | { type: 'UPDATE_SHOW_VECTORS'; payload: boolean }
+  | { type: 'UPDATE_PLANE'; payload: { x: number; y: number; scale: number } }
+  | { type: 'UPDATE_IS_RESET'; payload: boolean };
 
 /**
  * Interfaz del contexto de simulación
@@ -73,7 +85,11 @@ interface SimulationContextType {
   /** Reinicia la simulación */
   resetSimulation: () => void;
   /** Cambia si se muestran los vectores */
-  setShowVectors: (show: boolean) => void;
+  updateShowVectors: (show: boolean) => void;
+  /** Actualiza la posición y escala del plano */
+  updatePlane: (plane: { x: number; y: number; scale: number }) => void;
+  /** Cambia el estado isReset */
+  updateIsReset: (isReset: boolean) => void;
 }
 
 //* ESTADO INICIAL
@@ -120,7 +136,13 @@ const initialState: SimulationState = {
       color: "#FFFFFF"   
     })
   ],
-  showVectors: false
+  showVectors: false,
+  plane: {
+    x: 0,
+    y: 0,
+    scale: 1
+  },
+  isReset: false
 };
 
 //* CONTEXTO
@@ -232,10 +254,16 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
         ...state,
         time: 0,
         isPlaying: false,
-        entities: resetEntities
+        entities: resetEntities,
+        plane: { x: 0, y: 0, scale: 1 },
+        isReset: true
       };
-    case 'SET_SHOW_VECTORS':
+    case 'UPDATE_SHOW_VECTORS':
       return { ...state, showVectors: action.payload };
+    case 'UPDATE_PLANE':
+      return { ...state, plane: action.payload };
+    case 'UPDATE_IS_RESET':
+      return { ...state, isReset: action.payload };
     default:
       return state;
   }
@@ -290,8 +318,14 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     dispatch({ type: 'RESET' });
   }, []);
 
-  const setShowVectors = useCallback((show: boolean) => {
-    dispatch({ type: 'SET_SHOW_VECTORS', payload: show });
+  const updateShowVectors = useCallback((show: boolean) => {
+    dispatch({ type: 'UPDATE_SHOW_VECTORS', payload: show });
+  }, []);
+  const updatePlane = useCallback((plane: { x: number; y: number; scale: number }) => {
+    dispatch({ type: 'UPDATE_PLANE', payload: plane });
+  }, []);
+  const updateIsReset = useCallback((isReset: boolean) => {
+    dispatch({ type: 'UPDATE_IS_RESET', payload: isReset });
   }, []);
 
   const contextValue = useMemo(() => ({
@@ -304,7 +338,9 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     updateEntities,
     updateEntity,
     resetSimulation,
-    setShowVectors,
+    updateShowVectors,
+    updatePlane,
+    updateIsReset,
   }), [
     state,
     play,
@@ -315,7 +351,9 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     updateEntities,
     updateEntity,
     resetSimulation,
-    setShowVectors,
+    updateShowVectors,
+    updatePlane,
+    updateIsReset,
   ]);
 
   return (

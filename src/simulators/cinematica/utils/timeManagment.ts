@@ -4,9 +4,19 @@ function runTicker(
     ticker: Ticker,
     speed: number,
     isPlaying: boolean,
+    isReset: boolean,
     updateFPS: (fps: number) => void,
     updateTime: (time: number) => void,
+    updateIsReset: (isReset: boolean) => void,
 ) {
+    if (isReset) {
+        ticker.timeCount = 0;
+        ticker.lastTime = performance.now();
+        ticker.frameCount = 0;
+        ticker.fps = 0;
+        updateIsReset(false);
+    }
+
     const now = performance.now();
     ticker.deltaMS = now - (ticker.lastTime || now - 16);
     ticker.lastTime = now;

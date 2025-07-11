@@ -3,7 +3,7 @@ import type { JSX } from 'preact/jsx-runtime'
 import { useSimulation } from '@/simulators/cinematica/context/SimulationContext'
 import { CANVAS_CONFIG } from '@/simulators/cinematica/utils/canvasManagment'
 import { runTicker } from '@/simulators/cinematica/utils/timeManagment'
-import { drawGrid, drawAxes, clearCanvas, drawEntities } from '@/simulators/cinematica/utils/drawingOnCanvas'
+import { drawPlane, clearCanvas, drawEntities } from '@/simulators/cinematica/utils/drawingOnCanvas'
 import { useInitialRefs } from '@/simulators/cinematica/hooks/useInitialRefs'
 import { listenEvents } from '@/simulators/cinematica/utils/canvasListeners'
 
@@ -12,10 +12,17 @@ function Canvas(
         style?: JSX.CSSProperties
     }
 ) {
-  
     const { 
-        state: { isPlaying, entities, speed, showVectors },
-        updateFPS, updateTime 
+        state: {
+            isPlaying,
+            isReset,
+            entities,
+            speed,
+            showVectors
+        },
+        updateIsReset,
+        updateFPS,
+        updateTime,
     } = useSimulation();
 
     const { 
@@ -25,8 +32,6 @@ function Canvas(
         AbsolutePlaneRef 
     } = useInitialRefs();
 
-    
-    
     useEffect(() => {
         
         const $canvas = canvasRef.current!
@@ -37,14 +42,26 @@ function Canvas(
         const Mouse = MouseRef.current;
         const AbsolutePlane = AbsolutePlaneRef.current;
         
-        const cleanupEvents = listenEvents(canvasRef.current!, MouseRef.current!, AbsolutePlaneRef.current!, CANVAS_CONFIG);
+        const cleanupEvents = listenEvents(
+            $canvas,
+            Mouse,
+            AbsolutePlane,
+            CANVAS_CONFIG,
+        );
 
         const render = () => {
-            runTicker(Ticker, speed, isPlaying, updateFPS, updateTime);
+            runTicker(
+                Ticker,
+                speed,
+                isPlaying,
+                isReset,
+                updateFPS,
+                updateTime,
+                updateIsReset,
+            );
 
-            clearCanvas(ctx, $canvas);
-            drawGrid(ctx, $canvas, AbsolutePlane, CANVAS_CONFIG);
-            drawAxes(ctx, $canvas, AbsolutePlane);
+            clearCanvas($canvas);
+            drawPlane($canvas, AbsolutePlane, CANVAS_CONFIG);
             drawEntities(ctx, entities, AbsolutePlane, Ticker, showVectors, isPlaying);
             
             animationFrameId = window.requestAnimationFrame(render)
@@ -52,9 +69,20 @@ function Canvas(
         render()
         
         return () => {
+            window.cancelAnimationFrame(animationFrameId);
             cleanupEvents();
         }
-    }, [isPlaying, speed, entities, updateFPS, updateTime, showVectors])
+    }, [
+        isPlaying,
+        isReset,
+        showVectors,
+        entities,
+        speed,
+        updateFPS,
+        updateTime,
+        updateIsReset,
+        canvasRef,
+    ])
     
     return <canvas ref={canvasRef} style={style} />
 }

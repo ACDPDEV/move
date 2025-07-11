@@ -31,7 +31,7 @@ function TimeControls({
     onSpeedDown
 }: TimeControlsProps) {
 
-    const { state: { showVectors }, setShowVectors } = useSimulation();
+    const { state: { showVectors }, updateShowVectors: setShowVectors } = useSimulation();
 
     // Estado local para el input de velocidad
     const [speedInput, setSpeedInput] = useState<string>(() => speed.toFixed(1));

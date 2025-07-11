@@ -1,8 +1,13 @@
 import type { AbsolutePlaneState, CanvasConfig, Ticker } from '@/simulators/cinematica/types';
-import { Movil } from '@/simulators/cinematica/entities/Movil';
 
-function drawGrid(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, AbsolutePlaneState: AbsolutePlaneState, CANVAS_CONFIG: CanvasConfig): void {
-    const rect = canvas.getBoundingClientRect();
+function drawGrid(
+    $canvas: HTMLCanvasElement,
+    AbsolutePlaneState: AbsolutePlaneState,
+    CANVAS_CONFIG: CanvasConfig
+): void {
+    const ctx = $canvas.getContext('2d')!;
+
+    const rect = $canvas.getBoundingClientRect();
     const gridSize = CANVAS_CONFIG.GRID_SIZE * AbsolutePlaneState.scale;
 
     if (gridSize < 10 || gridSize > rect.width / 2) return;
@@ -44,8 +49,13 @@ function drawGrid(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, Abso
     }
 }
 
-function drawAxes(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, AbsolutePlaneState: AbsolutePlaneState): void {
-    const rect = canvas.getBoundingClientRect();
+function drawAxes(
+    $canvas: HTMLCanvasElement,
+    AbsolutePlaneState: AbsolutePlaneState
+): void {
+    const ctx = $canvas.getContext('2d')!;
+
+    const rect = $canvas.getBoundingClientRect();
     const absolutePos = {
         x: AbsolutePlaneState.position.x * AbsolutePlaneState.scale,
         y: AbsolutePlaneState.position.y * AbsolutePlaneState.scale,
@@ -80,10 +90,14 @@ function drawAxes(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, Abso
     }
 };
 
-function clearCanvas(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function clearCanvas(
+    $canvas: HTMLCanvasElement
+): void {
+    const ctx = $canvas.getContext('2d')!;
+
+    ctx.clearRect(0, 0, $canvas.width, $canvas.height);
     ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, $canvas.width, $canvas.height);
 }
 
 function drawEntities(
@@ -107,9 +121,17 @@ function drawEntities(
     });
 }
 
+function drawPlane(
+    $canvas: HTMLCanvasElement,
+    AbsolutePlane: AbsolutePlaneState,
+    CANVAS_CONFIG: CanvasConfig
+): void {
+    drawAxes($canvas, AbsolutePlane);
+    drawGrid($canvas, AbsolutePlane, CANVAS_CONFIG);
+}
+
 export {
-    drawGrid,
-    drawAxes,
+    drawPlane,
     clearCanvas,
     drawEntities,
 };
