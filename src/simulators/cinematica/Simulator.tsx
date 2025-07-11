@@ -17,15 +17,9 @@ function MRUSimulator({ slug }: { slug: string }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const { 
-        state: { isPlaying, entities, time, fps, speed },
-        play, 
-        pause, 
-        setSpeed, 
-        updateTime, 
-        updateFPS, 
+        state: { isPlaying, entities, fps },
         updateEntities,
         updateEntity,
-        resetSimulation
     } = useSimulation();
 
     
@@ -66,6 +60,20 @@ function MRUSimulator({ slug }: { slug: string }) {
                     <div className="font-mono">
                         FPS: {Math.round(fps)}
                     </div>
+                </div>
+            </div>
+
+            <div className="absolute bottom-4 right-4 space-y-2">
+                <div class="flex flex-row gap-1 bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm">
+                    {
+                        entities.map(entity => (
+                            <button
+                                key={entity.id}
+                                class="w-5 h-5 rounded-full"
+                                style={{ backgroundColor: entity.color }}
+                            />
+                        ))
+                    }
                 </div>
             </div>
         </div>
