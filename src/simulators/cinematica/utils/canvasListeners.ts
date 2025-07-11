@@ -23,6 +23,7 @@ function listenMouseEvents(
     Mouse: MouseState,
     AbsolutePlane: AbsolutePlaneState,
     CANVAS_CONFIG: CanvasConfig,
+    updatePlane: (plane: AbsolutePlaneState) => void,
 ) {
     // Callbacks
     const handleMouseDown = (event: MouseEvent) => {
@@ -42,6 +43,8 @@ function listenMouseEvents(
         
         AbsolutePlane.position.x += deltaX / AbsolutePlane.scale;
         AbsolutePlane.position.y += deltaY / AbsolutePlane.scale;
+
+        updatePlane(AbsolutePlane);
     };
     
     const handleMouseUp = () => {
@@ -82,9 +85,10 @@ function listenEvents(
     Mouse: MouseState,
     AbsolutePlane: AbsolutePlaneState,
     CANVAS_CONFIG: CanvasConfig,
+    updatePlane: (plane: AbsolutePlaneState) => void,
 ) {
     const cleanupCanvas = listenCanvasEvents($canvas);
-    const cleanupMouse = listenMouseEvents($canvas, Mouse, AbsolutePlane, CANVAS_CONFIG);
+    const cleanupMouse = listenMouseEvents($canvas, Mouse, AbsolutePlane, CANVAS_CONFIG, updatePlane);
 
     // Combined cleanup function
     const cleanup = () => {

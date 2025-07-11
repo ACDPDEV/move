@@ -3,9 +3,10 @@ import { useSimulation } from '@/simulators/cinematica/context/SimulationContext
 import type { Ticker, MouseState, AbsolutePlaneState } from '@/simulators/cinematica/types';
 
 function useInitialRefs() {
+    const { state: { time, plane } } = useSimulation();
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const TickerRef = useRef<Ticker>({
-        timeCount: 0,
+        timeCount: time,
         lastTime: 0,
         frameCount: 0,
         fps: 0,
@@ -21,8 +22,8 @@ function useInitialRefs() {
         deltaPosition: { x: 0, y: 0 },
     });
     const AbsolutePlaneRef = useRef<AbsolutePlaneState>({
-        position: { x: 300, y: 300 },
-        scale: 1,
+        position: { x: plane.position.x, y: plane.position.y },
+        scale: plane.scale,
     });
 
     return {

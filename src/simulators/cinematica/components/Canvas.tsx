@@ -23,6 +23,7 @@ function Canvas(
         updateIsReset,
         updateFPS,
         updateTime,
+        updatePlane,
     } = useSimulation();
 
     const { 
@@ -47,6 +48,7 @@ function Canvas(
             Mouse,
             AbsolutePlane,
             CANVAS_CONFIG,
+            updatePlane,
         );
 
         const render = () => {

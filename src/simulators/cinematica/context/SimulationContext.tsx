@@ -3,6 +3,7 @@ import { useContext, useReducer, useCallback, useMemo } from 'preact/hooks';
 import type { JSX } from 'preact';
 import { Vector2D } from '@/lib/physicsUtils';
 import { Movil, type IMovilProps } from '../entities/Movil';
+import type { AbsolutePlaneState } from '../types';
 
 //* DEFINICIONES DE TIPOS
 
@@ -24,11 +25,7 @@ type SimulationState = {
   /** Si se muestran los vectores de posición, velocidad y aceleración */
   showVectors: boolean;
   /** Estado del plano absoluto (posición y escala) */
-  plane: {
-    x: number;
-    y: number;
-    scale: number;
-  };
+  plane: AbsolutePlaneState;
   /** Indica si el plano fue reseteado recientemente */
   isReset: boolean;
 };
@@ -58,7 +55,7 @@ type SimulationAction =
   | { type: 'UPDATE_ENTITY'; payload: { id: string; updates: Partial<IMovilProps> } }
   | { type: 'RESET' }
   | { type: 'UPDATE_SHOW_VECTORS'; payload: boolean }
-  | { type: 'UPDATE_PLANE'; payload: { x: number; y: number; scale: number } }
+  | { type: 'UPDATE_PLANE'; payload: AbsolutePlaneState }
   | { type: 'UPDATE_IS_RESET'; payload: boolean };
 
 /**
@@ -87,7 +84,7 @@ interface SimulationContextType {
   /** Cambia si se muestran los vectores */
   updateShowVectors: (show: boolean) => void;
   /** Actualiza la posición y escala del plano */
-  updatePlane: (plane: { x: number; y: number; scale: number }) => void;
+  updatePlane: (plane: AbsolutePlaneState) => void;
   /** Cambia el estado isReset */
   updateIsReset: (isReset: boolean) => void;
 }
@@ -138,8 +135,7 @@ const initialState: SimulationState = {
   ],
   showVectors: false,
   plane: {
-    x: 0,
-    y: 0,
+    position: { x: 400, y: 300 },
     scale: 1
   },
   isReset: false
@@ -255,7 +251,7 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
         time: 0,
         isPlaying: false,
         entities: resetEntities,
-        plane: { x: 0, y: 0, scale: 1 },
+        plane: { position: { x: 400, y: 300 }, scale: 1 },
         isReset: true
       };
     case 'UPDATE_SHOW_VECTORS':
@@ -321,7 +317,7 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
   const updateShowVectors = useCallback((show: boolean) => {
     dispatch({ type: 'UPDATE_SHOW_VECTORS', payload: show });
   }, []);
-  const updatePlane = useCallback((plane: { x: number; y: number; scale: number }) => {
+  const updatePlane = useCallback((plane: AbsolutePlaneState) => {
     dispatch({ type: 'UPDATE_PLANE', payload: plane });
   }, []);
   const updateIsReset = useCallback((isReset: boolean) => {
