@@ -105,12 +105,13 @@ function drawEntities(
     entities: any[],
     AbsolutePlane: AbsolutePlaneState,
     Ticker: Ticker,
+    speed: number,
     showVectors: boolean,
     isPlaying: boolean,
 ) {
     entities.forEach(entity => {
         if (isPlaying) {
-            entity.update(Ticker.deltaTime);
+            entity.update(Ticker.deltaTime * speed);
         }
         entity.absoluteMoveAndScale(AbsolutePlane.position, AbsolutePlane.scale);
         entity.draw(ctx);

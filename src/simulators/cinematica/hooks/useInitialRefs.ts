@@ -11,7 +11,6 @@ function useInitialRefs() {
         frameCount: 0,
         fps: 0,
         lastFpsUpdate: 0,
-        deltaMS: 0,
         deltaTime: 0,
     });
     

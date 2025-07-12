@@ -4,7 +4,6 @@ interface Ticker {
     frameCount: number;
     fps: number;
     lastFpsUpdate: number;
-    deltaMS: number;
     deltaTime: number;
 }
 

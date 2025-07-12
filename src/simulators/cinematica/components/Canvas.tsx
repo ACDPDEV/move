@@ -1,4 +1,4 @@
-import {useEffect } from 'preact/hooks'
+import { useEffect, useCallback } from 'preact/hooks'
 import type { JSX } from 'preact/jsx-runtime'
 import { useSimulation } from '@/simulators/cinematica/context/SimulationContext'
 import { CANVAS_CONFIG } from '@/simulators/cinematica/utils/canvasManagment'
@@ -27,6 +27,7 @@ function Canvas(
         updateFPS,
         updateTime,
         updatePlane,
+        pause,
     } = useSimulation();
 
     const { 
@@ -55,6 +56,8 @@ function Canvas(
         );
 
         const render = () => {
+            // console.log('render', inputTimeChanged);
+            console.log('render', isReset);
             runTicker(
                 Ticker,
                 speed,
@@ -66,12 +69,13 @@ function Canvas(
                 updateFPS,
                 updateTime,
                 updateIsReset,
-                updateInputTimeChanged
+                updateInputTimeChanged,
+                pause,
             );
 
             clearCanvas($canvas);
             drawPlane($canvas, AbsolutePlane, CANVAS_CONFIG);
-            drawEntities(ctx, entities, AbsolutePlane, Ticker, showVectors, isPlaying);
+            drawEntities(ctx, entities, AbsolutePlane, Ticker, speed, showVectors, isPlaying);
             
             animationFrameId = window.requestAnimationFrame(render)
         }

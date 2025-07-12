@@ -1,4 +1,5 @@
 import type { Ticker } from '@/simulators/cinematica/types';
+import type { Movil } from '../entities/Movil';
 
 function runTicker(
     ticker: Ticker,
@@ -7,13 +8,16 @@ function runTicker(
     isReset: boolean,
     inputTimeChanged: number,
     movementPrediction: boolean,
-    entities: any[],
+    entities: Movil[],
     updateFPS: (fps: number) => void,
     updateTime: (time: number) => void,
     updateIsReset: (isReset: boolean) => void,
     updateInputTimeChanged: (isInputTimeChanged: number) => void,
+    pause: () => void,
 ) {
     if (isReset) {
+        const deltaTimeChanged = -ticker.timeCount * 1000 * speed;
+        entities.forEach(entity => entity.update(deltaTimeChanged));
         ticker.timeCount = 0;
         ticker.lastTime = performance.now();
         ticker.frameCount = 0;
@@ -22,36 +26,35 @@ function runTicker(
     }
     if (inputTimeChanged !== 0) {
         if (movementPrediction) {
-            const deltaTimeChange = inputTimeChanged - ticker.timeCount;
-            ticker.timeCount = inputTimeChanged;
+            const deltaTimeChanged = inputTimeChanged * 1000 * speed;
+            console.log('dt', deltaTimeChanged, inputTimeChanged, speed);
             entities.forEach(entity => {
-                entity.update(deltaTimeChange);
+                entity.update(deltaTimeChanged);
+                console.log('changed...')
             });
         }
-        const deltaTimeChange = inputTimeChanged - ticker.timeCount;
         
-        ticker.timeCount = inputTimeChanged;
+        ticker.timeCount += inputTimeChanged
         updateInputTimeChanged(0);
     }
 
     const now = performance.now();
-    ticker.deltaMS = now - (ticker.lastTime || now - 16);
+    ticker.deltaTime = now - (ticker.lastTime || now - 1000/60);
     ticker.lastTime = now;
     
+    ticker.fps = Math.round(1000 / (ticker.deltaTime || 1000/60));
     ticker.frameCount++;
-    if (now - ticker.lastFpsUpdate > 1000) {
-        ticker.fps = Math.round((ticker.frameCount * 1000) / (now - ticker.lastFpsUpdate));
-        ticker.frameCount = 0;
-        ticker.lastFpsUpdate = now;
-    }
+    ticker.lastFpsUpdate = now;
     
-    ticker.deltaTime = 60 / ticker.fps * speed;
-
+    
     if (isPlaying) {
-        ticker.timeCount += ticker.deltaMS / 1000 * speed;
-        updateTime(ticker.timeCount);
+        ticker.timeCount += ticker.deltaTime / 1000 * speed;
+        updateTime(ticker.timeCount);   
+    
     }
-    updateFPS(ticker.fps);
+    if (ticker.frameCount % 60 === 0) {
+        updateFPS(ticker.fps);
+    }
 }
 
 export {

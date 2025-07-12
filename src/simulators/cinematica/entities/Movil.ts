@@ -16,9 +16,6 @@ class Movil {
     acceleration: Vector2D;
     radius: number;
     color: string;
-    initialPosition: Vector2D;
-    initialVelocity: Vector2D;
-    initialAcceleration: Vector2D;
     absolutePosition: Vector2D;
     absoluteRadius: number;
 
@@ -34,9 +31,6 @@ class Movil {
         this.position = new Vector2D(position.x, position.y);
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);
-        this.initialPosition = this.position.copy();
-        this.initialVelocity = this.velocity.copy();
-        this.initialAcceleration = this.acceleration.copy();
         this.absolutePosition = this.position.copy();
         this.radius = radius;
         this.absoluteRadius = this.radius;
@@ -44,11 +38,12 @@ class Movil {
     }
 
     update(deltaTime: number): void {
-        this.velocity.x += this.acceleration.x * deltaTime / 60;
-        this.velocity.y += this.acceleration.y * deltaTime / 60;
+        if (deltaTime === 0) return;
+        this.position.x += this.velocity.x * deltaTime / 1000 + this.acceleration.x * Math.pow((deltaTime / 1000), 2) / 2;
+        this.position.y += this.velocity.y * deltaTime / 1000 + this.acceleration.y * Math.pow((deltaTime / 1000), 2) / 2;
 
-        this.position.x += this.velocity.x * deltaTime / 60;
-        this.position.y += this.velocity.y * deltaTime / 60;
+        this.velocity.x += this.acceleration.x * deltaTime / 1000;
+        this.velocity.y += this.acceleration.y * deltaTime / 1000;
     }
 
     absoluteMoveAndScale(deltaPosition: { x: number, y: number }, scale: number): void {
@@ -111,12 +106,6 @@ class Movil {
         ctx.fillStyle = this.color;
         ctx.fill();
         ctx.closePath();
-    }
-    
-    reset(): void {
-        this.position = this.initialPosition.copy();
-        this.velocity = this.initialVelocity.copy();
-        this.acceleration = this.initialAcceleration.copy();
     }
 
     toString(): string {

@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { IconEye, IconEyeOff, IconPlayerPause, IconPlayerPlay, IconReload, IconStar, IconStarFilled } from '@tabler/icons-preact';
+import { IconEye, IconEyeOff, IconPlayerPause, IconPlayerPlay, IconReload, IconComponents, IconComponentsOff } from '@tabler/icons-preact';
 import { useSimulation } from '@/simulators/cinematica/context/SimulationContext';
 import { useTimeHandlers } from '@/simulators/cinematica/hooks/useTimeHadlers';
 
@@ -91,10 +91,14 @@ function TimeInput({ time, updateTime, updateInputTimeChanged, handleMovementPre
             <input
                 type="number"
                 value={time.toFixed(2)}
-                onInput={(e) => { 
+                onInput={(e) => {
                     const newTime = parseFloat((e.target as HTMLInputElement).value);
+                    if (isNaN(newTime)) return;
+                    updateInputTimeChanged(newTime - time);
+                    console.log(newTime - time);
+                    console.log(newTime);
+                    console.log(time);
                     updateTime(newTime);
-                    updateInputTimeChanged(newTime);
                 }}
                 class="w-20 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
             />
@@ -103,7 +107,7 @@ function TimeInput({ time, updateTime, updateInputTimeChanged, handleMovementPre
                 onClick={handleMovementPrediction}
                 title='Predecir el movimiento con el tiempo'
             >
-                {movementPrediction ? <IconStarFilled size={20} /> : <IconStar size={20} />}
+                {movementPrediction ? <IconComponents size={20} /> : <IconComponentsOff size={20} />}
             </button>
         </div>
     );

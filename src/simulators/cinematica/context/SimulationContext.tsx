@@ -254,17 +254,10 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
       };
     }
     case 'RESET':
-      // Resetear todas las entidades a su estado inicial
-      const resetEntities = state.entities.map(entity => {
-        entity.reset();
-        return entity;
-      });
-      
       return {
         ...state,
         time: 0,
         isPlaying: false,
-        entities: resetEntities,
         plane: { position: { x: 400, y: 300 }, scale: 1 },
         isReset: true
       };
