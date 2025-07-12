@@ -5,13 +5,13 @@ function useTimeHandlers(
     setSpeedInput: (value: string) => void
 ) {
     const { 
-        state: { isPlaying, speed, showVectors, timePrediction },
+        state: { isPlaying, speed, showVectors, movementPrediction },
         play, 
         pause, 
         setSpeed, 
         updateShowVectors, 
         resetSimulation,
-        updateTimePrediction
+        updateMovementPrediction
     } = useSimulation();
 
 
@@ -59,8 +59,8 @@ function useTimeHandlers(
         updateShowVectors(!showVectors);
     };
 
-    const handleTimePrediction = () => {
-        updateTimePrediction(!timePrediction);
+    const handleMovementPrediction = () => {
+        updateMovementPrediction(!movementPrediction);
     };
 
     return {
@@ -70,7 +70,7 @@ function useTimeHandlers(
         handleSpeedInput,
         handleSpeedBlur,
         handleShowVectorsChange,
-        handleTimePrediction,
+        handleMovementPrediction,
     }
 }
 

@@ -14,17 +14,16 @@ function Canvas(
 ) {
     const { 
         state: {
-            time,
             isPlaying,
             isReset,
             entities,
             speed,
             showVectors,
-            isInputTimeChanged,
-            timePrediction
+            inputTimeChanged,
+            movementPrediction,
         },
         updateIsReset,
-        updateIsInputTimeChanged,
+        updateInputTimeChanged,
         updateFPS,
         updateTime,
         updatePlane,
@@ -58,15 +57,16 @@ function Canvas(
         const render = () => {
             runTicker(
                 Ticker,
-                time,
                 speed,
                 isPlaying,
                 isReset,
-                isInputTimeChanged,
+                inputTimeChanged,
+                movementPrediction,
+                entities,
                 updateFPS,
                 updateTime,
                 updateIsReset,
-                updateIsInputTimeChanged
+                updateInputTimeChanged
             );
 
             clearCanvas($canvas);
@@ -83,9 +83,9 @@ function Canvas(
         }
     }, [
         isPlaying,
-        timePrediction,
+        movementPrediction,
         isReset,
-        isInputTimeChanged,
+        inputTimeChanged,
         showVectors,
         entities,
         speed,

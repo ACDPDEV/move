@@ -28,10 +28,10 @@ type SimulationState = {
   plane: AbsolutePlaneState;
   /** Indica si el plano fue reseteado recientemente */
   isReset: boolean;
-  /** Indica si el tiempo es un valor de entrada o un tiempo real */
-  isInputTimeChanged: boolean;
+  /** Indica el tiempo es un valor de entrada o un tiempo real */
+  inputTimeChanged: number;
   /** Indica si se está predeciendo el movimiento con el tiempo */
-  timePrediction: boolean;
+  movementPrediction: boolean;
 };
 
 /**
@@ -48,8 +48,8 @@ type SimulationState = {
  * - `UPDATE_SHOW_VECTORS`: Cambia si se muestran los vectores
  * - `UPDATE_PLANE`: Actualiza la posición y escala del plano
  * - `UPDATE_IS_RESET`: Cambia el estado isReset
- * - `UPDATE_IS_INPUT_TIME_CHANGED`: Cambia el estado isInputTimeChanged
- * - `UPDATE_TIME_PREDICTION`: Cambia el estado timePrediction
+ * - `UPDATE_INPUT_TIME_CHANGED`: Cambia el estado inputTimeChanged
+ * - `UPDATE_MOVEMENT_PREDICTION`: Cambia el estado movementPrediction
  */
 type SimulationAction =
   | { type: 'PLAY' }
@@ -63,8 +63,8 @@ type SimulationAction =
   | { type: 'UPDATE_SHOW_VECTORS'; payload: boolean }
   | { type: 'UPDATE_PLANE'; payload: AbsolutePlaneState }
   | { type: 'UPDATE_IS_RESET'; payload: boolean }
-  | { type: 'UPDATE_IS_INPUT_TIME_CHANGED'; payload: boolean }
-  | { type: 'UPDATE_TIME_PREDICTION'; payload: boolean };
+  | { type: 'UPDATE_INPUT_TIME_CHANGED'; payload: number }
+  | { type: 'UPDATE_MOVEMENT_PREDICTION'; payload: boolean };
 
 /**
  * Interfaz del contexto de simulación
@@ -96,9 +96,9 @@ interface SimulationContextType {
   /** Cambia el estado isReset */
   updateIsReset: (isReset: boolean) => void;
   /** Cambia el estado isInputTimeChanged */
-  updateIsInputTimeChanged: (changed: boolean) => void;
+  updateInputTimeChanged: (changed: number) => void;
   /** Cambia el estado timePrediction */  
-  updateTimePrediction: (prediction: boolean) => void;
+  updateMovementPrediction: (prediction: boolean) => void;
 }
 
 //* ESTADO INICIAL
@@ -151,8 +151,8 @@ const initialState: SimulationState = {
     scale: 1
   },
   isReset: false,
-  isInputTimeChanged: false,
-  timePrediction: false,
+  inputTimeChanged: 0,
+  movementPrediction: false,
 };
 
 //* CONTEXTO
@@ -274,10 +274,10 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
       return { ...state, plane: action.payload };
     case 'UPDATE_IS_RESET':
       return { ...state, isReset: action.payload };
-    case 'UPDATE_IS_INPUT_TIME_CHANGED':
-      return { ...state, isInputTimeChanged: action.payload };
-    case 'UPDATE_TIME_PREDICTION':
-      return { ...state, timePrediction: action.payload };
+    case 'UPDATE_INPUT_TIME_CHANGED':
+      return { ...state, inputTimeChanged: action.payload };
+    case 'UPDATE_MOVEMENT_PREDICTION':
+      return { ...state, movementPrediction: action.payload };
     default:
       return state;
   }
@@ -341,11 +341,11 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
   const updateIsReset = useCallback((isReset: boolean) => {
     dispatch({ type: 'UPDATE_IS_RESET', payload: isReset });
   }, []);
-  const updateIsInputTimeChanged = useCallback((changed: boolean) => {
-    dispatch({ type: 'UPDATE_IS_INPUT_TIME_CHANGED', payload: changed });
+  const updateInputTimeChanged = useCallback((changed: number) => {
+    dispatch({ type: 'UPDATE_INPUT_TIME_CHANGED', payload: changed });
   }, []);
-  const updateTimePrediction = useCallback((prediction: boolean) => {
-    dispatch({ type: 'UPDATE_TIME_PREDICTION', payload: prediction });
+  const updateMovementPrediction = useCallback((prediction: boolean) => {
+    dispatch({ type: 'UPDATE_MOVEMENT_PREDICTION', payload: prediction });
   }, []);
 
   const contextValue = useMemo(() => ({
@@ -361,8 +361,8 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     updateShowVectors,
     updatePlane,
     updateIsReset,
-    updateIsInputTimeChanged,
-    updateTimePrediction,
+    updateInputTimeChanged,
+    updateMovementPrediction,
   }), [
     state,
     play,
@@ -376,8 +376,8 @@ export function SimulationProvider({ children }: { children: JSX.Element }) {
     updateShowVectors,
     updatePlane,
     updateIsReset,
-    updateIsInputTimeChanged,
-    updateTimePrediction,
+    updateInputTimeChanged,
+    updateMovementPrediction,
   ]);
 
   return (

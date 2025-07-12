@@ -2,15 +2,16 @@ import type { Ticker } from '@/simulators/cinematica/types';
 
 function runTicker(
     ticker: Ticker,
-    time: number,
     speed: number,
     isPlaying: boolean,
     isReset: boolean,
-    isInputTimeChanged: boolean,
+    inputTimeChanged: number,
+    movementPrediction: boolean,
+    entities: any[],
     updateFPS: (fps: number) => void,
     updateTime: (time: number) => void,
     updateIsReset: (isReset: boolean) => void,
-    updateIsInputTimeChanged: (isInputTimeChanged: boolean) => void,
+    updateInputTimeChanged: (isInputTimeChanged: number) => void,
 ) {
     if (isReset) {
         ticker.timeCount = 0;
@@ -19,9 +20,18 @@ function runTicker(
         ticker.fps = 0;
         updateIsReset(false);
     }
-    if (isInputTimeChanged) {
-        ticker.timeCount = time;
-        updateIsInputTimeChanged(false);
+    if (inputTimeChanged !== 0) {
+        if (movementPrediction) {
+            const deltaTimeChange = inputTimeChanged - ticker.timeCount;
+            ticker.timeCount = inputTimeChanged;
+            entities.forEach(entity => {
+                entity.update(deltaTimeChange);
+            });
+        }
+        const deltaTimeChange = inputTimeChanged - ticker.timeCount;
+        
+        ticker.timeCount = inputTimeChanged;
+        updateInputTimeChanged(0);
     }
 
     const now = performance.now();

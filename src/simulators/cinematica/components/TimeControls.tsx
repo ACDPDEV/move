@@ -78,12 +78,12 @@ function SpeedInput({handleSpeedChange, handleSpeedInput, handleSpeedBlur, speed
     );
 }
 
-function TimeInput({ time, updateTime, updateIsInputTimeChanged, handleTimePrediction, timePrediction }: {
+function TimeInput({ time, updateTime, updateInputTimeChanged, handleMovementPrediction, movementPrediction }: {
     time: number,
     updateTime: (newTime: number) => void,
-    updateIsInputTimeChanged: (changed: boolean) => void,
-    handleTimePrediction: () => void,
-    timePrediction: boolean,
+    updateInputTimeChanged: (changed: number) => void,
+    handleMovementPrediction: () => void,
+    movementPrediction: boolean,
 }) {
     return (
         <div class="flex items-center gap-2">
@@ -91,15 +91,19 @@ function TimeInput({ time, updateTime, updateIsInputTimeChanged, handleTimePredi
             <input
                 type="number"
                 value={time.toFixed(2)}
-                onInput={(e) => { updateTime(parseFloat((e.target as HTMLInputElement).value)); updateIsInputTimeChanged(true) }}
+                onInput={(e) => { 
+                    const newTime = parseFloat((e.target as HTMLInputElement).value);
+                    updateTime(newTime);
+                    updateInputTimeChanged(newTime);
+                }}
                 class="w-20 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
             />
             <button
                 class="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105" 
-                onClick={handleTimePrediction}
+                onClick={handleMovementPrediction}
                 title='Predecir el movimiento con el tiempo'
             >
-                {timePrediction ? <IconStarFilled size={20} /> : <IconStar size={20} />}
+                {movementPrediction ? <IconStarFilled size={20} /> : <IconStar size={20} />}
             </button>
         </div>
     );
@@ -107,9 +111,9 @@ function TimeInput({ time, updateTime, updateIsInputTimeChanged, handleTimePredi
 
 function TimeControls() {
     const { 
-        state: { time, speed, isPlaying, showVectors, timePrediction },
+        state: { time, speed, isPlaying, showVectors, movementPrediction },
         updateTime,
-        updateIsInputTimeChanged,
+        updateInputTimeChanged,
     } = useSimulation(); 
 
     // Estado local para el input de velocidad
@@ -122,7 +126,7 @@ function TimeControls() {
         handleSpeedInput,
         handleSpeedBlur,
         handleShowVectorsChange,
-        handleTimePrediction,
+        handleMovementPrediction,
     } = useTimeHandlers(setSpeedInput);
 
     return (
@@ -130,9 +134,9 @@ function TimeControls() {
             <TimeInput
                 time={time}
                 updateTime={updateTime}
-                updateIsInputTimeChanged={updateIsInputTimeChanged}
-                handleTimePrediction={handleTimePrediction}
-                timePrediction={timePrediction}
+                updateInputTimeChanged={updateInputTimeChanged}
+                handleMovementPrediction={handleMovementPrediction}
+                movementPrediction={movementPrediction}
             />
             
             <div class="h-6 w-px bg-stone-600"></div>
