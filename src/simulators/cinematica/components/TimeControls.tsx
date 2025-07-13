@@ -78,10 +78,10 @@ function SpeedInput({handleSpeedChange, handleSpeedInput, handleSpeedBlur, speed
     );
 }
 
-function TimeInput({ time, updateTime, updateInputTimeChanged, handleMovementPrediction, movementPrediction }: {
+function TimeInput({ time, updateTime, updateIsInputTimeChanged, handleMovementPrediction, movementPrediction }: {
     time: number,
     updateTime: (newTime: number) => void,
-    updateInputTimeChanged: (changed: number) => void,
+    updateIsInputTimeChanged: (changed: boolean) => void,
     handleMovementPrediction: () => void,
     movementPrediction: boolean,
 }) {
@@ -94,10 +94,7 @@ function TimeInput({ time, updateTime, updateInputTimeChanged, handleMovementPre
                 onInput={(e) => {
                     const newTime = parseFloat((e.target as HTMLInputElement).value);
                     if (isNaN(newTime)) return;
-                    updateInputTimeChanged(newTime - time);
-                    console.log(newTime - time);
-                    console.log(newTime);
-                    console.log(time);
+                    updateIsInputTimeChanged(true);
                     updateTime(newTime);
                 }}
                 class="w-20 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
@@ -117,7 +114,7 @@ function TimeControls() {
     const { 
         state: { time, speed, isPlaying, showVectors, movementPrediction },
         updateTime,
-        updateInputTimeChanged,
+        updateIsInputTimeChanged,
     } = useSimulation(); 
 
     // Estado local para el input de velocidad
@@ -138,7 +135,7 @@ function TimeControls() {
             <TimeInput
                 time={time}
                 updateTime={updateTime}
-                updateInputTimeChanged={updateInputTimeChanged}
+                updateIsInputTimeChanged={updateIsInputTimeChanged}
                 handleMovementPrediction={handleMovementPrediction}
                 movementPrediction={movementPrediction}
             />
