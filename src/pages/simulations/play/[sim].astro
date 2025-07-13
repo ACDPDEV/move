@@ -1,0 +1,19 @@
+---
+import PlaySimulatorLayout from '@/layouts/PlaySimulatorLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const simulations = await getCollection('simulationsComponent');
+  return simulations.map((simulation) => ({
+    params: { sim: simulation.slug },
+    props: { simulation: simulation },
+  }));
+}
+
+const { simulation } = Astro.props;
+const { Content } = await simulation.render();
+---
+
+<PlaySimulatorLayout title={simulation.data.name} >
+  <Content />
+</PlaySimulatorLayout>

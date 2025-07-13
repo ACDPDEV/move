@@ -4,7 +4,7 @@ import { useState, useMemo } from "preact/hooks";
 import type { CollectionEntry } from "astro:content";
 
 function FilterForm(
-    {data}: {data: CollectionEntry<"simulators">[]}
+    {data}: {data: CollectionEntry<"simulationsDescription">[]}
 ) {
     const [inputQuery, setInputQuery] = useState("");
 

@@ -6,7 +6,7 @@ const ComponentMap: Record<string, () => Promise<any>> = {
     "ley-de-ohm": () => import("@/simulations/ley-de-ohm/Simulator"),
     "leyes-de-newton": () => import("@/simulations/leyes-de-newton/Simulator"),
     "movimiento-parabolico": () => import("@/simulations/movimiento-parabolico/Simulator"),
-    "cinematica": () => import("@/simulations/cinematica/Simulator"),
+    "cinematica": () => import("@/simulations/cinematica/SimulationPage"),
     "oscilador-armonico": () => import("@/simulations/oscilador-armonico/Simulator"),
     "radioactividad": () => import("@/simulations/radioactividad/Simulator"),
     "reflexion-de-la-luz": () => import("@/simulations/reflexion-de-la-luz/Simulator"),

@@ -1,6 +1,6 @@
 import { defineCollection, z } from "astro:content";
 
-const simulators = defineCollection({
+const simulationsDescription = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
@@ -9,4 +9,13 @@ const simulators = defineCollection({
   }),
 });
 
-export const collections = { simulators };
+const simulationsComponent = defineCollection({
+  schema: z.object({
+    name: z.string(),
+  }),
+});
+
+export const collections = { 
+  simulationsDescription: simulationsDescription,
+  simulationsComponent: simulationsComponent,
+};

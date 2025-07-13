@@ -3,11 +3,11 @@ import Layout from '@/layouts/Layout.astro';
 import FilterForm from '@/components/simulations-searching-page/FilterForm';
 import CategoriesAccordion from '@/components/simulations-searching-page/CategoriesAccordion.astro';
 import { getCollection } from 'astro:content';
-const simulatorsCollection = await getCollection('simulators');
+const simulations = await getCollection('simulationsDescription');
 ---
 <Layout>
     <article class="flex flex-row w-full h-full">
        <CategoriesAccordion />
-       <FilterForm data={simulatorsCollection} client:load />
+       <FilterForm data={simulations} client:load />
     </article>
 </Layout>

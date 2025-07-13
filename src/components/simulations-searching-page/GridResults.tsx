@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 
-function GridResults({data}: {data: CollectionEntry<"simulators">[]}) {
+function GridResults({data}: {data: CollectionEntry<"simulationsDescription">[]}) {
     const hasData = data.length > 0;
 
     return (
@@ -10,7 +10,7 @@ function GridResults({data}: {data: CollectionEntry<"simulators">[]}) {
                     {data.map((simulator) => (
                         <li key={simulator.id}>
                             <a 
-                                href={`/simulators/preview/${simulator.slug}/`}
+                                href={`/simulations/preview/${simulator.slug}/`}
                                 className="flex flex-col gap-2 bg-stone-950 border border-stone-800 rounded-md p-4 shadow-md shadow-[rgba(0,0,0,0.5)] h-fit hover:bg-stone-900 transition-colors"
                             >
                                 <span className="flex flex-row justify-between items-start">

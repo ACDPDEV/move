@@ -5,15 +5,15 @@ import { SimulationProvider, useSimulation } from "@/simulations/cinematica/cont
 import { Movil } from "@/simulations/cinematica/entities/Movil";
 import Canvas from "@/simulations/cinematica/components/Canvas";
 
-function MRUSimulatorContainer({ slug }: { slug: string }) {
+function MRUSimulatorContainer() {
     return (
         <SimulationProvider>
-            <MRUSimulator slug={slug} />
+            <MRUSimulator />
         </SimulationProvider>
     );
 }
 
-function MRUSimulator({ slug }: { slug: string }) {
+function MRUSimulator() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const { 
