@@ -1,5 +1,5 @@
-import { SearchFilter } from "@/components/simulators-searching-page/SearchFilter";
-import { GridResults } from "@/components/simulators-searching-page/GridResults";
+import { SearchFilter } from "@/components/simulations-searching-page/SearchFilter";
+import { GridResults } from "@/components/simulations-searching-page/GridResults";
 import { useState, useMemo } from "preact/hooks";
 import type { CollectionEntry } from "astro:content";
 

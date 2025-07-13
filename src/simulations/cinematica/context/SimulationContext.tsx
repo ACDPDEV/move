@@ -1,7 +1,7 @@
 import { createContext } from 'preact';
 import { useContext, useReducer, useCallback, useMemo } from 'preact/hooks';
 import type { JSX } from 'preact';
-import { Vector2D } from '@/lib/physicsUtils';
+import { Vector2D } from '@/simulations/lib/physicsUtils';
 import { Movil, type IMovilProps } from '../entities/Movil';
 import type { AbsolutePlaneState } from '../types';
 

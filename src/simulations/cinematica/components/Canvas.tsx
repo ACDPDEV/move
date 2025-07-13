@@ -1,11 +1,11 @@
 import { useEffect, useCallback } from 'preact/hooks'
 import type { JSX } from 'preact/jsx-runtime'
-import { useSimulation } from '@/simulators/cinematica/context/SimulationContext'
-import { CANVAS_CONFIG } from '@/simulators/cinematica/utils/canvasManagment'
-import { runTicker } from '@/simulators/cinematica/utils/timeManagment'
-import { drawPlane, clearCanvas, drawEntities } from '@/simulators/cinematica/utils/drawingOnCanvas'
-import { useInitialRefs } from '@/simulators/cinematica/hooks/useInitialRefs'
-import { listenEvents } from '@/simulators/cinematica/utils/canvasListeners'
+import { useSimulation } from '@/simulations/cinematica/context/SimulationContext'
+import { CANVAS_CONFIG } from '@/simulations/cinematica/utils/canvasManagment'
+import { runTicker } from '@/simulations/cinematica/utils/timeManagment'
+import { drawPlane, clearCanvas, drawEntities } from '@/simulations/cinematica/utils/drawingOnCanvas'
+import { useInitialRefs } from '@/simulations/cinematica/hooks/useInitialRefs'
+import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners'
 
 function Canvas(
     { style }: {

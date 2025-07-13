@@ -1,4 +1,4 @@
-import type { Ticker } from '@/simulators/cinematica/types';
+import type { Ticker } from '@/simulations/cinematica/types';
 import type { Movil } from '../entities/Movil';
 
 function runTicker(

@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'preact/hooks';
-import { useSimulation } from '@/simulators/cinematica/context/SimulationContext';
+import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
 
 function useTimeHandlers(
     setSpeedInput: (value: string) => void

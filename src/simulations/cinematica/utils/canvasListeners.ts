@@ -1,5 +1,5 @@
-import { resizeCanvas } from '@/simulators/cinematica/utils/canvasManagment';
-import type { MouseState, AbsolutePlaneState, CanvasConfig } from '@/simulators/cinematica/types';
+import { resizeCanvas } from '@/simulations/cinematica/utils/canvasManagment';
+import type { MouseState, AbsolutePlaneState, CanvasConfig } from '@/simulations/cinematica/types';
 
 function listenCanvasEvents($canvas: HTMLCanvasElement) {
     // Callbacks

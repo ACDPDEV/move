@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { IconEye, IconEyeOff, IconPlayerPause, IconPlayerPlay, IconReload, IconComponents, IconComponentsOff } from '@tabler/icons-preact';
-import { useSimulation } from '@/simulators/cinematica/context/SimulationContext';
-import { useTimeHandlers } from '@/simulators/cinematica/hooks/useTimeHadlers';
+import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
+import { useTimeHandlers } from '@/simulations/cinematica/hooks/useTimeHadlers';
 
 function PlayerButtons({isPlaying, HandlePlayPause, handleReset, showVectors, handleShowVectorsChange }: {
     isPlaying: boolean,

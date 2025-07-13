@@ -1,4 +1,4 @@
-import type { AbsolutePlaneState, CanvasConfig, Ticker } from '@/simulators/cinematica/types';
+import type { AbsolutePlaneState, CanvasConfig, Ticker } from '@/simulations/cinematica/types';
 
 function drawGrid(
     $canvas: HTMLCanvasElement,

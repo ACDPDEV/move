@@ -1,6 +1,6 @@
 import { useRef } from 'preact/hooks';
-import { useSimulation } from '@/simulators/cinematica/context/SimulationContext';
-import type { Ticker, MouseState, AbsolutePlaneState } from '@/simulators/cinematica/types';
+import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
+import type { Ticker, MouseState, AbsolutePlaneState } from '@/simulations/cinematica/types';
 
 function useInitialRefs() {
     const { state: { time, plane } } = useSimulation();

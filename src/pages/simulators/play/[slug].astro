@@ -1,5 +1,5 @@
 ---
-import SimulatorRenderer from '@/components/simulators-renderer/SimulatorRenderer';
+import SimulationRenderer from '@/components/simulations-renderer/SimulationRenderer';
 import { getCollection } from 'astro:content';
 import PlaySimulatorLayout from '@/layouts/PlaySimulatorLayout.astro';
 
@@ -15,5 +15,5 @@ const { simulator } = Astro.props;
 ---
 
 <PlaySimulatorLayout title={simulator.data.name} >
-    <SimulatorRenderer slug={simulator.slug} client:load />
+    <SimulationRenderer slug={simulator.slug} client:load />
 </PlaySimulatorLayout>
