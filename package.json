@@ -12,7 +12,6 @@
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/preact": "^4.1.0",
     "@tabler/icons-preact": "^3.34.0",
-    "@tailwindcss/vite": "^4.1.5",
     "astro": "^5.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -24,6 +23,7 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.5",
     "@tailwindcss/typography": "^0.5.16",
     "tw-animate-css": "^1.2.9",
     "vitest": "^3.2.4"
