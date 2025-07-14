@@ -14,7 +14,7 @@ function MRUSimulatorContainer() {
 }
 
 function MRUSimulator() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const { 
         state: { isPlaying, entities, fps },
