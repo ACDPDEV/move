@@ -4,9 +4,12 @@ import FilterForm from '@/components/simulations-searching-page/FilterForm';
 import CategoriesAccordion from '@/components/simulations-searching-page/CategoriesAccordion.astro';
 import { getCollection } from 'astro:content';
 const simulations = await getCollection('simulationsDescription');
+const simulationsComponents = await getCollection('simulationsComponent');
+console.log(simulationsComponents);
+console.log(simulations);
 ---
 <Layout>
     <article class="flex flex-row w-full h-full">
-       <FilterForm data={simulations} client:load />
+       <FilterForm simulationsPreviews={simulations} simulationsComponents={simulationsComponents} client:load />
     </article>
 </Layout>

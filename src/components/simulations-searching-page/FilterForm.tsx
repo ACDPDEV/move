@@ -3,19 +3,20 @@ import { GridResults } from "@/components/simulations-searching-page/GridResults
 import { useState, useMemo } from "preact/hooks";
 import type { CollectionEntry } from "astro:content";
 
-function FilterForm(
-    {data}: {data: CollectionEntry<"simulationsDescription">[]}
-) {
+function FilterForm({simulationsPreviews, simulationsComponents}: {
+    simulationsPreviews: CollectionEntry<"simulationsDescription">[], 
+    simulationsComponents: CollectionEntry<"simulationsComponent">[]
+}) {
     const [inputQuery, setInputQuery] = useState("");
 
     const filteredData = useMemo(() => {
-        if (!inputQuery.trim()) return data;
+        if (!inputQuery.trim()) return simulationsPreviews;
         
-        return data.filter(simulator => {
+        return simulationsPreviews.filter(simulationPreview => {
             const query = inputQuery.toLowerCase();
-            const name = simulator.data.name.toLowerCase();
-            const description = simulator.data.description.toLowerCase();
-            const areas = simulator.data.area || [];
+            const name = simulationPreview.data.name.toLowerCase();
+            const description = simulationPreview.data.description.toLowerCase();
+            const areas = simulationPreview.data.area || [];
             
             return (
                 name.includes(query) ||
@@ -23,12 +24,12 @@ function FilterForm(
                 areas.some((area: string) => area.toLowerCase().includes(query))
             );
         });
-    }, [data, inputQuery]);
+    }, [simulationsPreviews, inputQuery]);
     
     return (
         <article className="grid grid-rows-[auto_1fr] w-full h-[calc(100vh-76px)] gap-4">
             <SearchFilter getInput={inputQuery} setInput={setInputQuery} />
-            <GridResults data={filteredData} />
+            <GridResults simulationsPreviews={filteredData} simulationsComponents={simulationsComponents} />
         </article>
     )
 }
