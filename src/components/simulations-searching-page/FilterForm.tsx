@@ -20,7 +20,7 @@ function FilterForm(
             return (
                 name.includes(query) ||
                 description.includes(query) ||
-                areas.some(area => area.toLowerCase().includes(query))
+                areas.some((area: string) => area.toLowerCase().includes(query))
             );
         });
     }, [data, inputQuery]);

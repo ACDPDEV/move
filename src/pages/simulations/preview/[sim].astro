@@ -3,14 +3,19 @@ import Layout from '@/layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
+  const simulationsComponents = await getCollection('simulationsComponent');
   const simulations = await getCollection('simulationsDescription');
+  console.log(simulationsComponents);
   return simulations.map((simulation) => ({
     params: { sim: simulation.slug },
-    props: { simulation: simulation },
+    props: { 
+      simulation: simulation,
+      isAviable: simulationsComponents.find(component => component.slug === simulation.slug) !== undefined
+    },
   }));
 }
 
-const { simulation } = Astro.props;
+const { simulation, isAviable } = Astro.props;
 const { Content } = await simulation.render();
 ---
 
@@ -26,7 +31,16 @@ const { Content } = await simulation.render();
           <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt={simulation.data.name} />
         </div>
         <div class="flex flex-row items-center justify-center p-4">
-          <a href={`/simulations/play/${simulation.slug}/`} class="bg-stone-950 border border-stone-800 hover:bg-stone-900 rounded-md px-3 py-2">Iniciar simulación</a>  
+          <a
+            href={isAviable ? `/simulations/play/${simulation.slug}/` : undefined}
+            aria-disabled={!isAviable}
+            class={`bg-stone-950 border border-stone-800 hover:bg-stone-900 rounded-md px-3 py-2 text-center transition ${
+              !isAviable ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            {isAviable ? 'Iniciar simulación' : 'Aún no disponible'}
+          </a>
+
         </div>
       </div>
     </div>
