@@ -7,7 +7,6 @@ const simulations = await getCollection('simulationsDescription');
 ---
 <Layout>
     <article class="flex flex-row w-full h-full">
-       <CategoriesAccordion />
        <FilterForm data={simulations} client:load />
     </article>
 </Layout>
