@@ -1,48 +1,75 @@
-# Astro Starter Kit: Basics
+# MOVE 
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+**MOVE** es una plataforma educativa interactiva diseñada para facilitar el aprendizaje de física y matemáticas mediante simulaciones visuales accesibles desde la web. Está construida con [Astro], lo que garantiza un rendimiento óptimo y una arquitectura moderna orientada a componentes.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Descripción
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+Este repositorio contiene el código fuente de *MOVE*, una iniciativa orientada a estudiantes de nivel secundario que busca ofrecer herramientas intuitivas para el estudio de conceptos científicos a través de experiencias digitales interactivas.
 
-## 🚀 Project Structure
+El proyecto está pensado para ser:
 
-Inside of your Astro project, you'll see the following folders and files:
+- Claro y navegable
+- Rápido y eficiente
+- Modular y mantenible
+- Accesible desde cualquier dispositivo
+
+## Objetivos
+
+- Facilitar el aprendizaje de física y matemáticas mediante la exploración activa.
+
+- Promover el pensamiento visual e intuitivo en la resolución de problemas científicos.
+
+- Democratizar el acceso a simulaciones educativas sin necesidad de instalación.
+
+- Fomentar la participación y contribución de estudiantes y docentes en el desarrollo del contenido.
+
+---
+
+## Estructura
 
 ```text
 /
-├── public/
-│   └── favicon.svg
+├── public/                # Recursos estáticos (favicon, imágenes, etc.)
 ├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/        # Componentes reutilizables de interfaz.
+│   ├── layouts/           # Estructuras generales de página.
+│   ├── pages/             # Rutas visibles del sitio.
+│   ├── styles/            # Estilos globales o utilitarios.
+│   └── env.d.ts           # Tipos para desarrollo con Astro.
+├── astro.config.mjs       # Configuración principal del framework.
+├── tsconfig.json          # Configuración de TypeScript.
+└── package.json           # Dependencias y scripts del proyecto.
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+---
 
-## 🧞 Commands
+## Tecnologías utilizadas
 
-All commands are run from the root of the project, from a terminal:
+- [Astro](https://astro.build)
+- [TypeScript](https://www.typescriptlang.org/)
+- [pnpm](https://pnpm.io/)
+- [Preact](https://preactjs.com/)
+- [TailwindCCS](https://tailwindcss.com/)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+---
 
-## 👀 Want to learn more?
+## Scripts disponibles
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Comando         | Descripción                                       |
+|-----------------|---------------------------------------------------|
+| `pnpm install`  | Instala todas las dependencias.                   |
+| `pnpm dev`      | Inicia un servidor local de desarrollo.           |
+| `pnpm build`    | Genera la versión optimizada para producción.     |
+| `pnpm preview`  | Muestra una vista previa del sitio generado.      |
+| `test`          | Ejecuta todos los tests del proyecto.             |
+| `coverage`      | Muestra un informe de cobertura de pruebas.       |
+
+> **Nota:** el entorno de desarrollo no es necesario para usuarios finales. El sitio ya está disponible en línea.
+
+---
+
+## Licencia
+
+Distribuido bajo la licencia [MIT](LICENSE).  
+© 2025 - [ACDPDEV](https://github.com/ACDPDEV) - [TheDormitabis](https://github.com/TheDormitabis)
