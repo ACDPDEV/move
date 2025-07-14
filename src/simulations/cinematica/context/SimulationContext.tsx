@@ -125,7 +125,7 @@ const initialState: SimulationState = {
       position: { x: 100, y: 100 },
       velocity: { x: 1, y: 0 },    
       acceleration: { x: 0, y: 1 },
-      radius: 5,
+      radius: 15,
       color: "#FF5733"   
     }),
     new Movil({
@@ -133,7 +133,7 @@ const initialState: SimulationState = {
       position: { x: 100, y: 30 },
       velocity: { x: 0, y: 1 },     
       acceleration: { x: 0, y: 1 },
-      radius: 5,
+      radius: 15,
       color: "#33A1FF"   
     }),
     new Movil({
@@ -141,7 +141,7 @@ const initialState: SimulationState = {
       position: { x: 200, y: 100 },
       velocity: { x: -10, y: -2 },     
       acceleration: { x: 2, y: -0.5 },
-      radius: 5,
+      radius: 15,
       color: "#FFFFFF"   
     })
   ],
