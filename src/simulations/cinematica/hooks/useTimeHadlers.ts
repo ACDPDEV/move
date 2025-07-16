@@ -1,77 +1,83 @@
 import { useCallback, useEffect } from 'preact/hooks';
 import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
+import type { DeepPartial } from '@/simulations/cinematica/types';
+import type { DisplayOptions } from '@/simulations/cinematica/context/SimulationContext';
 
 function useTimeHandlers(
-    setSpeedInput: (value: string) => void
+  setSpeedInput: (value: string) => void
 ) {
-    const { 
-        state: { isPlaying, speed, showVectors, movementPrediction },
-        play, 
-        pause, 
-        setSpeed, 
-        updateShowVectors, 
-        resetSimulation,
-        updateMovementPrediction
-    } = useSimulation();
+  const {
+    state: { isPlaying, speed, displayOptions, movementPrediction },
+    play,
+    pause,
+    setSpeed,
+    updateDisplayOptions,
+    resetSimulation,
+    updateMovementPrediction,
+  } = useSimulation();
 
+  const handlePlayPause = useCallback(() => {
+    if (isPlaying) pause();
+    else play();
+  }, [isPlaying, play, pause]);
 
-    const handlePlayPause = useCallback(() => {
-        if (isPlaying) {
-            pause();
-        } else {
-            play();
-        }
-    }, [isPlaying, play, pause]);
+  const handleSpeedChange = useCallback((newSpeed: number) => {
+    const clamped = Math.max(0.1, Math.min(3, newSpeed));
+    setSpeed(clamped);
+  }, [setSpeed]);
 
-    const handleSpeedChange = useCallback((newSpeed: number) => {
-        const clampedSpeed = Math.max(0.1, Math.min(3, newSpeed));
-        setSpeed(clampedSpeed);
-    }, [setSpeed]);
+  const handleReset = useCallback(() => {
+    resetSimulation();
+  }, [resetSimulation]);
 
-    const handleReset = useCallback(() => {
-        resetSimulation();
-    }, [resetSimulation]);
+  useEffect(() => {
+    setSpeedInput(speed.toFixed(1));
+  }, [speed, setSpeedInput]);
 
-    // Sincroniza el input local si cambia el prop speed
-    useEffect(() => {
-        setSpeedInput(speed.toFixed(1));
-    }, [speed]);
+  const handleSpeedInput = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    setSpeedInput(target.value);
+  };
 
-    /**
-     * Maneja el cambio directo de velocidad mediante input
-     */
-    const handleSpeedInput = (event: Event) => {
-        const target = event.target as HTMLInputElement;
-        setSpeedInput(target.value);
-    };
-
-    const handleSpeedBlur = (event: Event) => {
-        const target = event.target as HTMLInputElement;
-        const newSpeed = parseFloat(target.value);
-        if (!isNaN(newSpeed) && newSpeed >= 0.1 && newSpeed <= 3) {
-            handleSpeedChange(newSpeed);
-        } else {
-            setSpeedInput(speed.toFixed(1)); // Restaura valor válido
-        }
-    };
-
-    const handleShowVectorsChange = () => {
-        updateShowVectors(!showVectors);
-    };
-
-    const handleMovementPrediction = () => {
-        updateMovementPrediction(!movementPrediction);
-    };
-
-    return {
-        handlePlayPause,
-        handleSpeedChange,
-        handleReset,
-        handleSpeedInput,
-        handleSpeedBlur,
-        handleShowVectorsChange,
-        handleMovementPrediction,
+  const handleSpeedBlur = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    const val = parseFloat(target.value);
+    if (!isNaN(val) && val >= 0.1 && val <= 3) {
+      handleSpeedChange(val);
+    } else {
+      setSpeedInput(speed.toFixed(1));
     }
+  };
+
+  /**
+   * Función genérica para togglear cualquier opción de display
+   */
+  const handleToggleDisplayOption = useCallback(
+    (partial: DeepPartial<DisplayOptions>) => {
+      updateDisplayOptions(partial);
+    },
+    [updateDisplayOptions]
+  );
+
+  /**
+   * Ejemplos de uso:
+   * handleToggleDisplayOption({ position: { resultant: !displayOptions.position.resultant } })
+   * handleToggleDisplayOption({ trayectories: !displayOptions.trayectories })
+   */
+
+  const handleMovementPredictionToggle = useCallback(() => {
+    updateMovementPrediction(!movementPrediction);
+  }, [movementPrediction, updateMovementPrediction]);
+
+  return {
+    handlePlayPause,
+    handleSpeedChange,
+    handleReset,
+    handleSpeedInput,
+    handleSpeedBlur,
+    handleToggleDisplayOption,
+    handleMovementPredictionToggle,
+  };
 }
 
 export { useTimeHandlers };

@@ -38,7 +38,6 @@ function MRUSimulator() {
         <div className="relative w-full h-full bg-stone-900">
             <Canvas style={{ width: '100%', height: '100%' }} />
             
-            <TimeControls />
             
             <Sidebar
                 isOpen={isSidebarOpen}
@@ -63,8 +62,8 @@ function MRUSimulator() {
                 </div>
             </div>
 
-            <div className="absolute bottom-4 right-4 space-y-2">
-                <div class="flex flex-row gap-1 bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm">
+            <div className="absolute flex flex-col bottom-0 left-1/2 translate-x-[-50%] gap-2 mb-10 justify-center items-center">
+                <div class="flex flex-row gap-1 bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm w-fit">
                     {
                         entities.map(entity => (
                             <button
@@ -75,6 +74,7 @@ function MRUSimulator() {
                         ))
                     }
                 </div>
+                <TimeControls />
             </div>
         </div>
     );
