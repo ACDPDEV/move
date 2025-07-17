@@ -39,31 +39,6 @@ interface TimeControlsProps {
     onSpeedDown: () => void;
 }
 
-interface MovilInterface {
-    id?: string;
-    position: Vector2D;
-    velocity: Vector2D;
-    acceleration: Vector2D;
-    radius: number;
-    color: string;
-
-    constructor({ 
-        id,
-        position, 
-        velocity, 
-        acceleration,
-        radius, 
-        color
-    });
-    update(deltaTime: number): void;
-    absoluteMoveAndScale(deltaPosition: { x: number, y: number }, scale: number): void;
-    draw(ctx: CanvasRenderingContext2D): void;
-    drawVelocityVector(ctx: CanvasRenderingContext2D, scale: number): void;
-    drawAccelerationVector(ctx: CanvasRenderingContext2D, scale: number): void;
-    toString(): string;
-    getDebugInfo(): string;
-}
-
 type DisplayOptions = {
   position: {
     resultant: boolean;
@@ -96,7 +71,6 @@ export type {
     AbsolutePlaneState,
     CanvasConfig,
     TimeControlsProps,
-    MovilInterface,
     DisplayOptions,
     DeepPartial
 }

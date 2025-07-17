@@ -76,7 +76,7 @@ function Sidebar({
         const entity = entities.find(e => e.id === entityId);
         if (!entity) return;
 
-        let updates: Partial<Movil> = {};
+        const updates: Partial<Movil> = {};
 
         if (vectorComponent && (property === 'position' || property === 'velocity' || property === 'acceleration')) {
             if (value === "") return;
