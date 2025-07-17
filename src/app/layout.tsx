@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Ubuntu } from 'next/font/google';
 import './globals.css';
-import LayoutContainer from '@/components/layout/LayoutContainer';
+import { ThemeProvider } from '@/components/layout/ThemeProvider';
 
 const ubuntu = Ubuntu({
   subsets: ['latin'],
@@ -20,13 +20,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='es'>
+    <html lang='es' suppressHydrationWarning>
       <body
-        className={`${ubuntu.variable} bg-white text-black dark:bg-black dark:text-white`}
+        className={`${ubuntu.className} bg-background text-primary`}
       >
-        <LayoutContainer>
-          {children}
-        </LayoutContainer>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            {children}
+        </ThemeProvider>
       </body>
     </html>
   );

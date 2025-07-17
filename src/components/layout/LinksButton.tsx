@@ -11,12 +11,14 @@ function HomeLink({isThisPage}: Readonly<{
     isThisPage: boolean;
 }>) {
     return (
-        <Button variant={isThisPage ? 'secondary' : 'default'} disabled={isThisPage} className="p-0">
-            <Link href="/" className="flex flex-row gap-2 justify-center items-center h-full w-full p-3">
-                <IconHome className={`${isThisPage ? 'stroke-stone-800 hover:stroke-stone-950' : 'stroke-stone-400 hover:stroke-stone-200'} hover:scale-110 transition-all`} />
-                <span className={isThisPage ? 'text-stone-800' : 'text-stone-400'}>Inicio</span>
-            </Link>
-        </Button>
+        <Link href="/">
+            <Button variant={isThisPage ? 'default' : 'secondary'} >
+                <IconHome className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <span className={isThisPage ? 'text-stone-400 dark:text-stone-800' : 'text-stone-800 dark:text-stone-400'}>
+                    Inicio
+                </span>
+            </Button>
+        </Link>
     )
 }
 
@@ -24,12 +26,14 @@ function SimulationsLink({isThisPage}: Readonly<{
     isThisPage: boolean;
 }>) {
     return (
-        <Button variant={isThisPage ? 'secondary' : 'default'} disabled={isThisPage} className="p-0">
-            <Link href="/simulations/" className="flex flex-row gap-2 justify-center items-center h-full w-full p-3">
-                <IconPrismLight className={`${isThisPage ? 'stroke-stone-800 hover:stroke-stone-950' : 'stroke-stone-400 hover:stroke-stone-200'} hover:scale-110 transition-all`} />
-                <span className={isThisPage ? 'text-stone-800' : 'text-stone-400'}>Simulaciones</span>
-            </Link>
-        </Button>
+        <Link href="/simulations/">
+            <Button variant={isThisPage ? 'default' : 'secondary'} >
+                <IconPrismLight className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <span className={isThisPage ? 'text-stone-400 dark:text-stone-800' : 'text-stone-800 dark:text-stone-400'}>
+                    Simulaciones
+                </span>
+            </Button>
+        </Link>
     )
 }
 
@@ -37,12 +41,14 @@ function AboutLink({isThisPage}: Readonly<{
     isThisPage?: boolean;
 }>) {
     return (
-        <Button variant={isThisPage ? 'secondary' : 'default'} disabled={isThisPage} className="p-0">
-            <Link href="/about/" className="flex flex-row gap-2 justify-center items-center h-full w-full p-3">
-                <IconInfoCircle className={`${isThisPage ? 'stroke-stone-800 hover:stroke-stone-950' : 'stroke-stone-400 hover:stroke-stone-200'} hover:scale-110 transition-all`} />
-                <span className={isThisPage ? 'text-stone-800' : 'text-stone-400'}>Sobre nosotros</span>
-            </Link>
-        </Button>
+        <Link href="/about/">
+            <Button variant={isThisPage ? 'default' : 'secondary'} >
+                <IconInfoCircle className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <span className={isThisPage ? 'text-stone-400 dark:text-stone-800' : 'text-stone-800 dark:text-stone-400'}>
+                    Sobre nosotros
+                </span>
+            </Button>
+        </Link>
     )
 }
 
@@ -50,12 +56,14 @@ function ContactLink({isThisPage}: Readonly<{
     isThisPage?: boolean;
 }>) {
     return (
-        <Button variant={isThisPage ? 'secondary' : 'default'} disabled={isThisPage} className="p-0">
-            <Link href="/contact/" className="flex flex-row gap-2 justify-center items-center h-full w-full p-3">
-                <IconMessage className={`${isThisPage ? 'stroke-stone-800 hover:stroke-stone-950' : 'stroke-stone-400 hover:stroke-stone-200'} hover:scale-110 transition-all`} />
-                <span className={isThisPage ? 'text-stone-800' : 'text-stone-400'}>Contacto</span>
-            </Link>
-        </Button>
+        <Link href="/contact/">
+            <Button variant={isThisPage ? 'default' : 'secondary'} >
+                <IconMessage className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <span className={isThisPage ? 'text-stone-400 dark:text-stone-800' : 'text-stone-800 dark:text-stone-400'}>
+                    Contacto
+                </span>
+            </Button>
+        </Link>
     )
 }
 

@@ -1,15 +1,16 @@
 import Header from "@/components/layout/Header";
+import { ScrollArea } from "../ui/scroll-area";
 
 function LayoutContainer({ children }: Readonly<{ 
     children: React.ReactNode;
 }>) {
     return (
-        <main className="flex flex-col w-screen h-screen overflow-scroll bg-black text-white p-3">
+        <ScrollArea className="flex flex-col w-screen h-screen overflow-hidden p-3">
             <Header /> 
-            <article className="w-full h-full mt-[52px]">
+            <main className="w-full h-full mt-[52px]">
                 {children}
-            </article>
-        </main>
+            </main>
+        </ScrollArea>
     )
 }
 
