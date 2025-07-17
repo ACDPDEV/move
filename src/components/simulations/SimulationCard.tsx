@@ -159,7 +159,7 @@ function SimulationCard({ simulation, showBackButton = false }:{
                   {/* Imagen con efecto de degradado */}
                   <div className="absolute inset-0">
                     <img
-                      src={`/img/${simulation.image}`}
+                      src={simulation.image}
                       alt={simulation.name}
                       className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                     />

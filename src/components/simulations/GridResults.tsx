@@ -68,10 +68,9 @@ function GridResults({ simulations }: Readonly<{ simulations: Simulation[] }>) {
                 <CardContent className="p-0">
                   <AspectRatio ratio={16 / 10} className="relative overflow-hidden">
                     <div className="absolute inset-0">
-                      <Image
-                        src={`/img/${simulation.image}`}
+                      <img
+                        src={simulation.image}
                         alt={simulation.name}
-                        fill
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       {/* Gradient overlay */}
