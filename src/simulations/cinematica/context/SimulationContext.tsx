@@ -1,7 +1,5 @@
-import { createContext } from 'preact';
-import { useContext, useReducer, useCallback, useMemo } from 'preact/hooks';
-import type { JSX } from 'preact';
-import { Vector2D } from '@/simulations/lib/physicsUtils';
+import { createContext, useContext, useReducer, useCallback, useMemo } from 'react';
+import { Vector2D } from '@/simulations//lib/utils';
 import { Movil, type IMovilProps } from '../entities/Movil';
 import type { AbsolutePlaneState, DeepPartial } from '../types';
 
@@ -164,7 +162,9 @@ function simulationReducer(state: SimulationState, action: SimulationAction): Si
 }
 
 // Proveedor
-export function SimulationProvider({ children }: { children: JSX.Element }) {
+export function SimulationProvider({ children }: Readonly<{ 
+    children: React.ReactNode 
+}>) {
   const [state, dispatch] = useReducer(simulationReducer, initialState);
 
   const play = useCallback(() => dispatch({ type: 'PLAY' }), []);

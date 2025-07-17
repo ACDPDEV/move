@@ -1,4 +1,4 @@
-import { useRef } from 'preact/hooks';
+import { useRef } from 'react';
 import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
 import type { Ticker, MouseState, AbsolutePlaneState } from '@/simulations/cinematica/types';
 

@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'preact/hooks';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface DropdownMenuProps {
-  trigger: preact.ComponentChildren;
-  children: preact.ComponentChildren;
+  trigger: React.ReactNode;
+  children: React.ReactNode;
   position?: 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
   className?: string;
   disabled?: boolean;
@@ -112,7 +112,7 @@ const DropdownMenu = ({
 
 // Componente para items del dropdown
 interface DropdownItemProps {
-  children: preact.ComponentChildren;
+  children: React.ReactNode;
   onClick?: (e: MouseEvent) => void;
   disabled?: boolean;
   className?: string;
@@ -162,7 +162,7 @@ const DropdownItem = ({
 };
 
 // Componente para separadores
-const DropdownSeparator = (): preact.VNode => (
+const DropdownSeparator = (): React.ReactElement => (
   <div className="h-px bg-gray-200 my-1" role="separator" />
 );
 

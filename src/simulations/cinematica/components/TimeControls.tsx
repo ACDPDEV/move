@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useState } from 'react';
 import {
   IconPlayerPause,
   IconPlayerPlay,
@@ -6,9 +6,9 @@ import {
   IconComponents,
   IconComponentsOff,
   IconArrowUp,
-} from '@tabler/icons-preact';
+} from '@tabler/icons-react';
 import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
-import { useTimeHandlers } from '@/simulations/cinematica/hooks/useTimeHadlers';
+import { useTimeHandlers } from '@/simulations/cinematica/hooks/useTimeHandlers';
 import { DropdownItem, DropdownMenu, DropdownSeparator } from './DropdownMenu';
 
 function PlayerButtons({
@@ -21,16 +21,16 @@ function PlayerButtons({
   onReset: () => void;
 }) {
   return (
-    <div class="flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <button
-        class="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105"
+        className="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105"
         onClick={onPlayPause}
         title={isPlaying ? 'Pausar' : 'Reproducir'}
       >
         {isPlaying ? <IconPlayerPause size={20} /> : <IconPlayerPlay size={20} />}
       </button>
       <button
-        class="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105"
+        className="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105"
         onClick={onReset}
         title="Reiniciar simulación"
       >
@@ -56,9 +56,9 @@ function SpeedInput({
   onBlur: (e: Event) => void;
 }) {
   return (
-    <div class="flex items-center gap-2">
-      <span class="text-xs text-stone-400">Velocidad:</span>
-      <button onClick={onDecrement} disabled={speed <= 0.1} class="text-stone-400 hover:text-white hover:bg-stone-700 w-6 h-6 rounded flex items-center justify-center transition-colors" title="Disminuir velocidad">-</button>
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-stone-400">Velocidad:</span>
+      <button onClick={onDecrement} disabled={speed <= 0.1} className="text-stone-400 hover:text-white hover:bg-stone-700 w-6 h-6 rounded flex items-center justify-center transition-colors" title="Disminuir velocidad">-</button>
       <input
         type="number"
         min="0.1"
@@ -67,9 +67,9 @@ function SpeedInput({
         value={inputValue}
         onInput={onInput}
         onBlur={onBlur}
-        class="w-12 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
+        className="w-12 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
       />
-      <button onClick={onIncrement} disabled={speed >= 3} class="text-stone-400 hover:text-white hover:bg-stone-700 w-6 h-6 rounded flex items-center justify-center transition-colors" title="Aumentar velocidad">+</button>
+      <button onClick={onIncrement} disabled={speed >= 3} className="text-stone-400 hover:text-white hover:bg-stone-700 w-6 h-6 rounded flex items-center justify-center transition-colors" title="Aumentar velocidad">+</button>
     </div>
   );
 }
@@ -88,8 +88,8 @@ function TimeInput({
   movementPrediction: boolean;
 }) {
   return (
-    <div class="flex items-center gap-2">
-      <span class="text-xs text-stone-400">Tiempo:</span>
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-stone-400">Tiempo:</span>
       <input
         type="number"
         value={time.toFixed(2)}
@@ -99,10 +99,10 @@ function TimeInput({
           onTimeInputToggle(true);
           onTimeChange(v);
         }}
-        class="w-20 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
+        className="w-20 text-center text-sm text-stone-200 bg-stone-700 border border-stone-600 rounded px-1 py-0.5 focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
       />
       <button
-        class="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105"
+        className="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all hover:scale-105"
         onClick={onPredictToggle}
         title="Predecir movimiento"
       >
@@ -137,7 +137,7 @@ function TimeControls() {
   };
 
   return (
-    <div class="flex flex-row w-fit h-fit bg-stone-800/90 border border-stone-700 items-center justify-center p-3 gap-3 rounded-lg backdrop-blur-md shadow-lg">
+    <div className="flex flex-row w-fit h-fit bg-stone-800/90 border border-stone-700 items-center justify-center p-3 gap-3 rounded-lg backdrop-blur-md shadow-lg">
       <TimeInput
         time={time}
         onTimeChange={updateTime}
@@ -145,7 +145,7 @@ function TimeControls() {
         onPredictToggle={handleMovementPredictionToggle}
         movementPrediction={movementPrediction}
       />
-      <div class="h-6 w-px bg-stone-600" />
+      <div className="h-6 w-px bg-stone-600" />
       <SpeedInput
         speed={speed}
         inputValue={speedInput}
@@ -154,7 +154,7 @@ function TimeControls() {
         onInput={handleSpeedInput}
         onBlur={handleSpeedBlur}
       />
-      <div class="h-6 w-px bg-stone-600" />
+      <div className="h-6 w-px bg-stone-600" />
       <DropdownMenu 
         position="top-left"
         trigger={
@@ -206,7 +206,7 @@ function TimeControls() {
           Ejes
         </DropdownItem>
       </DropdownMenu>
-      <div class="h-6 w-px bg-stone-600" />
+      <div className="h-6 w-px bg-stone-600" />
       <PlayerButtons
         isPlaying={isPlaying}
         onPlayPause={handlePlayPause}

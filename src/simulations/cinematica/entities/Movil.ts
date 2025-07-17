@@ -1,4 +1,4 @@
-import { Vector2D } from "@/simulations/lib/physicsUtils";
+import { Vector2D } from "@/simulations/lib/utils";
 
 interface IMovilProps {
     id?: string;

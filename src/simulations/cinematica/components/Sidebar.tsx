@@ -1,7 +1,7 @@
-import { Vector2D } from '@/simulations/lib/physicsUtils';
-import { useMemo, useState } from 'preact/hooks';
+import { Vector2D } from '@/simulations/lib/utils';
+import { useMemo, useState } from 'react';
 import { Movil, type IMovilProps } from '@/simulations/cinematica/entities/Movil';
-import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarRightCollapseFilled, IconPlus, IconTrash } from '@tabler/icons-preact';
+import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarRightCollapseFilled, IconPlus, IconTrash } from '@tabler/icons-react';
 import { AxisVectorInput } from './CoordinatesInput';
 
 interface SidebarProps {
@@ -104,7 +104,7 @@ function Sidebar({
             {/* Botón de toggle */}
             <button 
                 onClick={onToggle}
-                class="p-2 rounded-full hover:bg-stone-800 transition-colors absolute top-4 right-4 z-10"
+                className="p-2 rounded-full hover:bg-stone-800 transition-colors absolute top-4 right-4 z-10"
                 aria-label={isOpen ? "Ocultar panel" : "Mostrar panel"}
             >
                 {isOpen ? (
@@ -116,39 +116,39 @@ function Sidebar({
 
             {/* Panel lateral */}
             <nav
-                class={`fixed top-0 right-0 h-full bg-stone-900 border-l border-stone-700 transform transition-transform duration-300 ease-in-out ${
+                className={`fixed top-0 right-0 h-full bg-stone-900 border-l border-stone-700 transform transition-transform duration-300 ease-in-out ${
                     isOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
                 style={{ width: '400px' }}
             >
-                <div class="p-4 h-full overflow-y-auto">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-white">Control de Móviles</h2>
+                <div className="p-4 h-full overflow-y-auto">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-xl font-bold text-white">Control de Móviles</h2>
                     </div>
 
                     <button 
                         onClick={handleAddEntity}
-                        class="p-2 w-full rounded-md hover:bg-stone-700 border border-stone-600 transition-colors bg-stone-800 text-white mb-2"
+                        className="p-2 w-full rounded-md hover:bg-stone-700 border border-stone-600 transition-colors bg-stone-800 text-white mb-2"
                         aria-label="Añadir móvil"
                         title="Agregar nuevo móvil"
                     >
-                        <span class="flex items-center gap-2">
+                        <span className="flex items-center gap-2">
                             <IconPlus />
                             Añadir Móvil
                         </span>
                     </button>
                     {reverseEntities.length > 0 ? (
-                        <div class="space-y-4">
+                        <div className="space-y-4">
                             {reverseEntities.map((entity, index) => (
-                                <div key={entity.id || index} class="bg-stone-800 p-4 rounded-lg border border-stone-700">
+                                <div key={entity.id || index} className="bg-stone-800 p-4 rounded-lg border border-stone-700">
                                     {/* Header de la entidad */}
-                                    <div class="flex justify-between items-center mb-4">
-                                        <h3 class="text-lg font-semibold text-white">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className="text-lg font-semibold text-white">
                                             Móvil {reverseEntities.length - index}
                                         </h3>
                                         <button
                                             onClick={() => handleDeleteEntity(entity.id!)}
-                                            class="p-1 rounded hover:bg-red-600 transition-colors text-red-400 hover:text-white"
+                                            className="p-1 rounded hover:bg-red-600 transition-colors text-red-400 hover:text-white"
                                             aria-label="Eliminar móvil"
                                             title="Eliminar móvil"
                                         >
@@ -156,7 +156,7 @@ function Sidebar({
                                         </button>
                                     </div>
 
-                                    <div class="space-y-4">
+                                    <div className="space-y-4">
                                         {/* Posición */}
                                         {/* Posición */}
                                         <AxisVectorInput 
@@ -266,9 +266,9 @@ function Sidebar({
                                         />
 
                                         {/* Radio y Color */}
-                                        <div class="flex gap-4">
-                                            <div class="flex-1">
-                                                <label class="block text-sm font-medium text-stone-300 mb-2">
+                                        <div className="flex gap-4">
+                                            <div className="flex-1">
+                                                <label className="block text-sm font-medium text-stone-300 mb-2">
                                                     Radio
                                                 </label>
                                                 <input
@@ -289,14 +289,14 @@ function Sidebar({
                                                             return copy;
                                                         });
                                                     }}
-                                                    class="w-full px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
+                                                    className="w-full px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
                                                     min="5"
                                                     max="50"
                                                     step="1"
                                                 />
                                             </div>
-                                            <div class="flex-1">
-                                                <label class="block text-sm font-medium text-stone-300 mb-2">
+                                            <div className="flex-1">
+                                                <label className="block text-sm font-medium text-stone-300 mb-2">
                                                     Color
                                                 </label>
                                                 <input
@@ -317,14 +317,14 @@ function Sidebar({
                                                             return copy;
                                                         });
                                                     }}
-                                                    class="w-full h-8 bg-stone-700 border border-stone-600 rounded cursor-pointer"
+                                                    className="w-full h-8 bg-stone-700 border border-stone-600 rounded cursor-pointer"
                                                 />
                                             </div>
                                         </div>
 
                                         {/* Información de estado */}
-                                        <div class="mt-3 pt-3 border-t border-stone-700">
-                                            <div class="text-xs text-stone-400 space-y-1">
+                                        <div className="mt-3 pt-3 border-t border-stone-700">
+                                            <div className="text-xs text-stone-400 space-y-1">
                                                 <div>ID: {entity.id}</div>
                                                 <div>Pos: ({Math.sqrt(entity.position.x ** 2 + entity.position.y ** 2).toFixed(1)}, {(entity.position.angle() * (180 / Math.PI)).toFixed(1)}º)</div>
                                                 <div>Vel: ({Math.sqrt(entity.velocity.x ** 2 + entity.velocity.y ** 2).toFixed(1)}, {(entity.velocity.angle() * (180 / Math.PI)).toFixed(1)}º)</div>
@@ -336,13 +336,13 @@ function Sidebar({
                             ))}
                         </div>
                     ) : (
-                        <div class="text-center py-8">
-                            <div class="text-stone-400 mb-4">
+                        <div className="text-center py-8">
+                            <div className="text-stone-400 mb-4">
                                 No hay móviles en la simulación
                             </div>
                             <button 
                                 onClick={handleAddEntity}
-                                class="flex items-center justify-center gap-2 w-full bg-stone-800 border border-stone-600 hover:bg-stone-700 transition-colors rounded-lg p-4 text-white"
+                                className="flex items-center justify-center gap-2 w-full bg-stone-800 border border-stone-600 hover:bg-stone-700 transition-colors rounded-lg p-4 text-white"
                             >
                                 <IconPlus size={24} />
                                 Agregar primer móvil

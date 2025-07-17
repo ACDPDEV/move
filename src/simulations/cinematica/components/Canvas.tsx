@@ -1,5 +1,4 @@
-import { useEffect, useCallback } from 'preact/hooks'
-import type { JSX } from 'preact/jsx-runtime'
+import React, { useEffect, useCallback } from 'react'
 import { useSimulation } from '@/simulations/cinematica/context/SimulationContext'
 import { CANVAS_CONFIG } from '@/simulations/cinematica/utils/canvasManagment'
 import { runTicker } from '@/simulations/cinematica/utils/timeManagment'
@@ -9,7 +8,7 @@ import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners'
 
 function Canvas(
     { style }: {
-        style?: JSX.CSSProperties
+        style?: React.CSSProperties
     }
 ) {
     const { 
@@ -19,7 +18,7 @@ function Canvas(
             isReset,
             entities,
             speed,
-            showVectors,
+            displayOptions,
             isInputTimeChanged,
             movementPrediction,
         },
@@ -74,7 +73,7 @@ function Canvas(
 
             clearCanvas($canvas);
             drawPlane($canvas, AbsolutePlane, CANVAS_CONFIG);
-            drawEntities(ctx, entities, AbsolutePlane, Ticker, speed, showVectors, isPlaying);
+            drawEntities(ctx, entities, AbsolutePlane, Ticker, speed, displayOptions, isPlaying);
             
             animationFrameId = window.requestAnimationFrame(render)
         }
@@ -89,7 +88,7 @@ function Canvas(
         movementPrediction,
         isReset,
         isInputTimeChanged,
-        showVectors,
+        displayOptions,
         entities,
         speed,
         updateFPS,
