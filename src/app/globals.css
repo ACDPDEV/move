@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "@tailwindcss/typography";
+@plugin "@midudev/tailwind-animations";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
