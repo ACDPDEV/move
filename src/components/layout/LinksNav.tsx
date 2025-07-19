@@ -17,7 +17,7 @@ function LinksNav() {
                 <HomeLink isThisPage={pathname === '/' || pathname === ''} />
                 <SimulationsLink isThisPage={pathname.includes('/simulations/') || pathname === '/simulations'} />
                 <AboutLink isThisPage={pathname.includes('/about/') || pathname === '/about'} />
-                <ContactLink isThisPage={pathname.includes('/contact/') || pathname === '/contact'} />
+                <ContactLink isThisPage={pathname.includes('/download/') || pathname === '/download'} />
             </ul>
         </>
     );

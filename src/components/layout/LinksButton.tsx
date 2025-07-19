@@ -4,7 +4,7 @@ import {
     IconHome,
     IconPrismLight,
     IconInfoCircle,
-    IconMessage,
+    IconDownload,
 } from '@tabler/icons-react';
 
 function HomeLink({isThisPage}: Readonly<{ 
@@ -61,19 +61,19 @@ function AboutLink({isThisPage}: Readonly<{
     )
 }
 
-function ContactLink({isThisPage}: Readonly<{ 
+function DownloadLink({isThisPage}: Readonly<{ 
     isThisPage?: boolean;
 }>) {
     return (
-        <Link href="/contact/">
+        <Link href="/download/">
             <Button variant={isThisPage ? 'default' : 'secondary'} className="hidden md:flex" >
-                <IconMessage className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <IconDownload className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
                 <span className={isThisPage ? 'text-stone-400 dark:text-stone-800' : 'text-stone-800 dark:text-stone-400'}>
-                    Contacto
+                    Descargar
                 </span>
             </Button>
             <Button variant={isThisPage ? 'default' : 'secondary'} size={'icon'} className="md:hidden">
-                <IconMessage className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <IconDownload className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
             </Button>
         </Link>
     )
@@ -83,5 +83,5 @@ export {
     HomeLink,
     SimulationsLink,
     AboutLink,
-    ContactLink,
+    DownloadLink as ContactLink,
 }
