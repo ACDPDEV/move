@@ -22,7 +22,7 @@ async function GithubButton() {
         <Link href="https://github.com/acdpdev/move/">
             <Button variant='secondary' className="flex flex-row gap-2 justify-center items-center">
                 <IconBrandGithub/>
-                <div className="flex flex-row gap-1 h-full w-fit">
+                <div className="hidden md:flex md:flex-row gap-1 h-full w-fit">
                     {
                         GithubRepoContributors.map((contributor: any, index: number) => 
                             <img 
