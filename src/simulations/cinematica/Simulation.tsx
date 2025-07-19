@@ -2,26 +2,22 @@
 import { useCallback, useState } from "react";
 import Sidebar from "@/simulations/cinematica/components/Sidebar";
 import TimeControls from "@/simulations/cinematica/components/TimeControls";
-import { SimulationProvider, useSimulation } from "@/simulations/cinematica/context/SimulationContext";
 import { Movil } from "@/simulations/cinematica/entities/Movil";
 import Canvas from "@/simulations/cinematica/components/Canvas";
-
-function CinematicaSimulationContainer() {
-    return (
-        <SimulationProvider>
-            <CinematicaSimulation />
-        </SimulationProvider>
-    );
-}
+import { useSimulationStore } from "./store/useSimulationStore";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from "@/components/ui/button";
+import { IconLayoutSidebarLeftCollapseFilled } from "@tabler/icons-react";
 
 function CinematicaSimulation() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const { 
-        state: { isPlaying, entities, fps },
+        isPlaying,
+        entities,
+        fps,
         updateEntities,
         updateEntity,
-    } = useSimulation();
+    } = useSimulationStore();
 
     
     
@@ -39,14 +35,7 @@ function CinematicaSimulation() {
         <div className="relative w-full h-full bg-stone-900">
             <Canvas style={{ width: '100%', height: '100%' }} />
             
-            
-            <Sidebar
-                isOpen={isSidebarOpen}
-                onToggle={() => setIsSidebarOpen(prev => !prev)}
-                entities={entities}
-                onEntityChange={handleEntityChange}
-                onEntityDelete={handleEntityDelete}
-            />
+            <Sidebar />
             
             <div className="absolute top-4 left-4 space-y-2">
                 <div className="bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm">
@@ -81,4 +70,4 @@ function CinematicaSimulation() {
     );
 }
 
-export default CinematicaSimulationContainer;
+export default CinematicaSimulation;

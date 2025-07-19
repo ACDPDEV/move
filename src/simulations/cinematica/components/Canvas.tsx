@@ -5,6 +5,7 @@ import { runTicker } from '@/simulations/cinematica/utils/timeManagment'
 import { drawPlane, clearCanvas, drawEntities } from '@/simulations/cinematica/utils/drawingOnCanvas'
 import { useInitialRefs } from '@/simulations/cinematica/hooks/useInitialRefs'
 import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners'
+import { useSimulationStore } from '../store/useSimulationStore'
 
 function Canvas(
     { style }: {
@@ -12,7 +13,6 @@ function Canvas(
     }
 ) {
     const { 
-        state: {
             time,
             isPlaying,
             isReset,
@@ -21,14 +21,13 @@ function Canvas(
             displayOptions,
             isInputTimeChanged,
             movementPrediction,
-        },
         updateIsReset,
         updateIsInputTimeChanged,
         updateFPS,
         updateTime,
         updatePlane,
         pause,
-    } = useSimulation();
+    } = useSimulationStore();
 
     const { 
         canvasRef, 

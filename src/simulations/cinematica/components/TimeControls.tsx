@@ -7,9 +7,9 @@ import {
   IconComponentsOff,
   IconArrowUp,
 } from '@tabler/icons-react';
-import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
 import { useTimeHandlers } from '@/simulations/cinematica/hooks/useTimeHandlers';
 import { DropdownItem, DropdownMenu, DropdownSeparator } from './DropdownMenu';
+import { useSimulationStore } from '../store/useSimulationStore';
 
 function PlayerButtons({
   isPlaying,
@@ -114,10 +114,10 @@ function TimeInput({
 
 function TimeControls() {
   const {
-    state: { time, speed, isPlaying, displayOptions, movementPrediction },
+    time, speed, isPlaying, displayOptions, movementPrediction ,
     updateTime,
     updateIsInputTimeChanged,
-  } = useSimulation();
+  } = useSimulationStore();
 
   const [speedInput, setSpeedInput] = useState(() => speed.toFixed(1));
 

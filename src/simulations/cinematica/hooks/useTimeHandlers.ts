@@ -1,20 +1,20 @@
 import { useCallback, useEffect } from 'react';
-import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
 import type { DeepPartial } from '@/simulations/cinematica/types';
 import type { DisplayOptions } from '@/simulations/cinematica/context/SimulationContext';
+import { useSimulationStore } from '../store/useSimulationStore';
 
 function useTimeHandlers(
   setSpeedInput: (value: string) => void
 ) {
   const {
-    state: { isPlaying, speed, displayOptions, movementPrediction },
+    isPlaying, speed, displayOptions, movementPrediction,
     play,
     pause,
     setSpeed,
     updateDisplayOptions,
     resetSimulation,
     updateMovementPrediction,
-  } = useSimulation();
+  } = useSimulationStore();
 
   const handlePlayPause = useCallback(() => {
     if (isPlaying) pause();

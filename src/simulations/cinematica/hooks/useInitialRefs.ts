@@ -1,9 +1,9 @@
 import { useRef } from 'react';
-import { useSimulation } from '@/simulations/cinematica/context/SimulationContext';
 import type { Ticker, MouseState, AbsolutePlaneState } from '@/simulations/cinematica/types';
+import { useSimulationStore } from '../store/useSimulationStore';
 
 function useInitialRefs() {
-    const { state: { time, plane } } = useSimulation();
+    const { time, plane } = useSimulationStore();
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const TickerRef = useRef<Ticker>({
         timeCount: time,
