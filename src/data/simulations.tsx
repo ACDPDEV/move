@@ -104,7 +104,7 @@ const simulations: Simulation[] = [
   },
   {
     slug: "cinematica/mvcl",
-    name: "Movimiento Vertical de Caída Libre",
+    name: "MVCL - Caída Libre",
     description: "Simulación de un cuerpo cayendo solo bajo gravedad.",
     area: ["Mecánica", "Cinemática", "Gravitación"],
     image: "/mvcl.png",
@@ -147,7 +147,7 @@ const simulations: Simulation[] = [
   },
   {
     slug: "cinematica/mp",
-    name: "Movimiento Parabólico",
+    name: "MP - Movimiento Parabólico",
     description: "Simulación de proyectiles con trayectoria parabólica.",
     area: ["Mecánica", "Cinemática"],
     image: "/mp.png",
@@ -191,7 +191,7 @@ const simulations: Simulation[] = [
   },
   {
     slug: "cinematica/mcu",
-    name: "Movimiento Circular Uniforme",
+    name: "MCU -Movimiento Circular Uniforme",
     description: "Simulación de un objeto girando con velocidad constante.",
     area: ["Mecánica", "Cinemática"],
     image: "/mcu.png",
@@ -236,7 +236,7 @@ const simulations: Simulation[] = [
   },
   {
     slug: "cinematica/mcuv",
-    name: "Movimiento Circular Uniformemente Variado",
+    name: "MCUV - Movimiento Circular Uniformemente Variado",
     description: "Movimiento circular con aceleración angular constante.",
     area: ["Mecánica", "Cinemática"],
     image: "/mcuv.png",
