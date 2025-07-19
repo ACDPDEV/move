@@ -12,7 +12,7 @@ function About() {
                         </p>
                         <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
                             Creemos que la educación debe ser <strong className="text-blue-600 dark:text-blue-400">interactiva</strong>, 
-                            <strong className="text-purple-600 dark:text-purple-400"> divertida</strong> y <strong className="text-cyan-600 dark:text-cyan-400">accesible</strong> 
+                            <strong className="text-purple-600 dark:text-purple-400"> divertida</strong> y <strong className="text-cyan-600 dark:text-cyan-400">accesible </strong>
                             para todos los estudiantes, independientemente de su idioma o ubicación.
                         </p>
                         
