@@ -5,6 +5,8 @@ import { useSimulationStore } from '../store/useSimulationStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { z } from 'zod';
+import { Form } from '@/components/ui/form';
+import MobileForm from './MobileForm';
 
 // zod schema
 const schema = z.object({
@@ -47,24 +49,7 @@ function Sidebar() {
                     {reverseEntities.map((entity, index) => (
                         <Card key={entity.id || index}>
                             <CardContent>
-                                <Input 
-                                    type="text"
-                                    value={entity.radius}
-                                    onInput={(e) => {
-                                        const val = (e.target as HTMLInputElement).value;
-                                        updateEntity(entity.id!, { radius: Number(val) });
-                                    }}
-                                    onBlur={(e) => {
-                                        const val = (e.target as HTMLInputElement).value;
-                                        if (val !== "" && !isNaN(Number(val))) {
-                                            updateEntity(entity.id!, { radius: Number(val) });
-                                        }
-                                    }}
-                                    className="w-full px-2 py-1 bg-stone-700 border border-stone-600 rounded text-white text-sm focus:outline-none focus:border-stone-500 [&::-webkit-inner-spin-button]:hidden"
-                                    min="5"
-                                    max="50"
-                                    step="1"
-                                />
+                                <MobileForm entity={entity} />
                             </CardContent>
                         </Card>
                     ))}
