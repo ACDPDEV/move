@@ -5,7 +5,7 @@ import { Badge } from "../ui/badge";
 
 function Hero() {
     return (
-        <section className="w-full h-screen md:h-[calc(100vh-76px)] relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 rounded-t-xl">
+        <section className="w-full h-[calc(100vh-68px)] relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 rounded-t-xl">
             {/*Animated background elements*/}
             <div className="absolute inset-0 opacity-20">
                 <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl animate-pulse"></div>
@@ -20,10 +20,12 @@ function Hero() {
 
             <div className="relative z-10 flex flex-col w-full h-full gap-8 justify-center items-center px-6 animate-fade-in">
                 {/* Badge */}
-                <Badge className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-300 text-sm font-medium backdrop-blur-sm">
-                    <IconSearch size={24} />
-                    FENCYT 2025 - Colegio San Juan
-                </Badge>
+                <Link href="https://www.facebook.com/ColegioSanJuanTrujillo/" target="_blank" rel="noreferrer">
+                    <Badge className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-300 text-sm font-medium backdrop-blur-sm">
+                        <IconSearch size={24} />
+                        FENCYT 2025 - Colegio San Juan
+                    </Badge>
+                </Link>
 
                 {/* Main heading */}
                 <div className="text-center space-y-4">
