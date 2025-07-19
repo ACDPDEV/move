@@ -5,7 +5,7 @@ function LayoutContainer({ children }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <ScrollArea className="flex flex-col w-screen h-screen overflow-hidden p-3">
+        <ScrollArea className="flex flex-col w-screen h-screen overflow-hidden p-2 rounded-md">
             <Header /> 
             <main className="w-full h-full mt-[52px]">
                 {children}
