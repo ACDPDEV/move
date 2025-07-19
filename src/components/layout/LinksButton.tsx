@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import {
     IconHome,
     IconPrismLight,
-    IconInfoCircle,
+    IconBook,
     IconDownload,
 } from '@tabler/icons-react';
 
@@ -43,19 +43,19 @@ function SimulationsLink({isThisPage}: Readonly<{
     )
 }
 
-function AboutLink({isThisPage}: Readonly<{ 
+function DocsLink({isThisPage}: Readonly<{ 
     isThisPage?: boolean;
 }>) {
     return (
-        <Link href="/about/">
+        <Link href="/docs/">
             <Button variant={isThisPage ? 'default' : 'secondary'} className="hidden md:flex" >
-                <IconInfoCircle className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <IconBook className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
                 <span className={isThisPage ? 'text-stone-400 dark:text-stone-800' : 'text-stone-800 dark:text-stone-400'}>
-                    Sobre nosotros
+                    Documentación
                 </span>
             </Button>
             <Button variant={isThisPage ? 'default' : 'secondary'} size={'icon'} className="md:hidden">
-                <IconInfoCircle className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
+                <IconBook className={isThisPage ? 'stroke-stone-400 dark:stroke-stone-800' : 'stroke-stone-800 dark:stroke-stone-400'} />
             </Button>
         </Link>
     )
@@ -82,6 +82,6 @@ function DownloadLink({isThisPage}: Readonly<{
 export {
     HomeLink,
     SimulationsLink,
-    AboutLink,
-    DownloadLink as ContactLink,
+    DocsLink,
+    DownloadLink,
 }

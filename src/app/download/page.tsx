@@ -1,7 +1,7 @@
-function Contact() {
+function Download() {
   return (
     <></>
   );
 }
 
-export default Contact;
+export default Download;
