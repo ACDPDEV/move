@@ -65,7 +65,11 @@ const initialState: SimulationState = {
     fps: 0,
     speed: 1.0,
     isPlaying: false,
-    entities: [],
+    entities: [
+        new Movil({ id: uuidv4(), position: { x: 100, y: 300 }, velocity: { x: 100, y: 0 }, acceleration: { x: 0, y: 0 }, radius: 10, color: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0') }),
+        new Movil({ id: uuidv4(), position: { x: 200, y: 300 }, velocity: { x: 0, y: 100 }, acceleration: { x: 0, y: 0 }, radius: 10, color: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0') }),
+        new Movil({ id: uuidv4(), position: { x: 300, y: 300 }, velocity: { x: 100, y: 100 }, acceleration: { x: 0, y: 0 }, radius: 10, color: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0') }),
+    ],
     displayOptions: {
         position: { resultant: false, components: false, angle: false },
         velocity: { resultant: false, components: false, angle: false },
