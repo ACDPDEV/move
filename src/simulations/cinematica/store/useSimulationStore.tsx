@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Vector2D } from '@/simulations//lib/utils';
 import { Movil, type IMovilProps } from '../entities/Movil';
 import type { AbsolutePlaneState, DeepPartial } from '../types';
+import { v4 as uuidv4 } from 'uuid';
 
 // Definición de opciones de visualización (igual que antes)
 export type DisplayOptions = {
@@ -49,6 +50,7 @@ export interface SimulationStore extends SimulationState {
     updateEntities: (entities: Movil[]) => void;
     updateEntity: (id: string, updates: Partial<IMovilProps>) => void;
     deleteEntity: (id: string) => void;
+    addEntity: (type: string) => void;
     resetSimulation: () => void;
     updateDisplayOptions: (options: DeepPartial<DisplayOptions>) => void;
     updatePlane: (plane: AbsolutePlaneState) => void;
@@ -63,11 +65,7 @@ const initialState: SimulationState = {
     fps: 0,
     speed: 1.0,
     isPlaying: false,
-    entities: [
-        new Movil({ id: 'm1', position: { x: 100, y: 100 }, velocity: { x: 1, y: 0 }, acceleration: { x: 0, y: 1 }, radius: 15, color: '#FF5733' }),
-        new Movil({ id: 'm2', position: { x: 100, y: 30 }, velocity: { x: 0, y: 1 }, acceleration: { x: 0, y: 1 }, radius: 15, color: '#33A1FF' }),
-        new Movil({ id: 'm3', position: { x: 200, y: 100 }, velocity: { x: -10, y: -2 }, acceleration: { x: 2, y: -0.5 }, radius: 15, color: '#FFFFFF' }),
-    ],
+    entities: [],
     displayOptions: {
         position: { resultant: false, components: false, angle: false },
         velocity: { resultant: false, components: false, angle: false },
@@ -137,6 +135,10 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
             updatedEntities.splice(idx, 1);
         }
         return { entities: updatedEntities };
+    }),
+    addEntity: (_type: string) => set(state => {
+        const newEntity = new Movil({ id: uuidv4(), position: { x: 100, y: 300 }, velocity: { x: 0, y: 0 }, acceleration: { x: 0, y: 0 }, radius: 10, color: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0') });
+        return { entities: [...state.entities, newEntity] };
     }),
     updateDisplayOptions: (options) => set(state => ({ displayOptions: deepMerge(state.displayOptions, options) })),
     resetSimulation: () => set({ 

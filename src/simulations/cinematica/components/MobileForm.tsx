@@ -39,11 +39,10 @@ const FormSchema = z.object({
 })
 
 interface MobileFormProps {
-  id: string;
   entity: Movil;
 }
 
-function MobileForm({ id, entity }: Readonly<MobileFormProps>) {
+function MobileForm({ entity }: Readonly<MobileFormProps>) {
   const [fixedValues, setFixedValues] = useState<string[]>([])
   
   // Función para convertir decimales a enteros
@@ -79,16 +78,16 @@ function MobileForm({ id, entity }: Readonly<MobileFormProps>) {
   useEffect(() => {
     const subscription = form.watch((value) => {
       if (form.formState.isValid) {
-        updateEntity(id, value as z.infer<typeof FormSchema>)
+        updateEntity(entity.id!, value as z.infer<typeof FormSchema>)
       }
     })
     return () => subscription.unsubscribe()
-  }, [form, id, updateEntity])
+  }, [form, entity.id!, updateEntity])
 
   const handleDelete = () => {
-    deleteEntity(id)
+    deleteEntity(entity.id!)
     toast.success("Móvil eliminado", {
-      description: `El móvil #${id} ha sido eliminado de la simulación`,
+      description: `El móvil #${entity.id!} ha sido eliminado de la simulación`,
     })
   }
 
@@ -132,7 +131,7 @@ function MobileForm({ id, entity }: Readonly<MobileFormProps>) {
   return (
     <div className="space-y-4 p-4 border rounded-lg bg-card">
       <div className="flex items-center justify-between">
-        <h3 className="font-medium">Móvil #{id}</h3>
+        <h3 className="font-medium">Móvil #{entity.id!}</h3>
         <Button 
           variant="ghost" 
           size="sm"

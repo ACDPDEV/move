@@ -18,6 +18,9 @@ function Sidebar() {
                 </Button>
             </SheetTrigger>
             <SheetContent>
+                <Button onClick={() => useSimulationStore.getState().addEntity('mobile')} className="mb-4">
+                    Añadir Móvil
+                </Button>
                 <ScrollArea className="w-full h-full flex flex-col gap-4">
                     {reverseEntities.map((entity) => (
                         <Card key={entity.id!}>
