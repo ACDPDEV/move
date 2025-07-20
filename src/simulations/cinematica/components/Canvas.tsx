@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useCallback } from 'react'
 import { useSimulation } from '@/simulations/cinematica/context/SimulationContext'
 import { CANVAS_CONFIG } from '@/simulations/cinematica/utils/canvasManagment'

@@ -9,6 +9,22 @@ interface IMovilProps {
     color: string;
 }
 
+// Tipo para las opciones de visualización de vectores
+type VectorDisplayOptions = {
+    resultant: boolean;
+    components: boolean;
+    angle: boolean;
+};
+
+type DisplayOptions = {
+    position: VectorDisplayOptions;
+    velocity: VectorDisplayOptions;
+    acceleration: VectorDisplayOptions;
+    trayectories: boolean;
+    coordinates: boolean;
+    axes: boolean;
+};
+
 class Movil {
     id?: string;
     position: Vector2D;
@@ -18,6 +34,7 @@ class Movil {
     color: string;
     absolutePosition: Vector2D;
     absoluteRadius: number;
+    private trajectory: Vector2D[] = [];
 
     constructor({ 
         id,
@@ -39,11 +56,23 @@ class Movil {
 
     update(deltaTime: number): void {
         if (deltaTime === 0) return;
-        this.position.x += this.velocity.x * deltaTime / 1000 + this.acceleration.x * Math.pow((deltaTime / 1000), 2) / 2;
-        this.position.y += this.velocity.y * deltaTime / 1000 + this.acceleration.y * Math.pow((deltaTime / 1000), 2) / 2;
+        
+        // Guardar posición actual para la trayectoria
+        this.trajectory.push(this.position.copy());
+        
+        // Limitar el tamaño de la trayectoria para optimización
+        if (this.trajectory.length > 1000) {
+            this.trajectory.shift();
+        }
+        
+        // Actualización de posición usando ecuaciones cinemáticas
+        const dt = deltaTime / 1000;
+        this.position.x += this.velocity.x * dt + this.acceleration.x * dt * dt * 0.5;
+        this.position.y += this.velocity.y * dt + this.acceleration.y * dt * dt * 0.5;
 
-        this.velocity.x += this.acceleration.x * deltaTime / 1000;
-        this.velocity.y += this.acceleration.y * deltaTime / 1000;
+        // Actualización de velocidad
+        this.velocity.x += this.acceleration.x * dt;
+        this.velocity.y += this.acceleration.y * dt;
     }
 
     absoluteMoveAndScale(deltaPosition: { x: number, y: number }, scale: number): void {
@@ -60,52 +89,171 @@ class Movil {
         ctx.closePath();
     }
 
-   drawVelocityVector(ctx: CanvasRenderingContext2D, scale: number): void {
-        const endX = this.absolutePosition.x + this.velocity.x * scale;
-        const endY = this.absolutePosition.y - this.velocity.y * scale;
+    drawTrajectory(ctx: CanvasRenderingContext2D, deltaPosition: { x: number, y: number }, scale: number): void {
+        if (this.trajectory.length < 2) return;
 
         ctx.beginPath();
-        ctx.moveTo(this.absolutePosition.x, this.absolutePosition.y);
-        ctx.lineTo(endX, endY);
         ctx.strokeStyle = this.color;
-        ctx.lineWidth = 2;
+        ctx.globalAlpha = 0.6;
+        ctx.lineWidth = 1;
+        
+        // Convertir primera posición de la trayectoria
+        let firstPos = this.trajectory[0];
+        let absX = (firstPos.x + deltaPosition.x) * scale;
+        let absY = (firstPos.y * -1 + deltaPosition.y) * scale;
+        ctx.moveTo(absX, absY);
+        
+        // Dibujar el resto de la trayectoria
+        for (let i = 1; i < this.trajectory.length; i++) {
+            const pos = this.trajectory[i];
+            absX = (pos.x + deltaPosition.x) * scale;
+            absY = (pos.y * -1 + deltaPosition.y) * scale;
+            ctx.lineTo(absX, absY);
+        }
+        
         ctx.stroke();
+        ctx.globalAlpha = 1.0;
         ctx.closePath();
-        // Draw arrowhead as a triangle
-        const arrowSize = this.absoluteRadius * 0.5;
-        const angle = Math.atan2(endY - this.absolutePosition.y, endX - this.absolutePosition.x);
+    }
+
+    private drawArrowHead(ctx: CanvasRenderingContext2D, startX: number, startY: number, endX: number, endY: number): void {
+        const arrowSize = Math.max(6, this.absoluteRadius * 0.5);
+        const angle = Math.atan2(endY - startY, endX - startX);
+        
         ctx.beginPath();
         ctx.moveTo(endX, endY);
-        ctx.lineTo(endX - arrowSize * Math.cos(angle - Math.PI / 6), endY - arrowSize * Math.sin(angle - Math.PI / 6));
-        ctx.lineTo(endX - arrowSize * Math.cos(angle + Math.PI / 6), endY - arrowSize * Math.sin(angle + Math.PI / 6));
+        ctx.lineTo(
+            endX - arrowSize * Math.cos(angle - Math.PI / 6), 
+            endY - arrowSize * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.lineTo(
+            endX - arrowSize * Math.cos(angle + Math.PI / 6), 
+            endY - arrowSize * Math.sin(angle + Math.PI / 6)
+        );
         ctx.lineTo(endX, endY);
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = ctx.strokeStyle;
         ctx.fill();
         ctx.closePath();
     }
 
-    drawAccelerationVector(ctx: CanvasRenderingContext2D, scale: number): void {
-        const endX = this.absolutePosition.x + this.acceleration.x * scale;
-        const endY = this.absolutePosition.y - this.acceleration.y * scale;
+    private drawVectorComponent(ctx: CanvasRenderingContext2D, component: 'x' | 'y', vector: Vector2D, scale: number, color: string): void {
+        const startX = this.absolutePosition.x;
+        const startY = this.absolutePosition.y;
+        let endX = startX;
+        let endY = startY;
+        
+        if (component === 'x') {
+            endX = startX + vector.x * scale;
+        } else {
+            endY = startY - vector.y * scale;
+        }
 
+        // Solo dibujar si el vector tiene magnitud
+        if (Math.abs(endX - startX) > 1 || Math.abs(endY - startY) > 1) {
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            this.drawArrowHead(ctx, startX, startY, endX, endY);
+            ctx.closePath();
+        }
+    }
+
+    private drawVector(ctx: CanvasRenderingContext2D, vector: Vector2D, scale: number, color: string, options: VectorDisplayOptions): void {
+        // Dibujar vector resultante
+        if (options.resultant) {
+            const endX = this.absolutePosition.x + vector.x * scale;
+            const endY = this.absolutePosition.y - vector.y * scale;
+
+            // Solo dibujar si el vector tiene magnitud significativa
+            const magnitude = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+            if (magnitude * scale > 2) {
+                ctx.beginPath();
+                ctx.moveTo(this.absolutePosition.x, this.absolutePosition.y);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.closePath();
+                
+                this.drawArrowHead(ctx, this.absolutePosition.x, this.absolutePosition.y, endX, endY);
+            }
+        }
+
+        // Dibujar componentes
+        if (options.components) {
+            this.drawVectorComponent(ctx, 'x', vector, scale, color + '80');
+            this.drawVectorComponent(ctx, 'y', vector, scale, color + '80');
+        }
+
+        // Dibujar ángulo
+        if (options.angle && vector.mag() > 0.1) {
+            this.drawAngle(ctx, vector, scale, color);
+        }
+    }
+
+    private drawAngle(ctx: CanvasRenderingContext2D, vector: Vector2D, scale: number, color: string): void {
+        const angle = Math.atan2(-vector.y, vector.x); // Negativo porque Y está invertido
+        const radius = Math.min(30, this.absoluteRadius * 2);
+        
         ctx.beginPath();
-        ctx.moveTo(this.absolutePosition.x, this.absolutePosition.y);
-        ctx.lineTo(endX, endY);
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = 2;
+        ctx.arc(this.absolutePosition.x, this.absolutePosition.y, radius, 0, angle, false);
+        ctx.strokeStyle = color + '60';
+        ctx.lineWidth = 1;
         ctx.stroke();
         ctx.closePath();
-        // Draw arrowhead as a triangle
-        const arrowSize = this.absoluteRadius * 0.5;
-        const angle = Math.atan2(endY - this.absolutePosition.y, endX - this.absolutePosition.x);
-        ctx.beginPath();
-        ctx.moveTo(endX, endY);
-        ctx.lineTo(endX - arrowSize * Math.cos(angle - Math.PI / 6), endY - arrowSize * Math.sin(angle - Math.PI / 6));
-        ctx.lineTo(endX - arrowSize * Math.cos(angle + Math.PI / 6), endY - arrowSize * Math.sin(angle + Math.PI / 6));
-        ctx.lineTo(endX, endY);
+        
+        // Mostrar el valor del ángulo
+        const textX = this.absolutePosition.x + radius + 5;
+        const textY = this.absolutePosition.y;
+        ctx.fillStyle = color;
+        ctx.font = '12px Arial';
+        ctx.fillText(`${(angle * 180 / Math.PI).toFixed(1)}°`, textX, textY);
+    }
+
+    drawVectors(ctx: CanvasRenderingContext2D, scale: number, displayOptions: DisplayOptions): void {
+        // Dibujar vector de velocidad
+        if (displayOptions.velocity.resultant || displayOptions.velocity.components || displayOptions.velocity.angle) {
+            this.drawVector(ctx, this.velocity, scale, '#00FF00', displayOptions.velocity);
+        }
+
+        // Dibujar vector de aceleración
+        if (displayOptions.acceleration.resultant || displayOptions.acceleration.components || displayOptions.acceleration.angle) {
+            this.drawVector(ctx, this.acceleration, scale, '#FF0000', displayOptions.acceleration);
+        }
+
+        // Dibujar vector de posición (desde el origen)
+        if (displayOptions.position.resultant || displayOptions.position.components || displayOptions.position.angle) {
+            // Para el vector posición, necesitamos dibujarlo desde el origen
+            const originX = this.absolutePosition.x - (this.position.x * scale);
+            const originY = this.absolutePosition.y + (this.position.y * scale);
+            
+            ctx.save();
+            ctx.translate(originX, originY);
+            const tempAbsPos = this.absolutePosition;
+            this.absolutePosition = new Vector2D(0, 0);
+            this.drawVector(ctx, this.position, scale, '#FFFF00', displayOptions.position);
+            this.absolutePosition = tempAbsPos;
+            ctx.restore();
+        }
+    }
+
+    drawCoordinates(ctx: CanvasRenderingContext2D): void {
+        const textX = this.absolutePosition.x + this.absoluteRadius + 5;
+        const textY = this.absolutePosition.y - this.absoluteRadius - 5;
+        
         ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.closePath();
+        ctx.font = '12px Arial';
+        ctx.fillText(`(${this.position.x.toFixed(1)}, ${this.position.y.toFixed(1)})`, textX, textY);
+    }
+
+    resetTrajectory(): void {
+        this.trajectory = [];
     }
 
     toString(): string {
@@ -127,4 +275,4 @@ class Movil {
     }
 }
 
-export { Movil, type IMovilProps };
+export { Movil, type IMovilProps, type DisplayOptions };
