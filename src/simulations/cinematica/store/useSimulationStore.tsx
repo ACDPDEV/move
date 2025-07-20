@@ -48,6 +48,7 @@ export interface SimulationStore extends SimulationState {
     updateFPS: (fps: number) => void;
     updateEntities: (entities: Movil[]) => void;
     updateEntity: (id: string, updates: Partial<IMovilProps>) => void;
+    deleteEntity: (id: string) => void;
     resetSimulation: () => void;
     updateDisplayOptions: (options: DeepPartial<DisplayOptions>) => void;
     updatePlane: (plane: AbsolutePlaneState) => void;
@@ -127,6 +128,14 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
         if (updates.color !== undefined) updatedEntity.color = updates.color;
         
         updatedEntities[idx] = updatedEntity; // Reemplazar la entidad en la copia del array
+        return { entities: updatedEntities };
+    }),
+    deleteEntity: (id: string) => set(state => {
+        const updatedEntities = [...state.entities];
+        const idx = updatedEntities.findIndex(e => e.id === id);
+        if (idx !== -1) {
+            updatedEntities.splice(idx, 1);
+        }
         return { entities: updatedEntities };
     }),
     updateDisplayOptions: (options) => set(state => ({ displayOptions: deepMerge(state.displayOptions, options) })),
