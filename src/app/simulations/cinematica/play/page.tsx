@@ -1,13 +1,9 @@
-import CinematicaSimulationContainer from "@/simulations/cinematica/Simulation";
+import CinematicaSimulation from "@/simulations/cinematica/Simulation";
 
 function CinematicaSimulationPlay() {
   return (
-    <CinematicaSimulationContainer />
+    <CinematicaSimulation />
   );
 }
-
-CinematicaSimulationPlay.getLayout = function getLayout(page: React.ReactNode) {
-  return page; // Sin layout, solo la página
-};
 
 export default CinematicaSimulationPlay;

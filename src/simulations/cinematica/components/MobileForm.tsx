@@ -17,11 +17,23 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Movil } from "../entities/Movil"
+import { useSimulationStore } from "../store/useSimulationStore"
 
 const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  position: z.object({
+    x: z.number(),
+    y: z.number(),
   }),
+  velocity: z.object({
+    x: z.number(),
+    y: z.number(),
+  }),
+  acceleration: z.object({
+    x: z.number(),
+    y: z.number(),
+  }),
+  radius: z.number(),
+  color: z.string(),
 })
 
 function MobileForm({entity}: Readonly<{
@@ -30,9 +42,24 @@ function MobileForm({entity}: Readonly<{
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      position: {
+        x: entity.position.x,
+        y: entity.position.y,
+      },
+      velocity: {
+        x: entity.velocity.x,
+        y: entity.velocity.y,
+      },
+      acceleration: {
+        x: entity.acceleration.x,
+        y: entity.acceleration.y,
+      },
+      radius: entity.radius,
+      color: entity.color,
     },
   })
+
+  const { updateEntity } = useSimulationStore()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast("You submitted the following values", {
@@ -42,6 +69,7 @@ function MobileForm({entity}: Readonly<{
         </pre>
       ),
     })
+    updateEntity(entity.id!, data)
   }
 
   return (
@@ -49,12 +77,12 @@ function MobileForm({entity}: Readonly<{
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
-          name="username"
+          name="position.x"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Position X</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="0" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -63,6 +91,118 @@ function MobileForm({entity}: Readonly<{
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="position.y"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Position Y</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="velocity.x"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Velocity X</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="velocity.y"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Velocity Y</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="acceleration.x"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Acceleration X</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="acceleration.y"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Acceleration Y</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="radius"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Radius</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="color"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Color</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> 
         <Button type="submit">Submit</Button>
       </form>
     </Form>
