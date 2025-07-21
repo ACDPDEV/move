@@ -1,12 +1,19 @@
-import type { NextConfig } from "next";
+import { createMDX } from 'fumadocs-mdx/next';
 
-const nextConfig: NextConfig = {
+const withMDX = createMDX();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    mdxRs: true, 
+  },
+  reactStrictMode: true,
 };
 
-export default nextConfig;
+module.exports = withMDX(nextConfig);

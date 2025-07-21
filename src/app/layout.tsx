@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Ubuntu } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
+import { RootProvider } from 'fumadocs-ui/provider';
 
 const ubuntu = Ubuntu({
   subsets: ['latin'],
@@ -30,7 +31,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            {children}
+          <RootProvider>{children}</RootProvider>
         </ThemeProvider>
       </body>
     </html>
