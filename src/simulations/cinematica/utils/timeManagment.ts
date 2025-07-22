@@ -1,5 +1,5 @@
 import type { Ticker } from '@/simulations/cinematica/types';
-import type { Movil } from '../entities/Movil';
+import type { Entity } from '../entities/Entity';
 
 function runTicker(
     time: number,
@@ -9,7 +9,7 @@ function runTicker(
     isReset: boolean,
     isInputTimeChanged: boolean,
     movementPrediction: boolean,
-    entities: Movil[],
+    entities: Entity[],
     updateFPS: (fps: number) => void,
     updateTime: (time: number) => void,
     updateIsReset: (isReset: boolean) => void,

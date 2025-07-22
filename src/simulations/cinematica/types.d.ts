@@ -55,7 +55,7 @@ type DisplayOptions = {
     components: boolean;
     angle: boolean;
   };
-  trayectories: boolean;
+  trajectory: boolean;
   coordinates: boolean;
   axes: boolean;
 };

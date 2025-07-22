@@ -1,103 +1,39 @@
 "use client"
-import React, { useEffect, useCallback } from 'react'
-import { useSimulation } from '@/simulations/cinematica/context/SimulationContext'
-import { CANVAS_CONFIG } from '@/simulations/cinematica/utils/canvasManagment'
-import { runTicker } from '@/simulations/cinematica/utils/timeManagment'
-import { drawPlane, clearCanvas, drawEntities } from '@/simulations/cinematica/utils/drawingOnCanvas'
-import { useInitialRefs } from '@/simulations/cinematica/hooks/useInitialRefs'
-import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners'
-import { useSimulationStore } from '../store/useSimulationStore'
+import React, { useEffect, useRef } from 'react';
+import { useEntityUpdater } from '@/simulations/cinematica/hooks/useEntityUpdater';
+import { useCanvasRenderer } from '@/simulations/cinematica/hooks/useCanvasRenderer';
+import { useTimer } from '@/simulations/cinematica/hooks/useTimer';
+import { usePlaneStore } from '@/simulations/cinematica/store/usePlaneStore';
+import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners';
+import { CANVAS_CONFIG } from '@/simulations/cinematica/utils/canvasManagment';
+import { MouseState } from '@/simulations/cinematica/types';
 
-function Canvas(
-    { style }: {
-        style?: React.CSSProperties
-    }
-) {
-    const { 
-            time,
-            isPlaying,
-            isReset,
-            entities,
-            speed,
-            displayOptions,
-            isInputTimeChanged,
-            movementPrediction,
-        updateIsReset,
-        updateIsInputTimeChanged,
-        updateFPS,
-        updateTime,
-        updatePlane,
-        pause,
-    } = useSimulationStore();
+function Canvas({ style }: { style?: React.CSSProperties }) {
+  useTimer(); // ⏱️ Hook que actualiza delta, fps, time, etc.
+  useEntityUpdater(); // 🧠 Hook que actualiza las entidades
 
-    const { 
-        canvasRef, 
-        TickerRef, 
-        MouseRef, 
-        AbsolutePlaneRef 
-    } = useInitialRefs();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const MouseRef = useRef<MouseState>({ isDown: false, startPosition: { x: 0, y: 0 }, currentPosition: { x: 0, y: 0 }, deltaPosition: { x: 0, y: 0 } });
+  const { plane: absolutePlane, setPosition, setScale } = usePlaneStore();
 
-    useEffect(() => {
-        
-        const $canvas = canvasRef.current!
-        const ctx = $canvas.getContext('2d')!
-        let animationFrameId: number
-        
-        const Ticker = TickerRef.current;
-        const Mouse = MouseRef.current;
-        const AbsolutePlane = AbsolutePlaneRef.current;
-        
-        const cleanupEvents = listenEvents(
-            $canvas,
-            Mouse,
-            AbsolutePlane,
-            CANVAS_CONFIG,
-            updatePlane,
-        );
+  useCanvasRenderer(canvasRef as React.RefObject<HTMLCanvasElement>); // 🎨 Dibuja plano y entidades
 
-        const render = () => {
-            runTicker(
-                time,
-                Ticker,
-                speed,
-                isPlaying,
-                isReset,
-                isInputTimeChanged,
-                movementPrediction,
-                entities,
-                updateFPS,
-                updateTime,
-                updateIsReset,
-                updateIsInputTimeChanged,
-            );
+  useEffect(() => {
+    if (!canvasRef.current) return;
 
-            clearCanvas($canvas);
-            drawPlane($canvas, AbsolutePlane, CANVAS_CONFIG);
-            drawEntities(ctx, entities, AbsolutePlane, Ticker, speed, displayOptions, isPlaying);
-            
-            animationFrameId = window.requestAnimationFrame(render)
-        }
-        render()
-        
-        return () => {
-            window.cancelAnimationFrame(animationFrameId);
-            cleanupEvents();
-        }
-    }, [
-        isPlaying,
-        movementPrediction,
-        isReset,
-        isInputTimeChanged,
-        displayOptions,
-        entities,
-        speed,
-        updateFPS,
-        updateTime,
-        updateIsReset,
-        canvasRef,
-    ])
-    
-    return <canvas ref={canvasRef} style={style} />
+    const cleanup = listenEvents(
+      canvasRef.current,
+      MouseRef.current,
+      absolutePlane,
+      CANVAS_CONFIG,
+      setPosition,
+      setScale
+    );
+
+    return cleanup;
+  }, [canvasRef, absolutePlane]);
+
+  return <canvas ref={canvasRef} style={style} className="w-full h-full" />;
 }
 
-export default Canvas
+export default Canvas;

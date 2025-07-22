@@ -18,8 +18,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ColorPicker } from "./ColorPicker"
-import { Movil } from "../entities/Movil"
-import { useSimulationStore } from "../store/useSimulationStore"
+import { Entity } from "../entities/Entity"
+import { useEntityStore } from "../store/useEntityStore"
 
 const FormSchema = z.object({
   position: z.object({
@@ -39,10 +39,10 @@ const FormSchema = z.object({
 })
 
 interface MobileFormProps {
-  entity: Movil;
+  entity: Entity;
 }
 
-function MobileForm({ entity }: Readonly<MobileFormProps>) {
+function EntityForm({ entity }: Readonly<MobileFormProps>) {
   const [fixedValues, setFixedValues] = useState<string[]>([])
   
   // Función para convertir decimales a enteros
@@ -70,7 +70,7 @@ function MobileForm({ entity }: Readonly<MobileFormProps>) {
     },
   })
 
-  const { updateEntity, deleteEntity } = useSimulationStore()
+  const { updateEntity, deleteEntity } = useEntityStore()
 
   // Auto-actualizar cuando cambian los valores
   const watchedValues = form.watch()
@@ -336,4 +336,4 @@ function MobileForm({ entity }: Readonly<MobileFormProps>) {
   )
 }
 
-export default MobileForm
+export default EntityForm
