@@ -26,7 +26,7 @@ type DisplayOptions = {
 };
 
 class Entity {
-    id: string | undefined;
+    id: string;
     position: Vector2D;
     velocity: Vector2D;
     acceleration: Vector2D;
@@ -43,7 +43,7 @@ class Entity {
         radius,
         color,
     }: EntityProps) {
-        this.id = typeof window !== 'undefined' ? uuidv4() : undefined;
+        this.id = typeof window !== 'undefined' ? uuidv4() : '';
         this.position = new Vector2D(position.x, position.y);
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);
@@ -384,6 +384,17 @@ class Entity {
             radius: this.radius,
             color: this.color,
         });
+    }
+
+    toProps() {
+        return {
+            id: this.id,
+            position: this.position,
+            velocity: this.velocity,
+            acceleration: this.acceleration,
+            radius: this.radius,
+            color: this.color,
+        };
     }
 }
 

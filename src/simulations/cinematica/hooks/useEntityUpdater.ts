@@ -22,27 +22,22 @@ function useEntityUpdater() {
             } = useTimeStore.getState();
 
             const entities = useEntityStore.getState().entities;
+            const updateAllEntities =
+                useEntityStore.getState().updateAllEntities;
 
             if (isPlaying) {
-                entities.forEach((entity) => {
-                    entity.update(delta);
-                });
+                updateAllEntities(delta);
             }
 
             if (timeBeforeReset !== 0) {
                 console.log('reset');
                 console.log(timeBeforeReset);
-                entities.forEach((entity) => {
-                    entity.update((0 - timeBeforeReset) * 2);
-                    entity.resetTrajectory();
-                });
+                updateAllEntities((0 - timeBeforeReset) * 2);
                 useTimeStore.setState({ timeBeforeReset: 0 });
             }
 
             if (movementPrediction && inputTimeChange > 0) {
-                entities.forEach((entity) => {
-                    entity.update(inputTimeChange);
-                });
+                updateAllEntities(inputTimeChange);
                 useTimeStore.setState({ inputTimeChange: 0 });
             }
 
