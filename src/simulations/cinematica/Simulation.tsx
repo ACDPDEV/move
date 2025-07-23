@@ -22,7 +22,7 @@ export default function CinematicaSimulation() {
             <div className="relative w-screen h-screen bg-stone-900 flex md:hidden justify-center items-center p-4">
                 <div className="flex flex-col gap-4 text-center">
                     <span className="prose dark:prose-invert">
-                        Esta simulación solo está disponible en tu tipo de
+                        Esta simulación no está disponible en tu tipo de
                         pantalla, <strong>estamos trabajando en ello</strong>
                     </span>
                     <span className="prose dark:prose-invert">
