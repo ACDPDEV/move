@@ -49,7 +49,9 @@ const AccelerationYInput = memo(function AccelerationYInput({
             .getState()
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
-            inputRef.current.value = initEntity.acceleration.y.toFixed(0);
+            if (initEntity.acceleration.y) {
+                inputRef.current.value = initEntity.acceleration.y.toFixed(0);
+            }
             previousRef.current = initEntity.acceleration.y;
         }
 
@@ -80,6 +82,7 @@ const AccelerationYInput = memo(function AccelerationYInput({
             name="accelerationY"
             ref={inputRef}
             onChange={onChange}
+            placeholder="0"
             className={className}
         />
     );

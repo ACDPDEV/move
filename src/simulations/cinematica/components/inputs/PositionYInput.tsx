@@ -49,7 +49,9 @@ const PositionYInput = memo(function PositionYInput({
             .getState()
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
-            inputRef.current.value = initEntity.position.y.toFixed(0);
+            if (initEntity.position.y) {
+                inputRef.current.value = initEntity.position.y.toFixed(0);
+            }
             previousRef.current = initEntity.position.y;
         }
 
@@ -80,6 +82,7 @@ const PositionYInput = memo(function PositionYInput({
             name="positionY"
             ref={inputRef}
             onChange={onChange}
+            placeholder="0"
             className={className}
         />
     );

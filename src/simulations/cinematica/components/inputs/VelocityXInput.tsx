@@ -49,7 +49,9 @@ const VelocityXInput = memo(function VelocityXInput({
             .getState()
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
-            inputRef.current.value = initEntity.velocity.x.toFixed(0);
+            if (initEntity.velocity.x) {
+                inputRef.current.value = initEntity.velocity.x.toFixed(0);
+            }
             previousRef.current = initEntity.velocity.x;
         }
 
@@ -80,6 +82,7 @@ const VelocityXInput = memo(function VelocityXInput({
             name="velocityX"
             ref={inputRef}
             onChange={onChange}
+            placeholder="0"
             className={className}
         />
     );
