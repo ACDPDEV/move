@@ -7,11 +7,15 @@ import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
 
 interface AccelerationXInputProps {
+    className?: string;
     entityId: string;
+    setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AccelerationXInput = memo(function AccelerationXInput({
+    className,
     entityId,
+    setError,
 }: AccelerationXInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
@@ -58,10 +62,16 @@ const AccelerationXInput = memo(function AccelerationXInput({
         const n = Number(e.target.value);
         if (isNaN(n)) {
             e.target.value = previousRef.current.toString();
+            setError('Aceleración X solo puede ser un número');
             return;
         }
+        const cleaned = e.target.value
+            .replace(/^0+(?=\d)/, '')
+            .replace(/^0+$/, '');
+        e.target.value = cleaned;
         previousRef.current = n;
         updateX(entityId, 'acceleration.x', n);
+        setError('');
     };
 
     return (
@@ -70,6 +80,7 @@ const AccelerationXInput = memo(function AccelerationXInput({
             name="accelerationX"
             ref={inputRef}
             onChange={onChange}
+            className={className}
         />
     );
 });

@@ -7,11 +7,13 @@ import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
 
 interface PositionXInputProps {
+    className?: string;
     entityId: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const PositionXInput = memo(function PositionXInput({
+    className,
     entityId,
     setError,
 }: PositionXInputProps) {
@@ -71,6 +73,7 @@ const PositionXInput = memo(function PositionXInput({
         e.target.value = cleaned;
         previousRef.current = n;
         updateX(entityId, 'position.x', n);
+        setError('');
     };
 
     return (
@@ -80,6 +83,7 @@ const PositionXInput = memo(function PositionXInput({
             ref={inputRef}
             onChange={onChange}
             placeholder="0"
+            className={className}
         />
     );
 });

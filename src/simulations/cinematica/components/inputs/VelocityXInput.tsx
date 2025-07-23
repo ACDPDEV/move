@@ -7,11 +7,15 @@ import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
 
 interface VelocityXInputProps {
+    className?: string;
     entityId: string;
+    setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const VelocityXInput = memo(function VelocityXInput({
+    className,
     entityId,
+    setError,
 }: VelocityXInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
@@ -58,10 +62,16 @@ const VelocityXInput = memo(function VelocityXInput({
         const n = Number(e.target.value);
         if (isNaN(n)) {
             e.target.value = previousRef.current.toString();
+            setError('Velocidad X solo puede ser un número');
             return;
         }
+        const cleaned = e.target.value
+            .replace(/^0+(?=\d)/, '')
+            .replace(/^0+$/, '');
+        e.target.value = cleaned;
         previousRef.current = n;
         updateX(entityId, 'velocity.x', n);
+        setError('');
     };
 
     return (
@@ -70,6 +80,7 @@ const VelocityXInput = memo(function VelocityXInput({
             name="velocityX"
             ref={inputRef}
             onChange={onChange}
+            className={className}
         />
     );
 });

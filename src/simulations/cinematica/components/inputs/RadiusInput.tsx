@@ -7,11 +7,13 @@ import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
 
 interface RadiusInputProps {
+    className?: string;
     entityId: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RadiusInput = memo(function RadiusInput({
+    className,
     entityId,
     setError,
 }: RadiusInputProps) {
@@ -71,10 +73,17 @@ const RadiusInput = memo(function RadiusInput({
         }
         previousRef.current = n;
         updateX(entityId, 'radius', n);
+        setError('');
     };
 
     return (
-        <Input type="number" name="radius" ref={inputRef} onChange={onChange} />
+        <Input
+            type="number"
+            name="radius"
+            ref={inputRef}
+            onChange={onChange}
+            className={className}
+        />
     );
 });
 

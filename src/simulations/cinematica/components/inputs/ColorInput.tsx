@@ -4,13 +4,19 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/store/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { ColorPicker } from '../ColorPicker';
+import { Input } from '@/components/ui/input';
 
 interface ColorInputProps {
+    className?: string;
     entityId: string;
+    setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const ColorInput = memo(function ColorInput({ entityId }: ColorInputProps) {
+const ColorInput = memo(function ColorInput({
+    className,
+    entityId,
+    setError,
+}: ColorInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<string>('');
 
@@ -52,16 +58,21 @@ const ColorInput = memo(function ColorInput({ entityId }: ColorInputProps) {
 
     // Actualizar store cuando el usuario modifica
     const updateX = useEntityStore((s) => s.updateSpecificPropOfEntity);
-    const onChange = (color: string) => {
+    const onChange = (el: React.ChangeEvent<HTMLInputElement>) => {
+        const color = el.target.value;
         previousRef.current = color;
         updateX(entityId, 'color', color);
+        setError('');
     };
 
     return (
-        <ColorPicker
+        <Input
+            name="color"
+            type="color"
             value={previousRef.current}
             onChange={onChange}
             ref={inputRef}
+            className={className}
         />
     );
 });

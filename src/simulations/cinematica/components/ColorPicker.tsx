@@ -26,6 +26,7 @@ const PRESET_COLORS = [
 ];
 
 interface ColorPickerProps {
+    className?: string;
     value: string;
     onChange: (color: string) => void;
     disabled?: boolean;
@@ -33,6 +34,7 @@ interface ColorPickerProps {
 }
 
 export function ColorPicker({
+    className,
     value,
     onChange,
     disabled,
@@ -65,7 +67,7 @@ export function ColorPicker({
                 <Button
                     variant="outline"
                     disabled={disabled}
-                    className="w-full justify-start gap-2 h-8 text-sm"
+                    className={className}
                 >
                     <div
                         className="w-4 h-4 rounded-sm border border-gray-300"
@@ -135,7 +137,6 @@ export function ColorPicker({
                                         : '#000000'
                                 }
                                 onChange={(e) => handleCustomColorChange(e)}
-                                ref={ref}
                                 className="w-12 h-10 p-1 border rounded"
                             />
                         </div>

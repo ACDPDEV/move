@@ -25,7 +25,7 @@ function FloatBar() {
                         />
                     </PopoverTrigger>
                     <PopoverContent className="w-sm p-0">
-                        <EntityCard entityId={id} />
+                        <EntityCard entityId={id} color={color} />
                     </PopoverContent>
                 </Popover>
             ))}
@@ -33,8 +33,9 @@ function FloatBar() {
                 onClick={() => useEntityStore.getState().addEntity()}
                 size="icon"
                 variant="outline"
+                className="rounded-full"
             >
-                <PlusIcon className="w-5 h-5" />
+                <PlusIcon size={16} />
             </Button>
         </div>
     );

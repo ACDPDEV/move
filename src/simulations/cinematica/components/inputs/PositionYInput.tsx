@@ -7,11 +7,15 @@ import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
 
 interface PositionYInputProps {
+    className?: string;
     entityId: string;
+    setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const PositionYInput = memo(function PositionYInput({
+    className,
     entityId,
+    setError,
 }: PositionYInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
@@ -58,10 +62,16 @@ const PositionYInput = memo(function PositionYInput({
         const n = Number(e.target.value);
         if (isNaN(n)) {
             e.target.value = previousRef.current.toString();
+            setError('Posición Y solo puede ser un número');
             return;
         }
+        const cleaned = e.target.value
+            .replace(/^0+(?=\d)/, '')
+            .replace(/^0+$/, '');
+        e.target.value = cleaned;
         previousRef.current = n;
         updateY(entityId, 'position.y', n);
+        setError('');
     };
 
     return (
@@ -70,6 +80,7 @@ const PositionYInput = memo(function PositionYInput({
             name="positionY"
             ref={inputRef}
             onChange={onChange}
+            className={className}
         />
     );
 });

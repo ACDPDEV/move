@@ -54,8 +54,8 @@ function Sidebar() {
                         Añadir Móvil
                     </Button>
                     <div className="flex flex-col gap-4">
-                        {entities.map(({ id }) => (
-                            <EntityCard entityId={id} key={id} />
+                        {entities.map(({ id, color }) => (
+                            <EntityCard entityId={id} color={color} key={id} />
                         ))}
                     </div>
                 </ScrollArea>
