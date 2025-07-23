@@ -4,6 +4,7 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/store/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
+import { Input } from '@/components/ui/input';
 
 interface RadiusInputProps {
     entityId: string;
@@ -73,7 +74,7 @@ const RadiusInput = memo(function RadiusInput({
     };
 
     return (
-        <input type="number" name="radius" ref={inputRef} onChange={onChange} />
+        <Input type="number" name="radius" ref={inputRef} onChange={onChange} />
     );
 });
 

@@ -4,6 +4,7 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/store/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
+import { Input } from '@/components/ui/input';
 
 interface PositionXInputProps {
     entityId: string;
@@ -46,7 +47,9 @@ const PositionXInput = memo(function PositionXInput({
             .getState()
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
-            inputRef.current.value = initEntity.position.x.toFixed(0);
+            if (initEntity.position.x) {
+                inputRef.current.value = initEntity.position.x.toFixed(0);
+            }
             previousRef.current = initEntity.position.x;
         }
 
@@ -62,20 +65,21 @@ const PositionXInput = memo(function PositionXInput({
             setError('Posición X solo puede ser un número');
             return;
         }
+        const cleaned = e.target.value
+            .replace(/^0+(?=\d)/, '')
+            .replace(/^0+$/, '');
+        e.target.value = cleaned;
         previousRef.current = n;
         updateX(entityId, 'position.x', n);
-        console.log('updateX', entityId, n);
-        console.log(
-            useEntityStore.getState().entities.find((e) => e.id === entityId),
-        );
     };
 
     return (
-        <input
+        <Input
             type="number"
             name="positionX"
             ref={inputRef}
             onChange={onChange}
+            placeholder="0"
         />
     );
 });

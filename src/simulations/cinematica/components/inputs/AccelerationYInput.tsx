@@ -4,6 +4,7 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/store/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
+import { Input } from '@/components/ui/input';
 
 interface AccelerationYInputProps {
     entityId: string;
@@ -64,7 +65,7 @@ const AccelerationYInput = memo(function AccelerationYInput({
     };
 
     return (
-        <input
+        <Input
             type="number"
             name="accelerationY"
             ref={inputRef}

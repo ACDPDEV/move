@@ -8,6 +8,9 @@ import AccelerationYInput from './inputs/AccelerationYInput';
 import RadiusInput from './inputs/RadiusInput';
 import ColorInput from './inputs/ColorInput';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { IconTrash } from '@tabler/icons-react';
+import { useEntityStore } from '../store/useEntityStore';
 
 function EntityCard({
     entityId,
@@ -19,6 +22,13 @@ function EntityCard({
     const [error, setError] = useState<string>('');
     return (
         <form>
+            <Button
+                variant="outline"
+                size="icon"
+                onClick={() => useEntityStore.getState().deleteEntity(entityId)}
+            >
+                <IconTrash />
+            </Button>
             <PositionXInput entityId={entityId} setError={setError} />
             <PositionYInput entityId={entityId} />
             <VelocityXInput entityId={entityId} />

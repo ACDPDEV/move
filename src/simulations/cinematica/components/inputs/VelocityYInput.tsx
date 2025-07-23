@@ -4,6 +4,7 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/store/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
+import { Input } from '@/components/ui/input';
 
 interface VelocityYInputProps {
     entityId: string;
@@ -64,7 +65,7 @@ const VelocityYInput = memo(function VelocityYInput({
     };
 
     return (
-        <input
+        <Input
             type="number"
             name="velocityY"
             ref={inputRef}
