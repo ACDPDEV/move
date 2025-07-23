@@ -15,9 +15,8 @@ import { useEntityStore } from '../store/useEntityStore';
 import { useEntitySummaries } from '../hooks/useEntityISummaries';
 
 function Sidebar() {
-    console.log('render sidebar');
     const entities = useEntitySummaries();
-    console.log('entities', entities);
+    const reversedEntities = [...entities].reverse();
 
     return (
         <Sheet>
@@ -40,21 +39,13 @@ function Sidebar() {
 
                 <ScrollArea className="w-full h-full flex flex-col gap-4 p-4">
                     <Button
-                        onClick={() =>
-                            useEntityStore.getState().addEntity({
-                                position: { x: 100, y: 300 },
-                                velocity: { x: 100, y: 0 },
-                                acceleration: { x: 0, y: 0 },
-                                radius: 10,
-                                color: '#FFFFFF',
-                            })
-                        }
+                        onClick={() => useEntityStore.getState().addEntity()}
                         className="mb-4"
                     >
                         Añadir Móvil
                     </Button>
                     <div className="flex flex-col gap-4">
-                        {entities.map(({ id, color }) => (
+                        {reversedEntities.map(({ id, color }) => (
                             <EntityCard entityId={id} color={color} key={id} />
                         ))}
                     </div>
