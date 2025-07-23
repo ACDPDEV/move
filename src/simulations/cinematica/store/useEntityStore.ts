@@ -129,9 +129,18 @@ const useEntityStore = create<EntityStore>((set, get) => ({
             entities: [
                 ...state.entities,
                 new Entity({
-                    position: { x: 100, y: 300 },
-                    velocity: { x: 0, y: 0 },
-                    acceleration: { x: 0, y: 0 },
+                    position: {
+                        x: Math.random() * 2000 - 1000,
+                        y: Math.random() * 2000 - 1000,
+                    },
+                    velocity: {
+                        x: Math.random() * 2000 - 1000,
+                        y: Math.random() * 2000 - 1000,
+                    },
+                    acceleration: {
+                        x: Math.random() * 2000 - 1000,
+                        y: Math.random() * 2000 - 1000,
+                    },
                     radius: 10,
                     color:
                         '#' +
