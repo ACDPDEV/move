@@ -6,12 +6,15 @@ import {
 } from '@/components/ui/popover';
 import { useEntitySummaries } from '../hooks/useEntityISummaries';
 import EntityCard from './EntityCard';
+import { Button } from '@/components/ui/button';
+import { PlusIcon } from 'lucide-react';
+import { useEntityStore } from '../store/useEntityStore';
 
 function FloatBar() {
     const entities = useEntitySummaries();
 
     return (
-        <div className="flex flex-row gap-1 bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm w-fit flex-wrap">
+        <div className="flex flex-row gap-1 bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm w-fit flex-wrap justify-center items-center">
             {entities.map(({ id, color }) => (
                 <Popover key={id}>
                     <PopoverTrigger asChild>
@@ -26,6 +29,13 @@ function FloatBar() {
                     </PopoverContent>
                 </Popover>
             ))}
+            <Button
+                onClick={() => useEntityStore.getState().addEntity()}
+                size="icon"
+                variant="outline"
+            >
+                <PlusIcon className="w-5 h-5" />
+            </Button>
         </div>
     );
 }
