@@ -2,6 +2,7 @@ import { Vector2D } from '@/simulations/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
 
 interface EntityProps {
+    id?: string;
     position: { x: number; y: number };
     velocity: { x: number; y: number };
     acceleration: { x: number; y: number };
@@ -37,13 +38,14 @@ class Entity {
     private trajectory: Vector2D[] = [];
 
     constructor({
+        id,
         position,
         velocity,
         acceleration,
         radius,
         color,
     }: EntityProps) {
-        this.id = typeof window !== 'undefined' ? uuidv4() : '';
+        this.id = id ?? (typeof window !== 'undefined' ? uuidv4() : '');
         this.position = new Vector2D(position.x, position.y);
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);

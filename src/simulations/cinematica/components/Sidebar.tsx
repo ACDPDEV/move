@@ -9,14 +9,15 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
-import { Card, CardContent } from '@/components/ui/card';
 import EntityCard from './EntityCard';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEntityStore } from '../store/useEntityStore';
+import { useEntitySummaries } from '../hooks/useEntityISummaries';
 
 function Sidebar() {
-    const { entities } = useEntityStore();
-    const reverseEntities = [...entities].reverse();
+    console.log('render sidebar');
+    const entities = useEntitySummaries();
+    console.log('entities', entities);
 
     return (
         <Sheet>
@@ -53,12 +54,8 @@ function Sidebar() {
                         Añadir Móvil
                     </Button>
                     <div className="flex flex-col gap-4">
-                        {reverseEntities.map((entity) => (
-                            <Card key={entity.id}>
-                                <CardContent>
-                                    {/* <EntityCard entity={entity} /> */}
-                                </CardContent>
-                            </Card>
+                        {entities.map(({ id }) => (
+                            <EntityCard entityId={id} key={id} />
                         ))}
                     </div>
                 </ScrollArea>

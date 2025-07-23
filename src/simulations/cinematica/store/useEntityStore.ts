@@ -26,7 +26,7 @@ type EntityStore = {
     addEntity: (props?: Partial<EntityProps>) => void;
 };
 
-export const useEntityStore = create<EntityStore>((set, get) => ({
+const useEntityStore = create<EntityStore>((set, get) => ({
     entities: [
         new Entity({
             position: { x: 100, y: 300 },
@@ -78,11 +78,44 @@ export const useEntityStore = create<EntityStore>((set, get) => ({
 
     updateSpecificPropOfEntity: (id, prop, value) => {
         set((state) => ({
-            entities: state.entities.map((entity) =>
-                entity.id === id
-                    ? new Entity({ ...entity.toProps(), [prop]: value })
-                    : entity,
-            ),
+            entities: state.entities.map((entity) => {
+                if (entity.id !== id) return entity;
+
+                // Extraemos todos los props actuales
+                const props = entity.toProps();
+                const [root, key] = prop.split('.') as [
+                    (
+                        | 'position'
+                        | 'velocity'
+                        | 'acceleration'
+                        | 'radius'
+                        | 'color'
+                    ),
+                    string,
+                ];
+
+                // Para campos anidados
+                if (
+                    root === 'position' ||
+                    root === 'velocity' ||
+                    root === 'acceleration'
+                ) {
+                    return new Entity({
+                        ...props,
+                        [root]: {
+                            // mantenemos la otra coordenada y sustituimos solo la que toca
+                            ...props[root],
+                            [key]: value as number,
+                        },
+                    });
+                }
+
+                // Para campos de primer nivel (radius, color)
+                return new Entity({
+                    ...props,
+                    [root]: value,
+                });
+            }),
         }));
     },
 
@@ -110,3 +143,5 @@ export const useEntityStore = create<EntityStore>((set, get) => ({
             ],
         })),
 }));
+
+export { useEntityStore, type EntityStore };
