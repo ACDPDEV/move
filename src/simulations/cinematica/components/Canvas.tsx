@@ -11,6 +11,7 @@ import { MouseState } from '@/simulations/cinematica/types';
 function Canvas({ style }: { style?: React.CSSProperties }) {
     useTimer(); // ⏱️ Hook que actualiza delta, fps, time, etc.
     useEntityUpdater(); // 🧠 Hook que actualiza las entidades
+    console.log('render')
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const MouseRef = useRef<MouseState>({

@@ -1,8 +1,10 @@
 'use client'
 import { useTimeStore } from "../store/useTimeStore";
+import FPSBadge from "./badges/FpsIndicator";
 
 function TimeIndicators() {
-    const { isPlaying, fps } = useTimeStore();
+
+    const isPlaying = useTimeStore((s) => s.isPlaying);
 
     return (
         <div className="absolute top-4 left-4 space-y-2">
@@ -12,9 +14,7 @@ function TimeIndicators() {
             {isPlaying ? 'Reproduciendo' : 'Pausado'}
           </div>
         </div>
-        <div className="bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm">
-          <div className="font-mono">FPS: {Math.round(fps)}</div>
-        </div>
+        <FPSBadge className="text-white" />
       </div>
     );
 }

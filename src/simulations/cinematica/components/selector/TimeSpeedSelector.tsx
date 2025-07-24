@@ -19,11 +19,11 @@ const TimeSpeedSelector = memo(function TimeSelectorInput({
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline" className={className}>
+                <Button variant="outline" className={`border border-stone-300 dark:border-stone-700 ${className}`}>
                     x{speed}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="flex flex-col gap-2 p-2 w-fit bg-stone-800 border-stone-700 rounded-md">
+            <PopoverContent className="flex flex-col gap-2 p-2 w-fit dark:bg-stone-800 bg-stone-100 dark:border-stone-700 border-stone-300 rounded-md text-stone-800 dark:text-stone-300"> 
                 <Button
                     variant="ghost"
                     className={`w-full justify-center text-left hover:border hover:border-bg-secondary ${

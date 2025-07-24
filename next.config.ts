@@ -13,7 +13,7 @@ const nextConfig = {
   experimental: {
     mdxRs: true, 
   },
-  reactStrictMode: true,
+  reactStrictMode: false,
 };
 
 module.exports = withMDX(nextConfig);

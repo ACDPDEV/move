@@ -3,6 +3,7 @@ import { Ubuntu } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { RootProvider } from 'fumadocs-ui/provider';
+import { Toaster } from '@/components/ui/sonner';
 
 const ubuntu = Ubuntu({
   subsets: ['latin'],
@@ -31,7 +32,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-          <RootProvider>{children}</RootProvider>
+          <RootProvider>
+            {children}
+            <Toaster />
+          </RootProvider>
         </ThemeProvider>
       </body>
     </html>

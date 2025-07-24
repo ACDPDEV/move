@@ -36,22 +36,22 @@ function DisplayOptionsSelector() {
         <Popover>
             <PopoverTrigger asChild>
                 <Button
-                    className="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-stone-500"
+                    className="text-stone-300 border-stone-300 hover:text-white hover:scale-125 p-2 rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-stone-400 flex"
                     type="button"
                     title="Opciones de visualización"
                     variant="outline"
                 >
-                    <IconSettings size={20} />
+                    <IconSettings className='stroke-stone-900 dark:stroke-stone-100' size={20} /> 
                 </Button>
             </PopoverTrigger>
             <PopoverContent
-                className="w-56 bg-stone-800 border-stone-700"
+                className="w-56 dark:bg-stone-800 bg-stone-100 border-stone-700"
                 align="end"
             >
                 <div className="space-y-3">
                     {/* Position */}
                     <div>
-                        <h4 className="text-xs text-stone-400 mb-2 font-medium">
+                        <h4 className="text-xs dark:text-stone-400 text-stone-700 mb-2 font-medium">
                             Posición
                         </h4>
                         <div className="space-y-1">
@@ -88,7 +88,7 @@ function DisplayOptionsSelector() {
 
                     {/* Velocity */}
                     <div>
-                        <h4 className="text-xs text-stone-400 mb-2 font-medium">
+                        <h4 className="text-xs dark:text-stone-400 text-stone-700 mb-2 font-medium">
                             Velocidad
                         </h4>
                         <div className="space-y-1">
@@ -166,11 +166,11 @@ function DisplayOptionsSelector() {
                         </div>
                     </div>
 
-                    <Separator className="bg-stone-700" />
+                    <Separator className="dark:bg-stone-700 bg-stone-400" />
 
                     {/* Additional options */}
                     <div>
-                        <h4 className="text-xs text-stone-400 mb-2 font-medium">
+                        <h4 className="text-xs dark:text-stone-400 mb-2 font-medium">
                             Otros
                         </h4>
                         <div className="space-y-1">

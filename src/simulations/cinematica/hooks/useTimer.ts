@@ -49,12 +49,7 @@ function useTimer() {
       updateTime(currentTime + deltaSeconds * currentSpeed)
 
       // 5) Calcular FPS
-      frameCountRef.current += 1
-      if (fpsTimeRef.current !== null && now - fpsTimeRef.current >= 1000) {
-        updateFPS(frameCountRef.current)
-        frameCountRef.current = 0
-        fpsTimeRef.current = now
-      }
+      updateFPS(1 / deltaSeconds )
 
       // 6) Solicitar el siguiente frame
       animationIdRef.current = requestAnimationFrame(loop)

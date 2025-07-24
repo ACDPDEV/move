@@ -24,6 +24,7 @@ type TimeStore = {
     updateTimeBeforeReset: (value: number) => void;
     updateInputTimeChange: (value: number) => void;
     updatePrediction: (value: boolean) => void;
+    togglePrediction: () => void;
 };
 
 const useTimeStore = create<TimeStore>((set, get) => ({
@@ -54,6 +55,7 @@ const useTimeStore = create<TimeStore>((set, get) => ({
     updateTimeBeforeReset: (value) => set({ timeBeforeReset: value }),
     updateInputTimeChange: (value) => set({ inputTimeChange: value }),
     updatePrediction: (value) => set({ movementPrediction: value }),
+    togglePrediction: () => set({ movementPrediction: !get().movementPrediction }),
 }));
 
 export { useTimeStore, type TimeStore };
