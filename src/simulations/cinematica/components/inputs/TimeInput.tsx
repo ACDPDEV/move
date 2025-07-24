@@ -1,34 +1,28 @@
 import React, { memo, useEffect, useRef } from 'react';
-import {
-    useEntityStore,
-    type EntityStore,
-} from '@/simulations/cinematica/store/useEntityStore';
-import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
+import { TimeStore, useTimeStore } from '../../store/useTimeStore';
 
-interface PositionXInputProps {
+interface TimeInputProps {
     className?: string;
-    entityId: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const PositionXInput = memo(function PositionXInput({
+const TimeInput = memo(function TimeInput({
     className,
-    entityId,
     setError,
-}: PositionXInputProps) {
+}: TimeInputProps) {
+    console.log('render time input');
+
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
 
     // Suscripción a TODO el estado, filtrar la propiedad que interesa
     useEffect(() => {
         // Función de actualización interna
-        const subscriber = (state: EntityStore) => {
-            const entity: Entity | undefined = state.entities.find(
-                (e) => e.id === entityId,
-            );
-            if (!entity) return;
-            const newValue: number = entity.position.x;
+        const subscriber = (state: TimeStore) => {
+            const time = state.time;
+            if (!time) return;
+            const newValue: number = time;
             const el = inputRef.current;
             // Actualiza solo si el input no está enfocado y cambió
             if (
@@ -42,36 +36,34 @@ const PositionXInput = memo(function PositionXInput({
         };
 
         // Subscribe devuelve la función de unsubscribe
-        const unsubscribe = useEntityStore.subscribe(subscriber);
+        const unsubscribe = useTimeStore.subscribe(subscriber);
 
         // Inicializa el valor
-        const initEntity = useEntityStore
-            .getState()
-            .entities.find((e) => e.id === entityId);
-        if (inputRef.current && initEntity) {
-            if (initEntity.position.x) {
-                inputRef.current.value = initEntity.position.x.toFixed(0);
+        const initTime = useTimeStore.getState().time;
+        if (inputRef.current && initTime) {
+            if (initTime) {
+                inputRef.current.value = initTime.toFixed(0);
             }
-            previousRef.current = initEntity.position.x;
+            previousRef.current = initTime;
         }
 
         return unsubscribe;
-    }, [entityId]);
+    }, []);
 
     // Actualizar store cuando el usuario modifica
-    const updateX = useEntityStore((s) => s.updateSpecificPropOfEntity);
+    const update = useTimeStore((s) => s.updateTime);
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const n = Number(e.target.value);
         if (isNaN(n)) {
             e.target.value = previousRef.current.toString();
-            setError('Posición X solo puede ser un número');
+            setError('Tiempo solo puede ser un número');
             return;
         }
         if (e.target.value.includes('.') || e.target.value.includes(',')) {
             e.target.value = previousRef.current
                 ? previousRef.current.toString()
                 : '';
-            setError('Posición X solo puede ser un entero');
+            setError('Tiempo solo puede ser un entero');
             return;
         }
         const cleaned = e.target.value
@@ -79,22 +71,27 @@ const PositionXInput = memo(function PositionXInput({
             .replace(/^0+$/, '');
         e.target.value = cleaned;
         previousRef.current = n;
-        updateX(entityId, 'position.x', n);
+        update(n);
         setError('');
     };
 
     return (
-        <Input
-            type="number"
-            name="positionX"
-            ref={inputRef}
-            onChange={onChange}
-            placeholder="0"
-            className={className}
-        />
+        <div className="relative w-full">
+            <Input
+                type="number"
+                name="time"
+                ref={inputRef}
+                onChange={onChange}
+                placeholder="0"
+                className={`${className} w-28 pr-6`} // espacio a la derecha para la "s"
+            />
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none select-none">
+                s
+            </span>
+        </div>
     );
 });
 
-PositionXInput.displayName = 'PositionXInput';
+TimeInput.displayName = 'TimeInput';
 
-export default PositionXInput;
+export default TimeInput;

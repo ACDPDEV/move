@@ -1,6 +1,7 @@
 import { create } from 'zustand';
+import { useEntityStore } from './useEntityStore';
 
-export type TimeStore = {
+type TimeStore = {
     time: number;
     fps: number;
     speed: number;
@@ -13,8 +14,8 @@ export type TimeStore = {
     play: () => void;
     pause: () => void;
     togglePlayer: () => void;
-    reset: (time: number) => void;
-    setSpeed: (speed: number) => void;
+    reset: () => void;
+    updateSpeed: (speed: number) => void;
     increaseSpeed: () => void;
     decreaseSpeed: () => void;
     updateTime: (time: number) => void;
@@ -25,7 +26,7 @@ export type TimeStore = {
     updatePrediction: (value: boolean) => void;
 };
 
-export const useTimeStore = create<TimeStore>((set, get) => ({
+const useTimeStore = create<TimeStore>((set, get) => ({
     time: 0,
     fps: 0,
     speed: 1.0,
@@ -38,9 +39,13 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
     play: () => set({ isPlaying: true }),
     pause: () => set({ isPlaying: false }),
     togglePlayer: () => set({ isPlaying: !get().isPlaying }),
-    reset: (timeBeforeReset) =>
-        set({ time: 0, timeBeforeReset: timeBeforeReset, isPlaying: false }),
-    setSpeed: (speed) => set({ speed: Math.max(0.1, Math.min(3, speed)) }),
+    reset: () => {
+        const timeBeforeReset = get().time;
+        const updateAllEntities = useEntityStore.getState().updateAllEntities;
+        updateAllEntities(-timeBeforeReset * 2);
+        set({ time: 0, isPlaying: false });
+    },
+    updateSpeed: (speed) => set({ speed: Math.max(0.1, Math.min(3, speed)) }),
     increaseSpeed: () => set({ speed: Math.min(3, get().speed + 0.1) }),
     decreaseSpeed: () => set({ speed: Math.max(0.1, get().speed - 0.1) }),
     updateTime: (time) => set({ time }),
@@ -50,3 +55,5 @@ export const useTimeStore = create<TimeStore>((set, get) => ({
     updateInputTimeChange: (value) => set({ inputTimeChange: value }),
     updatePrediction: (value) => set({ movementPrediction: value }),
 }));
+
+export { useTimeStore, type TimeStore };

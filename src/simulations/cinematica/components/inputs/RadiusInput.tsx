@@ -17,7 +17,6 @@ const RadiusInput = memo(function RadiusInput({
     entityId,
     setError,
 }: RadiusInputProps) {
-    console.log('render radius');
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
 
@@ -66,13 +65,26 @@ const RadiusInput = memo(function RadiusInput({
             setError('Radio solo puede ser un número');
             return;
         }
-        if (n <= 0) {
+        if (e.target.value.includes('.') || e.target.value.includes(',')) {
+            e.target.value = previousRef.current
+                ? previousRef.current.toString()
+                : '';
+            setError('Radio solo puede ser un entero');
+            return;
+        }
+        if (n <= 0 && e.target.value !== '') {
             e.target.value = previousRef.current.toString();
             setError('Radio solo puede ser un número mayor 0');
             return;
         }
-        previousRef.current = n;
-        updateX(entityId, 'radius', n);
+        const cleaned = e.target.value
+            .replace(/^0+(?=\d)/, '')
+            .replace(/^0+$/, '');
+        e.target.value = cleaned;
+        if (cleaned !== '') {
+            previousRef.current = n;
+            updateX(entityId, 'radius', n);
+        }
         setError('');
     };
 
@@ -82,6 +94,7 @@ const RadiusInput = memo(function RadiusInput({
             name="radius"
             ref={inputRef}
             onChange={onChange}
+            placeholder="1"
             className={className}
         />
     );

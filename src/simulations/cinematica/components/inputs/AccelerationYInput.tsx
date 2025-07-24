@@ -67,6 +67,13 @@ const AccelerationYInput = memo(function AccelerationYInput({
             setError('Aceleración Y solo puede ser un número');
             return;
         }
+        if (e.target.value.includes('.') || e.target.value.includes(',')) {
+            e.target.value = previousRef.current
+                ? previousRef.current.toString()
+                : '';
+            setError('Aceleración Y solo puede ser un entero');
+            return;
+        }
         const cleaned = e.target.value
             .replace(/^0+(?=\d)/, '')
             .replace(/^0+$/, '');

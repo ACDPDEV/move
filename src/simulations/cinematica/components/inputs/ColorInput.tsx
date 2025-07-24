@@ -58,8 +58,8 @@ const ColorInput = memo(function ColorInput({
 
     // Actualizar store cuando el usuario modifica
     const updateX = useEntityStore((s) => s.updateSpecificPropOfEntity);
-    const onChange = (el: React.ChangeEvent<HTMLInputElement>) => {
-        const color = el.target.value;
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const color = e.target.value;
         previousRef.current = color;
         updateX(entityId, 'color', color);
         setError('');
