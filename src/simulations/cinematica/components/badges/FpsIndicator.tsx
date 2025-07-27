@@ -1,64 +1,60 @@
+'use client';
 import React, { memo, useEffect, useRef } from 'react';
 import {
     useTimeStore,
     type TimeStore,
 } from '@/simulations/cinematica/store/useTimeStore';
-import { Input } from '@/components/ui/input';
 
 interface FPSBadgeProps {
     className?: string;
 }
 
-const FPSBadge = memo(function FPSBadge({
-    className,
-}: FPSBadgeProps) {
-    const inputRef = useRef<HTMLInputElement>(null);
+const FPSBadge = memo(function FPSBadge({ className }: FPSBadgeProps) {
+    const spanRef = useRef<HTMLDivElement>(null);
     const previousRef = useRef<number>(0);
 
-    // Suscripción a TODO el estado, filtrar la propiedad que interesa
     useEffect(() => {
-        // Función de actualización interna
         const subscriber = (state: TimeStore) => {
-            const fps = state.fps
+            const fps = state.fps;
             if (!fps) return;
 
-            const newValue: number = fps;
-            const el = inputRef.current;
-            // Actualiza solo si el input no está enfocado y cambió
-            if (
-                el &&
-                document.activeElement !== el &&
-                newValue !== previousRef.current
-            ) {
-                el.value = newValue.toFixed(0);
+            const newValue = fps;
+            const el = spanRef.current;
+
+            if (el && newValue !== previousRef.current) {
+                el.textContent = newValue.toFixed(0);
                 previousRef.current = newValue;
             }
         };
 
-        // Subscribe devuelve la función de unsubscribe
         const unsubscribe = useTimeStore.subscribe(subscriber);
 
-        // Inicializa el valor
-        const initFPS = useTimeStore
-            .getState().fps
-        if (inputRef.current && initFPS) {
-            inputRef.current.value = initFPS.toFixed(0);
+        const initFPS = useTimeStore.getState().fps;
+        if (spanRef.current && initFPS) {
+            spanRef.current.textContent = initFPS.toFixed(0);
             previousRef.current = initFPS;
         }
 
         return unsubscribe;
     }, []);
 
-    
-
     return (
-        <Input
-            type="number"
-            name="radius"
-            ref={inputRef}
-            placeholder="1"
-            className={className}
-        />
+        <div
+            className={`px-4 py-1 border rounded text-sm text-center bg-stone-200 dark:bg-stone-800 w-fit justify-center items-center h-fit ${
+                className ?? ''
+            }`}
+        >
+            <span
+                ref={spanRef}
+                className="text-stone-500 dark:text-stone-400 justify-center items-center"
+            >
+                60
+            </span>
+            <span className="text-stone-500 dark:text-stone-400 justify-center items-center">
+                {' '}
+                FPS
+            </span>
+        </div>
     );
 });
 
