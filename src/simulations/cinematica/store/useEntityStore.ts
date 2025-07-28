@@ -31,24 +31,24 @@ type EntityStore = {
 const useEntityStore = create<EntityStore>((set, get) => ({
     entities: [
         new Entity({
-            position: { x: 10, y: 30 },
-            velocity: { x: 10, y: 0 },
+            position: { x: 0.1, y: 0.3 },
+            velocity: { x: 0.1, y: 0 },
             acceleration: { x: 0, y: 0 },
-            radius: 1,
+            radius: 0.05,
             color: '#FF0039',
         }),
         new Entity({
-            position: { x: 20, y: 30 },
-            velocity: { x: 0, y: 10 },
+            position: { x: 0.3, y: 0.3 },
+            velocity: { x: 0, y: 0.1 },
             acceleration: { x: 0, y: 0 },
-            radius: 1,
+            radius: 0.05,
             color: '#00FF66',
         }),
         new Entity({
-            position: { x: 30, y: 30 },
-            velocity: { x: 10, y: 10 },
+            position: { x: 0.5, y: 0.3 },
+            velocity: { x: 0.1, y: 0.1 },
             acceleration: { x: 0, y: 0 },
-            radius: 1,
+            radius: 0.05,
             color: '#3F5FFF',
         }),
     ],
@@ -133,18 +133,18 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                 ...state.entities,
                 new Entity({
                     position: {
-                        x: Math.random() * 100 - 50,
-                        y: Math.random() * 100 - 50,
+                        x: Math.random() * 1 - 0.5,
+                        y: Math.random() * 1 - 0.5,
                     },
                     velocity: {
-                        x: Math.random() * 20 - 10,
-                        y: Math.random() * 20 - 10,
+                        x: Math.random() * 1 - 0.5,
+                        y: Math.random() * 1 - 0.5,
                     },
                     acceleration: {
-                        x: Math.random() * 10 - 5,
-                        y: Math.random() * 10 - 5,
+                        x: Math.random() * 1 - 0.5,
+                        y: Math.random() * 1 - 0.5,
                     },
-                    radius: 1,
+                    radius: 0.05,
                     color:
                         '#' +
                         Math.floor(Math.random() * 0xffffff)

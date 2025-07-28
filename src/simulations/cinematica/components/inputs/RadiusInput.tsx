@@ -36,7 +36,7 @@ const RadiusInput = memo(function RadiusInput({
                 document.activeElement !== el &&
                 newValue !== previousRef.current
             ) {
-                el.value = newValue.toFixed(0);
+                el.value = newValue.toFixed(2);
                 previousRef.current = newValue;
             }
         };
@@ -49,7 +49,7 @@ const RadiusInput = memo(function RadiusInput({
             .getState()
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
-            inputRef.current.value = initEntity.radius.toFixed(0);
+            inputRef.current.value = initEntity.radius.toFixed(2);
             previousRef.current = initEntity.radius;
         }
 

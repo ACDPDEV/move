@@ -36,7 +36,7 @@ const AccelerationYInput = memo(function AccelerationYInput({
                 document.activeElement !== el &&
                 newValue !== previousRef.current
             ) {
-                el.value = newValue.toFixed(0);
+                el.value = newValue.toFixed(2);
                 previousRef.current = newValue;
             }
         };
@@ -50,7 +50,7 @@ const AccelerationYInput = memo(function AccelerationYInput({
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
             if (initEntity.acceleration.y) {
-                inputRef.current.value = initEntity.acceleration.y.toFixed(0);
+                inputRef.current.value = initEntity.acceleration.y.toFixed(2);
             }
             previousRef.current = initEntity.acceleration.y;
         }

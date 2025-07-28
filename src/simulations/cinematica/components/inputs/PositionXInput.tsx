@@ -36,7 +36,7 @@ const PositionXInput = memo(function PositionXInput({
                 document.activeElement !== el &&
                 newValue !== previousRef.current
             ) {
-                el.value = newValue.toFixed(0);
+                el.value = newValue.toFixed(2);
                 previousRef.current = newValue;
             }
         };
@@ -50,7 +50,7 @@ const PositionXInput = memo(function PositionXInput({
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
             if (initEntity.position.x) {
-                inputRef.current.value = initEntity.position.x.toFixed(0);
+                inputRef.current.value = initEntity.position.x.toFixed(2);
             }
             previousRef.current = initEntity.position.x;
         }

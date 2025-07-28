@@ -36,7 +36,7 @@ const VelocityYInput = memo(function VelocityYInput({
                 document.activeElement !== el &&
                 newValue !== previousRef.current
             ) {
-                el.value = newValue.toFixed(0);
+                el.value = newValue.toFixed(2);
                 previousRef.current = newValue;
             }
         };
@@ -50,7 +50,7 @@ const VelocityYInput = memo(function VelocityYInput({
             .entities.find((e) => e.id === entityId);
         if (inputRef.current && initEntity) {
             if (initEntity.velocity.y) {
-                inputRef.current.value = initEntity.velocity.y.toFixed(0);
+                inputRef.current.value = initEntity.velocity.y.toFixed(2);
             }
             previousRef.current = initEntity.velocity.y;
         }
