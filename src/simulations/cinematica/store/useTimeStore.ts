@@ -47,7 +47,7 @@ const useTimeStore = create<TimeStore>((set, get) => ({
     reset: () => {
         const timeBeforeReset = get().time;
         const updateAllEntities = useEntityStore.getState().updateAllEntities;
-        updateAllEntities(-timeBeforeReset);
+        updateAllEntities(-timeBeforeReset * get().speed);
         set({ time: 0, isPlaying: false });
     },
     updateSpeed: (speed) => set({ speed: Math.max(0.1, Math.min(3, speed)) }),
