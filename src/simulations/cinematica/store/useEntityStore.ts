@@ -6,6 +6,7 @@ import {
 
 type EntityStore = {
     entities: Entity[];
+    selectedEntity: Entity | null;
     updateEntities: (entities: Entity[]) => void;
     updateAllEntities: (deltaTime: number) => void;
     updateEntity: (id: string, updates: Partial<EntityProps>) => void;
@@ -24,32 +25,34 @@ type EntityStore = {
     ) => void;
     deleteEntity: (id: string) => void;
     addEntity: (props?: Partial<EntityProps>) => void;
+    setSelectedEntity: (entity: Entity | null) => void;
 };
 
 const useEntityStore = create<EntityStore>((set, get) => ({
     entities: [
         new Entity({
-            position: { x: 100, y: 300 },
-            velocity: { x: 100, y: 0 },
+            position: { x: 10, y: 30 },
+            velocity: { x: 10, y: 0 },
             acceleration: { x: 0, y: 0 },
-            radius: 10,
-            color: '#FF0000',
+            radius: 1,
+            color: '#FF0039',
         }),
         new Entity({
-            position: { x: 200, y: 300 },
-            velocity: { x: 0, y: 100 },
+            position: { x: 20, y: 30 },
+            velocity: { x: 0, y: 10 },
             acceleration: { x: 0, y: 0 },
-            radius: 10,
-            color: '#E3CF00',
+            radius: 1,
+            color: '#00FF66',
         }),
         new Entity({
-            position: { x: 300, y: 300 },
-            velocity: { x: 100, y: 100 },
+            position: { x: 30, y: 30 },
+            velocity: { x: 10, y: 10 },
             acceleration: { x: 0, y: 0 },
-            radius: 10,
-            color: '#3F00FF',
+            radius: 1,
+            color: '#3F5FFF',
         }),
     ],
+    selectedEntity: null,
 
     updateEntities: (entities) => set({ entities }),
 
@@ -130,18 +133,18 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                 ...state.entities,
                 new Entity({
                     position: {
-                        x: Math.random() * 2000 - 1000,
-                        y: Math.random() * 2000 - 1000,
+                        x: Math.random() * 100 - 50,
+                        y: Math.random() * 100 - 50,
                     },
                     velocity: {
-                        x: Math.random() * 2000 - 1000,
-                        y: Math.random() * 2000 - 1000,
+                        x: Math.random() * 20 - 10,
+                        y: Math.random() * 20 - 10,
                     },
                     acceleration: {
-                        x: Math.random() * 2000 - 1000,
-                        y: Math.random() * 2000 - 1000,
+                        x: Math.random() * 10 - 5,
+                        y: Math.random() * 10 - 5,
                     },
-                    radius: 10,
+                    radius: 1,
                     color:
                         '#' +
                         Math.floor(Math.random() * 0xffffff)
@@ -151,6 +154,7 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                 }),
             ],
         })),
+    setSelectedEntity: (entity) => set({ selectedEntity: entity }),
 }));
 
 export { useEntityStore, type EntityStore };

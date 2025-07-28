@@ -14,7 +14,7 @@ function FloatBar() {
     const entities = useEntitySummaries();
 
     return (
-        <div className="flex flex-row gap-1 bg-stone-800/90 text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm w-fit flex-wrap justify-center items-center">
+        <div className="flex flex-row gap-1 bg-stone-200/90 dark:bg-stone-800/90 text-stone-900 dark:text-white px-3 py-1.5 rounded-lg text-sm backdrop-blur-sm w-fit flex-wrap justify-center items-center">
             {entities.map(({ id, color }) => (
                 <Popover key={id}>
                     <PopoverTrigger asChild>

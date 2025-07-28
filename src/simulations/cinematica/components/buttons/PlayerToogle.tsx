@@ -10,7 +10,7 @@ function PlayerToggle() {
         <Button
             onClick={togglePlayer}
             title={isPlaying ? 'Pausar' : 'Reproducir'}
-            className="text-stone-300 hover:text-white hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-stone-500"
+            className="text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500"
             type="button"
             variant="outline"
         >

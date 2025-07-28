@@ -1,5 +1,6 @@
 import { Vector2D } from '@/simulations/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
+import { usePlaneStore } from '../store/usePlaneStore';
 
 interface EntityProps {
     id?: string;
@@ -33,9 +34,7 @@ class Entity {
     acceleration: Vector2D;
     radius: number;
     color: string;
-    absolutePosition: Vector2D;
-    absoluteRadius: number;
-    private trajectory: Vector2D[] = [];
+    private trajectory: { x: number; y: number }[] = [];
 
     constructor({
         id,
@@ -49,10 +48,9 @@ class Entity {
         this.position = new Vector2D(position.x, position.y);
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);
-        this.absolutePosition = this.position.copy();
         this.radius = radius;
-        this.absoluteRadius = this.radius;
         this.color = color;
+        this.trajectory = [this.position];
     }
 
     update(deltaTime: number): void {
@@ -79,36 +77,27 @@ class Entity {
         this.velocity.y += this.acceleration.y * deltaTime;
     }
 
-    absoluteMoveAndScale(
-        deltaPosition: { x: number; y: number },
-        scale: number,
-    ): void {
-        this.absolutePosition.x = (this.position.x + deltaPosition.x) * scale;
-        this.absolutePosition.y =
-            (this.position.y * -1 + deltaPosition.y) * scale;
-        this.absoluteRadius = this.radius * scale;
-    }
-
     draw(ctx: CanvasRenderingContext2D): void {
-        ctx.beginPath();
-        ctx.arc(
-            this.absolutePosition.x,
-            this.absolutePosition.y,
-            this.absoluteRadius,
-            0,
-            Math.PI * 2,
-        );
-        ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.closePath();
+        const plane = usePlaneStore.getState();
+        const { width, height } = ctx.canvas;
+
+        const [eX, eY, eRadius] = [
+            (this.position.x + plane.position.x) * plane.scale,
+            (this.position.y + plane.position.y) * plane.scale * -1,
+            this.radius * plane.scale,
+        ];
+
+        if (eX >= 0 && eX <= width && eY >= 0 && eY <= height) {
+            ctx.beginPath();
+            ctx.arc(eX, eY, eRadius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+        }
     }
 
-    drawTrajectory(
-        ctx: CanvasRenderingContext2D,
-        deltaPosition: { x: number; y: number },
-        scale: number,
-    ): void {
-        if (this.trajectory.length < 2) return;
+    drawTrajectory(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
 
         ctx.beginPath();
         ctx.strokeStyle = this.color;
@@ -117,15 +106,15 @@ class Entity {
 
         // Convertir primera posición de la trayectoria
         const firstPos = this.trajectory[0];
-        let absX = (firstPos.x + deltaPosition.x) * scale;
-        let absY = (firstPos.y * -1 + deltaPosition.y) * scale;
+        let absX = (firstPos.x + plane.position.x) * plane.scale;
+        let absY = (firstPos.y + plane.position.y) * plane.scale * -1;
         ctx.moveTo(absX, absY);
 
         // Dibujar el resto de la trayectoria
         for (let i = 1; i < this.trajectory.length; i++) {
             const pos = this.trajectory[i];
-            absX = (pos.x + deltaPosition.x) * scale;
-            absY = (pos.y * -1 + deltaPosition.y) * scale;
+            absX = (pos.x + plane.position.x) * plane.scale;
+            absY = (pos.y + plane.position.y) * plane.scale * -1;
             ctx.lineTo(absX, absY);
         }
 
@@ -134,221 +123,237 @@ class Entity {
         ctx.closePath();
     }
 
-    private drawArrowHead(
-        ctx: CanvasRenderingContext2D,
-        startX: number,
-        startY: number,
-        endX: number,
-        endY: number,
-    ): void {
-        const arrowSize = Math.max(6, this.absoluteRadius * 0.5);
-        const angle = Math.atan2(endY - startY, endX - startX);
-
-        ctx.beginPath();
-        ctx.moveTo(endX, endY);
-        ctx.lineTo(
-            endX - arrowSize * Math.cos(angle - Math.PI / 6),
-            endY - arrowSize * Math.sin(angle - Math.PI / 6),
-        );
-        ctx.lineTo(
-            endX - arrowSize * Math.cos(angle + Math.PI / 6),
-            endY - arrowSize * Math.sin(angle + Math.PI / 6),
-        );
-        ctx.lineTo(endX, endY);
-        ctx.fillStyle = ctx.strokeStyle;
-        ctx.fill();
-        ctx.closePath();
+    resetTrajectory(): void {
+        this.trajectory = [this.position];
     }
 
-    private drawVectorComponent(
-        ctx: CanvasRenderingContext2D,
-        component: 'x' | 'y',
-        vector: Vector2D,
-        scale: number,
-        color: string,
-    ): void {
-        const startX = this.absolutePosition.x;
-        const startY = this.absolutePosition.y;
-        let endX = startX;
-        let endY = startY;
+    drawPositionVectorResultant(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const { width, height } = ctx.canvas;
 
-        if (component === 'x') {
-            endX = startX + vector.x * scale;
-        } else {
-            endY = startY - vector.y * scale;
-        }
+        const [pX, pY] = [
+            plane.position.x * plane.scale,
+            plane.position.y * plane.scale * -1,
+        ];
 
-        // Solo dibujar si el vector tiene magnitud
-        if (Math.abs(endX - startX) > 1 || Math.abs(endY - startY) > 1) {
+        const [eX, eY] = [
+            (this.position.x + plane.position.x) * plane.scale,
+            (this.position.y + plane.position.y) * plane.scale * -1,
+        ];
+
+        if (
+            eX >= 0 ||
+            eX <= width ||
+            eY >= 0 ||
+            eY <= height ||
+            pX >= 0 ||
+            pX <= width ||
+            pY >= 0 ||
+            pY <= height
+        ) {
             ctx.beginPath();
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(endX, endY);
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 1;
-            ctx.setLineDash([5, 5]);
+            ctx.moveTo(pX, pY);
+            ctx.lineTo(eX, eY);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
             ctx.stroke();
-            ctx.setLineDash([]);
-
-            this.drawArrowHead(ctx, startX, startY, endX, endY);
             ctx.closePath();
         }
     }
 
-    private drawVector(
-        ctx: CanvasRenderingContext2D,
-        vector: Vector2D,
-        scale: number,
-        color: string,
-        options: VectorDisplayOptions,
-    ): void {
-        // Dibujar vector resultante
-        if (options.resultant) {
-            const endX = this.absolutePosition.x + vector.x * scale;
-            const endY = this.absolutePosition.y - vector.y * scale;
+    drawPositionVectorComponents(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const { width, height } = ctx.canvas;
 
-            // Solo dibujar si el vector tiene magnitud significativa
-            const magnitude = Math.sqrt(
-                vector.x * vector.x + vector.y * vector.y,
-            );
-            if (magnitude * scale > 2) {
-                ctx.beginPath();
-                ctx.moveTo(this.absolutePosition.x, this.absolutePosition.y);
-                ctx.lineTo(endX, endY);
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                ctx.closePath();
+        const [pX, pY] = [
+            plane.position.x * plane.scale,
+            plane.position.y * plane.scale * -1,
+        ];
 
-                this.drawArrowHead(
-                    ctx,
-                    this.absolutePosition.x,
-                    this.absolutePosition.y,
-                    endX,
-                    endY,
-                );
-            }
-        }
+        const [eX, eY] = [
+            (this.position.x + plane.position.x) * plane.scale,
+            (this.position.y + plane.position.y) * plane.scale * -1,
+        ];
 
-        // Dibujar componentes
-        if (options.components) {
-            this.drawVectorComponent(ctx, 'x', vector, scale, color + '80');
-            this.drawVectorComponent(ctx, 'y', vector, scale, color + '80');
-        }
-
-        // Dibujar ángulo
-        if (options.angle && vector.mag() > 0.1) {
-            this.drawAngle(ctx, vector, scale, color);
-        }
-    }
-
-    private drawAngle(
-        ctx: CanvasRenderingContext2D,
-        vector: Vector2D,
-        scale: number,
-        color: string,
-    ): void {
-        const angle = Math.atan2(-vector.y, vector.x); // Negativo porque Y está invertido
-        const radius = Math.min(30, this.absoluteRadius * 2);
-
-        ctx.beginPath();
-        ctx.arc(
-            this.absolutePosition.x,
-            this.absolutePosition.y,
-            radius,
-            0,
-            angle,
-            false,
-        );
-        ctx.strokeStyle = color + '60';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        ctx.closePath();
-
-        // Mostrar el valor del ángulo
-        const textX = this.absolutePosition.x + radius + 5;
-        const textY = this.absolutePosition.y;
-        ctx.fillStyle = color;
-        ctx.font = '12px Arial';
-        ctx.fillText(`${((angle * 180) / Math.PI).toFixed(1)}°`, textX, textY);
-    }
-
-    drawVectors(
-        ctx: CanvasRenderingContext2D,
-        scale: number,
-        displayOptions: DisplayOptions,
-    ): void {
-        // Dibujar vector de velocidad
         if (
-            displayOptions.velocity.resultant ||
-            displayOptions.velocity.components ||
-            displayOptions.velocity.angle
+            eX >= 0 ||
+            eX <= width ||
+            eY >= 0 ||
+            eY <= height ||
+            pX >= 0 ||
+            pX <= width ||
+            pY >= 0 ||
+            pY <= height
         ) {
-            this.drawVector(
-                ctx,
-                this.velocity,
-                scale,
-                '#00FF00',
-                displayOptions.velocity,
-            );
-        }
+            ctx.beginPath();
+            ctx.moveTo(pX, pY);
+            ctx.lineTo(eX, pY);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.closePath();
 
-        // Dibujar vector de aceleración
+            ctx.beginPath();
+            ctx.moveTo(pX, pY);
+            ctx.lineTo(pX, eY);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.closePath();
+        }
+    }
+
+    drawPositionVectorAngle(ctx: CanvasRenderingContext2D): void {}
+
+    drawVelocityVectorResultant(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const { width, height } = ctx.canvas;
+
+        const [eX, eY] = [
+            (this.position.x + plane.position.x) * plane.scale,
+            (this.position.y + plane.position.y) * plane.scale * -1,
+        ];
+
+        const [vX, vY] = [
+            eX + this.velocity.x * plane.scale,
+            eY + this.velocity.y * plane.scale * -1,
+        ];
+
         if (
-            displayOptions.acceleration.resultant ||
-            displayOptions.acceleration.components ||
-            displayOptions.acceleration.angle
+            eX >= 0 ||
+            eX <= width ||
+            eY >= 0 ||
+            eY <= height ||
+            vX >= 0 ||
+            vX <= width ||
+            vY >= 0 ||
+            vY <= height
         ) {
-            this.drawVector(
-                ctx,
-                this.acceleration,
-                scale,
-                '#FF0000',
-                displayOptions.acceleration,
-            );
+            ctx.beginPath();
+            ctx.moveTo(eX, eY);
+            ctx.lineTo(vX, vY);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.closePath();
         }
+    }
 
-        // Dibujar vector de posición (desde el origen)
+    drawVelocityVectorComponents(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const { width, height } = ctx.canvas;
+
+        const [eX, eY] = [
+            (this.position.x + plane.position.x) * plane.scale,
+            (this.position.y + plane.position.y) * plane.scale * -1,
+        ];
+
+        const [vX, vY] = [
+            eX + this.velocity.x * plane.scale,
+            eY + this.velocity.y * plane.scale * -1,
+        ];
+
         if (
-            displayOptions.position.resultant ||
-            displayOptions.position.components ||
-            displayOptions.position.angle
+            eX >= 0 ||
+            eX <= width ||
+            eY >= 0 ||
+            eY <= height ||
+            vX >= 0 ||
+            vX <= width ||
+            vY >= 0 ||
+            vY <= height
         ) {
-            // Para el vector posición, necesitamos dibujarlo desde el origen
-            const originX = this.absolutePosition.x - this.position.x * scale;
-            const originY = this.absolutePosition.y + this.position.y * scale;
+            ctx.beginPath();
+            ctx.moveTo(eX, eY);
+            ctx.lineTo(vX, eY);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.closePath();
 
-            ctx.save();
-            ctx.translate(originX, originY);
-            const tempAbsPos = this.absolutePosition;
-            this.absolutePosition = new Vector2D(0, 0);
-            this.drawVector(
-                ctx,
-                this.position,
-                scale,
-                '#FFFF00',
-                displayOptions.position,
-            );
-            this.absolutePosition = tempAbsPos;
-            ctx.restore();
+            ctx.beginPath();
+            ctx.moveTo(eX, eY);
+            ctx.lineTo(eX, vY);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.closePath();
         }
     }
 
-    drawCoordinates(ctx: CanvasRenderingContext2D): void {
-        const textX = this.absolutePosition.x + this.absoluteRadius + 5;
-        const textY = this.absolutePosition.y - this.absoluteRadius - 5;
+    drawVelocityVectorAngle(ctx: CanvasRenderingContext2D): void {}
 
-        ctx.fillStyle = this.color;
-        ctx.font = '12px Arial';
-        ctx.fillText(
-            `(${this.position.x.toFixed(1)}, ${this.position.y.toFixed(1)})`,
-            textX,
-            textY,
-        );
-    }
+    drawAccelerationVectorResultant(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const { width, height } = ctx.canvas;
 
-    resetTrajectory(): void {
-        this.trajectory = [];
+        const [eX, eY] = [
+            (this.position.x + plane.position.x) * plane.scale,
+            (this.position.y + plane.position.y) * plane.scale * -1,
+        ];
+
+        const [aX, aY] = [
+            eX + this.acceleration.x * plane.scale,
+            eY + this.acceleration.y * plane.scale * -1,
+        ];
+
+        if (
+            eX >= 0 ||
+            eX <= width ||
+            eY >= 0 ||
+            eY <= height ||
+            aX >= 0 ||
+            aX <= width ||
+            aY >= 0 ||
+            aY <= height
+        ) {
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
+            ctx.moveTo(eX, eY);
+            ctx.lineTo(aX, aY);
+            ctx.stroke();
+            ctx.closePath();
+        }
     }
+    drawAccelerationVectorComponents(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const { width, height } = ctx.canvas;
+        const [eX, eY] = [
+            (this.position.x + plane.position.x) * plane.scale,
+            (this.position.y + plane.position.y) * plane.scale * -1,
+        ];
+        const [aX, aY] = [
+            eX + this.acceleration.x * plane.scale,
+            eY + this.acceleration.y * plane.scale * -1,
+        ];
+        if (
+            eX >= 0 ||
+            eX <= width ||
+            eY >= 0 ||
+            eY <= height ||
+            aX >= 0 ||
+            aX <= width ||
+            aY >= 0 ||
+            aY <= height
+        ) {
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1;
+            ctx.moveTo(eX, eY);
+            ctx.lineTo(aX, eY);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1;
+            ctx.moveTo(eX, eY);
+            ctx.lineTo(eX, aY);
+            ctx.stroke();
+            ctx.closePath();
+        }
+    }
+    drawAccelerationVectorAngle(ctx: CanvasRenderingContext2D): void {}
 
     toString(): string {
         return `Movil {

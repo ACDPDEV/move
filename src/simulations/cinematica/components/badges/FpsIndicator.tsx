@@ -1,9 +1,6 @@
 'use client';
 import React, { memo, useEffect, useRef } from 'react';
-import {
-    useTimeStore,
-    type TimeStore,
-} from '@/simulations/cinematica/store/useTimeStore';
+import { useTimeStore } from '@/simulations/cinematica/store/useTimeStore';
 
 interface FPSBadgeProps {
     className?: string;
@@ -14,28 +11,28 @@ const FPSBadge = memo(function FPSBadge({ className }: FPSBadgeProps) {
     const previousRef = useRef<number>(0);
 
     useEffect(() => {
-        const subscriber = (state: TimeStore) => {
-            const fps = state.fps;
+        const updateFPS = () => {
+            const fps = useTimeStore.getState().fps;
             if (!fps) return;
 
             const newValue = fps;
             const el = spanRef.current;
-
-            if (el && newValue !== previousRef.current) {
+            if (el) {
                 el.textContent = newValue.toFixed(0);
                 previousRef.current = newValue;
             }
         };
 
-        const unsubscribe = useTimeStore.subscribe(subscriber);
+        // Actualización inicial
+        updateFPS();
 
-        const initFPS = useTimeStore.getState().fps;
-        if (spanRef.current && initFPS) {
-            spanRef.current.textContent = initFPS.toFixed(0);
-            previousRef.current = initFPS;
-        }
+        // Configurar intervalo para actualizar cada segundo
+        const intervalId = setInterval(updateFPS, 1000);
 
-        return unsubscribe;
+        // Cleanup
+        return () => {
+            clearInterval(intervalId);
+        };
     }, []);
 
     return (

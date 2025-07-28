@@ -1,49 +1,86 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
-import { useEntityUpdater } from '@/simulations/cinematica/hooks/useEntityUpdater';
-import { useCanvasRenderer } from '@/simulations/cinematica/hooks/useCanvasRenderer';
-import { useTimer } from '@/simulations/cinematica/hooks/useTimer';
-import { usePlaneStore } from '@/simulations/cinematica/store/usePlaneStore';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners';
-import { CANVAS_CONFIG } from '@/simulations/cinematica/utils/canvasManagment';
-import { MouseState } from '@/simulations/cinematica/types';
+import { useTimeStore } from '../store/useTimeStore';
+import { useEntityStore } from '../store/useEntityStore';
+import { useTheme } from 'next-themes';
+import { drawOriginPoint } from '../draws/drawOriginPoint';
+import { drawAxes } from '../draws/drawAxes';
+import { drawEntities } from '../draws/drawEntities';
+import { drawGrids } from '../draws/drawGrids';
 
-function Canvas({ style }: { style?: React.CSSProperties }) {
-    useTimer(); // ⏱️ Hook que actualiza delta, fps, time, etc.
-    useEntityUpdater(); // 🧠 Hook que actualiza las entidades
-    console.log('render')
+interface CanvasProps {
+    style?: React.CSSProperties;
+    className?: string;
+}
 
+function Canvas({ style, className }: CanvasProps) {
+    const animationIdRef = useRef<number | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const MouseRef = useRef<MouseState>({
-        isDown: false,
-        startPosition: { x: 0, y: 0 },
-        currentPosition: { x: 0, y: 0 },
-        deltaPosition: { x: 0, y: 0 },
-    });
+    const { theme } = useTheme();
 
-    const {
-        plane: absolutePlane,
-        setPosition,
-        setScale,
-    } = usePlaneStore.getState();
-    useCanvasRenderer(canvasRef as React.RefObject<HTMLCanvasElement>); // 🎨 Dibuja plano y entidades
+    // Loop principal de renderizado
+    const renderLoop = useCallback(() => {
+        // Actualizar tiempo
+        useTimeStore.getState().runLoopTime();
 
+        // Actualizar entidades si la simulación está corriendo
+        if (useTimeStore.getState().isPlaying) {
+            useEntityStore
+                .getState()
+                .updateAllEntities(
+                    useTimeStore.getState().delta *
+                        useTimeStore.getState().speed,
+                );
+        }
+
+        // Obtener referencias del canvas
+        const canvas = canvasRef.current;
+        if (!canvas) {
+            animationIdRef.current = requestAnimationFrame(renderLoop);
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            animationIdRef.current = requestAnimationFrame(renderLoop);
+            return;
+        }
+        const { width, height } = canvas;
+
+        // Limpiar canvas
+        ctx.clearRect(0, 0, width, height);
+
+        drawGrids(ctx, theme === 'dark');
+        drawOriginPoint(ctx, theme === 'dark');
+        drawAxes(ctx, theme === 'dark');
+        drawEntities(ctx);
+
+        // Continuar el loop
+        animationIdRef.current = requestAnimationFrame(renderLoop);
+    }, [theme]);
+
+    // Efecto para el loop de renderizado
+    useEffect(() => {
+        animationIdRef.current = requestAnimationFrame(renderLoop);
+
+        return () => {
+            if (animationIdRef.current !== null) {
+                cancelAnimationFrame(animationIdRef.current);
+                animationIdRef.current = null;
+            }
+        };
+    }, [renderLoop]);
+
+    // Efecto para los event listeners
     useEffect(() => {
         if (!canvasRef.current) return;
 
-        const cleanup = listenEvents(
-            canvasRef.current,
-            MouseRef.current,
-            absolutePlane,
-            CANVAS_CONFIG,
-            setPosition,
-            setScale,
-        );
-
+        const cleanup = listenEvents(canvasRef.current);
         return cleanup;
-    }, [canvasRef, absolutePlane]);
+    }, []);
 
-    return <canvas ref={canvasRef} style={style} className="w-full h-full" />;
+    return <canvas ref={canvasRef} style={style} className={className} />;
 }
 
 export default Canvas;

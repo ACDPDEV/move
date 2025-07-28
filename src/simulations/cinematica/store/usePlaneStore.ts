@@ -1,18 +1,33 @@
-// En tu store (por ejemplo, planeStore.ts)
-import { create } from "zustand";
-import { AbsolutePlaneState } from "../types";
+import { create } from 'zustand';
 
 type PlaneStore = {
-  plane: AbsolutePlaneState;
-  setPosition: (position: AbsolutePlaneState['position']) => void;
-  setScale: (scale: AbsolutePlaneState['scale']) => void;
+    position: { x: number; y: number };
+    scale: number;
+    gap: number;
+    minScale: number;
+    maxScale: number;
+    minGridsWidthInScreen: number;
+    maxGridsWidthInScreen: number;
+    zoomSensitivity: number;
+    moveSensitivity: number;
+    setPosition: (position: { x: number; y: number }) => void;
+    setScale: (scale: number) => void;
+    setGap: (gap: number) => void;
 };
 
-export const usePlaneStore = create<PlaneStore>((set, get) => ({
-  plane: {
-    position: { x: 400, y: 300 },
-    scale: 1,
-  },
-  setPosition: (position) => set({ plane: { ...get().plane, position } }),
-  setScale: (scale) => set({ plane: { ...get().plane, scale } }),
+const usePlaneStore = create<PlaneStore>((set) => ({
+    position: { x: 1, y: -1 },
+    scale: 300,
+    gap: 0.5,
+    minScale: 0.5,
+    maxScale: 400,
+    minGridsWidthInScreen: 3,
+    maxGridsWidthInScreen: 10,
+    zoomSensitivity: 0.1,
+    moveSensitivity: 0.05,
+    setPosition: (position) => set({ position: position }),
+    setScale: (scale) => set({ scale: scale }),
+    setGap: (gap) => set({ gap: gap }),
 }));
+
+export { usePlaneStore, type PlaneStore };

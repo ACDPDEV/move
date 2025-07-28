@@ -65,13 +65,6 @@ const RadiusInput = memo(function RadiusInput({
             setError('Radio solo puede ser un número');
             return;
         }
-        if (e.target.value.includes('.') || e.target.value.includes(',')) {
-            e.target.value = previousRef.current
-                ? previousRef.current.toString()
-                : '';
-            setError('Radio solo puede ser un entero');
-            return;
-        }
         if (n <= 0 && e.target.value !== '') {
             e.target.value = previousRef.current.toString();
             setError('Radio solo puede ser un número mayor 0');

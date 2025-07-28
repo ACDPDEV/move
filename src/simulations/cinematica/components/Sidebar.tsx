@@ -2,7 +2,6 @@
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
@@ -30,21 +29,15 @@ function Sidebar() {
                 </Button>
             </SheetTrigger>
             <SheetContent>
-                <SheetHeader className="mb-4">
-                    <SheetTitle>Móviles</SheetTitle>
-                    <SheetDescription>
-                        Añade móviles a la simulación
-                    </SheetDescription>
-                </SheetHeader>
-
                 <ScrollArea className="w-full h-full flex flex-col gap-4 p-4">
+                    <SheetTitle className="mb-4">Entidades</SheetTitle>
                     <Button
                         onClick={() => useEntityStore.getState().addEntity()}
                         className="mb-4"
                     >
                         Añadir Móvil
                     </Button>
-                    <div className="flex flex-col gap-4">
+                    <div className="w-full h-full flex flex-col gap-4 p-4">
                         {reversedEntities.map(({ id, color }) => (
                             <EntityCard entityId={id} color={color} key={id} />
                         ))}

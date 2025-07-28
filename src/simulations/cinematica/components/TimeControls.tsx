@@ -8,6 +8,7 @@ import DisplayOptionsSelector from './selector/DisplayOptionsSelector';
 import PlayerToggle from './buttons/PlayerToogle';
 import ResetButton from './buttons/ResetButton';
 import { toast } from 'sonner';
+import { ModeToggle } from '@/components/layout/ToogleTheme';
 
 export default function TimeControls() {
     const [error, setError] = useState<string>('');
@@ -43,6 +44,7 @@ export default function TimeControls() {
             <div className="flex items-center gap-2">
                 <PlayerToggle />
                 <ResetButton />
+                <ModeToggle />
             </div>
         </div>
     );

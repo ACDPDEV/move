@@ -1,97 +1,116 @@
-import { resizeCanvas } from '@/simulations/cinematica/utils/canvasManagment';
-import type { MouseState, AbsolutePlaneState, CanvasConfig } from '@/simulations/cinematica/types';
+import { initializeCanvas } from '@/simulations/cinematica/utils/canvasManagment';
+import { usePlaneStore } from '../store/usePlaneStore';
+import { useMouseStore } from '../store/useMouseStore';
 
 function listenCanvasEvents($canvas: HTMLCanvasElement) {
-    // Callbacks
-    const handleResize = () => resizeCanvas($canvas);
+    // Callback optimizado que evita llamadas innecesarias
+    let isUpdating = false;
 
-    handleResize();
+    const updateCallback = () => {
+        if (isUpdating) return; // Evitar llamadas múltiples
 
-    // Event listeners
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup function
-    const cleanup = () => {
-        window.removeEventListener('resize', handleResize);
+        isUpdating = true;
     };
+
+    // Usar la nueva función de inicialización mejorada
+    const cleanup = initializeCanvas($canvas, updateCallback);
 
     return cleanup;
 }
 
-function listenMouseEvents(
-    $canvas: HTMLCanvasElement,
-    Mouse: MouseState,
-    AbsolutePlane: AbsolutePlaneState,
-    CANVAS_CONFIG: CanvasConfig,
-    updatePlanePosition: (plane: AbsolutePlaneState['position']) => void,
-    updatePlaneScale: (scale: AbsolutePlaneState['scale']) => void,
-) {
+function listenMouseEvents($canvas: HTMLCanvasElement) {
     // Callbacks
     const handleMouseDown = (event: MouseEvent) => {
-        Mouse.isDown = true;
-        Mouse.startPosition = { x: event.offsetX, y: event.offsetY };
-        Mouse.currentPosition = { x: event.offsetX, y: event.offsetY };
-    };
-    
-    const handleMouseMove = (event: MouseEvent) => {
-        if (!Mouse.isDown) return;
-        
-        const deltaX = event.offsetX - Mouse.currentPosition.x;
-        const deltaY = event.offsetY - Mouse.currentPosition.y;
-        
-        Mouse.deltaPosition = { x: deltaX, y: deltaY };
-        Mouse.currentPosition = { x: event.offsetX, y: event.offsetY };
-        
-        AbsolutePlane.position.x += deltaX / AbsolutePlane.scale;
-        AbsolutePlane.position.y += deltaY / AbsolutePlane.scale;
+        const MouseStore = useMouseStore.getState();
+        const position = { x: event.offsetX, y: event.offsetY };
 
-        updatePlanePosition(AbsolutePlane.position);
-        updatePlaneScale(AbsolutePlane.scale);
+        MouseStore.setIsDown(true);
+        MouseStore.setStartPosition(position);
+        MouseStore.setCurrentPosition(position);
+        MouseStore.setDeltaPosition({ x: 0, y: 0 });
     };
-    
+
+    const handleMouseMove = (event: MouseEvent) => {
+        const MouseStore = useMouseStore.getState();
+        const newPosition = { x: event.offsetX, y: event.offsetY };
+
+        // Siempre actualizar la posición actual del mouse
+        const oldPosition = MouseStore.currentPosition;
+        MouseStore.setCurrentPosition(newPosition);
+
+        // Solo procesar el arrastre si el mouse está presionado
+        if (MouseStore.isDown) {
+            const PlaneStore = usePlaneStore.getState();
+
+            // Calcular el delta basado en la posición anterior
+            const deltaX = newPosition.x - oldPosition.x;
+            const deltaY = newPosition.y - oldPosition.y;
+
+            const deltaPosition = { x: deltaX, y: deltaY };
+
+            // Actualizar el delta en el store
+            MouseStore.setDeltaPosition(deltaPosition);
+
+            // Actualizar la posición del plano
+            PlaneStore.setPosition({
+                x: PlaneStore.position.x + deltaX * PlaneStore.moveSensitivity,
+                y: PlaneStore.position.y - deltaY * PlaneStore.moveSensitivity,
+            });
+        }
+    };
+
     const handleMouseUp = () => {
-        Mouse.isDown = false;
-        Mouse.deltaPosition = { x: 0, y: 0 };
+        const MouseStore = useMouseStore.getState();
+        MouseStore.setIsDown(false);
+        MouseStore.setDeltaPosition({ x: 0, y: 0 });
     };
-    
+
+    // Manejar cuando el mouse sale del canvas
+    const handleMouseLeave = () => {
+        const MouseStore = useMouseStore.getState();
+        if (MouseStore.isDown) {
+            MouseStore.setIsDown(false);
+            MouseStore.setDeltaPosition({ x: 0, y: 0 });
+        }
+    };
+
     const handleWheel = (event: WheelEvent) => {
         event.preventDefault();
-        
-        const zoomFactor = event.deltaY * CANVAS_CONFIG.ZOOM_SENSITIVITY;
+        const PlaneStore = usePlaneStore.getState();
+
+        const zoomIntensity = PlaneStore.zoomSensitivity;
+        const wheel = event.deltaY < 0 ? 1 : -1;
+        const zoom = Math.exp(wheel * zoomIntensity);
+
         const newScale = Math.max(
-            CANVAS_CONFIG.MIN_SCALE,
-            Math.min(CANVAS_CONFIG.MAX_SCALE, AbsolutePlane.scale - zoomFactor)
+            PlaneStore.minScale,
+            Math.min(PlaneStore.maxScale, PlaneStore.scale * zoom),
         );
-        
-        AbsolutePlane.scale = newScale;
+
+        PlaneStore.setScale(newScale);
     };
 
     // Event listeners
     $canvas.addEventListener('mousedown', handleMouseDown);
     $canvas.addEventListener('mousemove', handleMouseMove);
     $canvas.addEventListener('mouseup', handleMouseUp);
-    $canvas.addEventListener('wheel', handleWheel);
+    $canvas.addEventListener('mouseleave', handleMouseLeave);
+    $canvas.addEventListener('wheel', handleWheel, { passive: false });
 
     const cleanup = () => {
         $canvas.removeEventListener('mousedown', handleMouseDown);
         $canvas.removeEventListener('mousemove', handleMouseMove);
         $canvas.removeEventListener('mouseup', handleMouseUp);
+        $canvas.removeEventListener('mouseleave', handleMouseLeave);
         $canvas.removeEventListener('wheel', handleWheel);
     };
 
     return cleanup;
 }
 
-function listenEvents(
-    $canvas: HTMLCanvasElement,
-    Mouse: MouseState,
-    AbsolutePlane: AbsolutePlaneState,
-    CANVAS_CONFIG: CanvasConfig,
-    updatePlanePosition: (plane: AbsolutePlaneState['position']) => void,
-    updatePlaneScale: (scale: AbsolutePlaneState['scale']) => void,
-) {
+function listenEvents($canvas: HTMLCanvasElement) {
     const cleanupCanvas = listenCanvasEvents($canvas);
-    const cleanupMouse = listenMouseEvents($canvas, Mouse, AbsolutePlane, CANVAS_CONFIG, updatePlanePosition, updatePlaneScale);
+    const cleanupMouse = listenMouseEvents($canvas);
 
     // Combined cleanup function
     const cleanup = () => {
@@ -102,6 +121,4 @@ function listenEvents(
     return cleanup;
 }
 
-export {
-    listenEvents,
-}
+export { listenEvents };

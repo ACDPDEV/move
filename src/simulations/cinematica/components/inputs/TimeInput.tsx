@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { TimeStore, useTimeStore } from '../../store/useTimeStore';
+import { useEntityStore } from '../../store/useEntityStore';
 
 interface TimeInputProps {
     className?: string;
@@ -15,13 +16,13 @@ const TimeInput = memo(function TimeInput({
 
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
+    const isMovementPrediction = useTimeStore((s) => s.movementPrediction);
 
     // Suscripción a TODO el estado, filtrar la propiedad que interesa
     useEffect(() => {
         // Función de actualización interna
         const subscriber = (state: TimeStore) => {
             const time = state.time;
-            if (!time) return;
             const newValue: number = time;
             const el = inputRef.current;
             // Actualiza solo si el input no está enfocado y cambió
@@ -30,8 +31,13 @@ const TimeInput = memo(function TimeInput({
                 document.activeElement !== el &&
                 newValue !== previousRef.current
             ) {
-                el.value = newValue.toFixed(0);
-                previousRef.current = newValue;
+                if (newValue.toFixed(0) === '0') {
+                    el.value = '';
+                    return;
+                } else {
+                    el.value = newValue.toFixed(0);
+                    previousRef.current = newValue;
+                }
             }
         };
 
@@ -42,7 +48,11 @@ const TimeInput = memo(function TimeInput({
         const initTime = useTimeStore.getState().time;
         if (inputRef.current && initTime) {
             if (initTime) {
-                inputRef.current.value = initTime.toFixed(0);
+                if (initTime.toFixed(0) === '0') {
+                    inputRef.current.value = '';
+                } else {
+                    inputRef.current.value = initTime.toFixed(0);
+                }
             }
             previousRef.current = initTime;
         }
@@ -71,6 +81,14 @@ const TimeInput = memo(function TimeInput({
             .replace(/^0+$/, '');
         e.target.value = cleaned;
         previousRef.current = n;
+        if (isMovementPrediction) {
+            useEntityStore
+                .getState()
+                .updateAllEntities(
+                    (n - useTimeStore.getState().time) *
+                        useTimeStore.getState().speed,
+                );
+        }
         update(n);
         setError('');
     };
