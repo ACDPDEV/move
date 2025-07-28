@@ -1,6 +1,6 @@
 import { Vector2D } from '@/simulations/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
-import { usePlaneStore } from '../store/usePlaneStore';
+import { usePlaneStore } from '../stores/usePlaneStore';
 
 interface EntityProps {
     id?: string;

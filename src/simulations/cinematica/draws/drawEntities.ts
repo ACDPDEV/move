@@ -1,5 +1,5 @@
-import { useDisplayStore } from '../store/useDisplayStore';
-import { useEntityStore } from '../store/useEntityStore';
+import { useDisplayStore } from '../stores/useDisplayStore';
+import { useEntityStore } from '../stores/useEntityStore';
 
 function drawEntities(ctx: CanvasRenderingContext2D): void {
     const entities = useEntityStore.getState().entities;

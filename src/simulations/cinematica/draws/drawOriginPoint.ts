@@ -1,4 +1,4 @@
-import { usePlaneStore } from '../store/usePlaneStore';
+import { usePlaneStore } from '../stores/usePlaneStore';
 
 function drawOriginPoint(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const plane = usePlaneStore.getState();

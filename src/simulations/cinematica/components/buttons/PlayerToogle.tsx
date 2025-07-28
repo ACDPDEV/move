@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react';
-import { useTimeStore } from '@/simulations/cinematica/store/useTimeStore';
+import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 
 function PlayerToggle() {
     const isPlaying = useTimeStore((s) => s.isPlaying);

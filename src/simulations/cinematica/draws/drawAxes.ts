@@ -1,4 +1,4 @@
-import { usePlaneStore } from '../store/usePlaneStore';
+import { usePlaneStore } from '../stores/usePlaneStore';
 
 function drawAxes(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const plane = usePlaneStore.getState();

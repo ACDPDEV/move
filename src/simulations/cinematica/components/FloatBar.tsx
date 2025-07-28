@@ -8,7 +8,7 @@ import { useEntitySummaries } from '../hooks/useEntityISummaries';
 import EntityCard from './EntityCard';
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
-import { useEntityStore } from '../store/useEntityStore';
+import { useEntityStore } from '../stores/useEntityStore';
 
 function FloatBar() {
     const entities = useEntitySummaries();

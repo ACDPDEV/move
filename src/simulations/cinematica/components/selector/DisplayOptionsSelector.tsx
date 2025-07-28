@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { IconSettings } from '@tabler/icons-react';
-import { useDisplayStore } from '../../store/useDisplayStore';
+import { useDisplayStore } from '../../stores/useDisplayStore';
 import {
     Popover,
     PopoverTrigger,
@@ -41,7 +41,10 @@ function DisplayOptionsSelector() {
                     title="Opciones de visualización"
                     variant="outline"
                 >
-                    <IconSettings className='stroke-stone-900 dark:stroke-stone-100' size={20} /> 
+                    <IconSettings
+                        className="stroke-stone-900 dark:stroke-stone-100"
+                        size={20}
+                    />
                 </Button>
             </PopoverTrigger>
             <PopoverContent

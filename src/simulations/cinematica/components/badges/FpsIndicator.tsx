@@ -1,6 +1,6 @@
 'use client';
 import React, { memo, useEffect, useRef } from 'react';
-import { useTimeStore } from '@/simulations/cinematica/store/useTimeStore';
+import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 
 interface FPSBadgeProps {
     className?: string;

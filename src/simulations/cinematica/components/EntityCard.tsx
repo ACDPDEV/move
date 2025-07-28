@@ -10,7 +10,7 @@ import RadiusInput from './inputs/RadiusInput';
 import ColorInput from './inputs/ColorInput';
 import { Button } from '@/components/ui/button';
 import { IconAlertCircle, IconTrash } from '@tabler/icons-react';
-import { useEntityStore } from '../store/useEntityStore';
+import { useEntityStore } from '../stores/useEntityStore';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 
 interface EntityCardProps {

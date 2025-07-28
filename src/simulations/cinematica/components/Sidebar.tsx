@@ -2,7 +2,6 @@
 import {
     Sheet,
     SheetContent,
-    SheetHeader,
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
@@ -10,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
 import EntityCard from './EntityCard';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useEntityStore } from '../store/useEntityStore';
+import { useEntityStore } from '../stores/useEntityStore';
 import { useEntitySummaries } from '../hooks/useEntityISummaries';
 
 function Sidebar() {

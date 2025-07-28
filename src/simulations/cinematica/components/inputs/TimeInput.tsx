@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
-import { TimeStore, useTimeStore } from '../../store/useTimeStore';
-import { useEntityStore } from '../../store/useEntityStore';
+import { TimeStore, useTimeStore } from '../../stores/useTimeStore';
+import { useEntityStore } from '../../stores/useEntityStore';
 
 interface TimeInputProps {
     className?: string;

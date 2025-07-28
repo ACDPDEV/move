@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useEntityStore } from '@/simulations/cinematica/store/useEntityStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
 
 /**
  * Devuelve un array de objetos { id, color }

@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger } from '@/components/ui/popover';
 import { PopoverContent } from '@radix-ui/react-popover';
-import { useTimeStore } from '../../store/useTimeStore';
+import { useTimeStore } from '../../stores/useTimeStore';
 
 interface TimeSpeedSelectorProps {
     className?: string;
@@ -19,11 +19,14 @@ const TimeSpeedSelector = memo(function TimeSelectorInput({
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline" className={`border border-stone-300 dark:border-stone-700 ${className}`}>
+                <Button
+                    variant="outline"
+                    className={`border border-stone-300 dark:border-stone-700 ${className}`}
+                >
                     x{speed}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="flex flex-col gap-2 p-2 w-fit dark:bg-stone-800 bg-stone-100 dark:border-stone-700 border-stone-300 rounded-md text-stone-800 dark:text-stone-300"> 
+            <PopoverContent className="flex flex-col gap-2 p-2 w-fit dark:bg-stone-800 bg-stone-100 dark:border-stone-700 border-stone-300 rounded-md text-stone-800 dark:text-stone-300">
                 <Button
                     variant="ghost"
                     className={`w-full justify-center text-left hover:border hover:border-bg-secondary ${

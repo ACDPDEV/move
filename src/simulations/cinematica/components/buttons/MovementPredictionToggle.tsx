@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { IconComponents, IconComponentsOff } from '@tabler/icons-react';
-import { useTimeStore } from '@/simulations/cinematica/store/useTimeStore';
+import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 
 function MovementPredictionToggle() {
     const togglePrediction = useTimeStore((s) => s.togglePrediction);

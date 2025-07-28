@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { useTimeStore } from '../../store/useTimeStore';
+import { useTimeStore } from '../../stores/useTimeStore';
 import { IconReload } from '@tabler/icons-react';
-import { useEntityStore } from '../../store/useEntityStore';
+import { useEntityStore } from '../../stores/useEntityStore';
 
 function ResetButton() {
     const reset = useTimeStore((s) => s.reset);

@@ -2,7 +2,7 @@ import React, { memo, useEffect, useRef } from 'react';
 import {
     useEntityStore,
     type EntityStore,
-} from '@/simulations/cinematica/store/useEntityStore';
+} from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
 

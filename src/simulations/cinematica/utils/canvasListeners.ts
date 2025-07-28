@@ -1,6 +1,6 @@
 import { initializeCanvas } from '@/simulations/cinematica/utils/canvasManagment';
-import { usePlaneStore } from '../store/usePlaneStore';
-import { useMouseStore } from '../store/useMouseStore';
+import { usePlaneStore } from '../stores/usePlaneStore';
+import { useMouseStore } from '../stores/useMouseStore';
 
 function listenCanvasEvents($canvas: HTMLCanvasElement) {
     // Callback optimizado que evita llamadas innecesarias
@@ -41,6 +41,7 @@ function listenMouseEvents($canvas: HTMLCanvasElement) {
         // Solo procesar el arrastre si el mouse está presionado
         if (MouseStore.isDown) {
             const PlaneStore = usePlaneStore.getState();
+            const moveIntensity = PlaneStore.moveSensitivity / PlaneStore.scale;
 
             // Calcular el delta basado en la posición anterior
             const deltaX = newPosition.x - oldPosition.x;
@@ -53,8 +54,8 @@ function listenMouseEvents($canvas: HTMLCanvasElement) {
 
             // Actualizar la posición del plano
             PlaneStore.setPosition({
-                x: PlaneStore.position.x + deltaX * PlaneStore.moveSensitivity,
-                y: PlaneStore.position.y - deltaY * PlaneStore.moveSensitivity,
+                x: PlaneStore.position.x + deltaX * moveIntensity,
+                y: PlaneStore.position.y - deltaY * moveIntensity,
             });
         }
     };
@@ -78,7 +79,7 @@ function listenMouseEvents($canvas: HTMLCanvasElement) {
         event.preventDefault();
         const PlaneStore = usePlaneStore.getState();
 
-        const zoomIntensity = PlaneStore.zoomSensitivity;
+        const zoomIntensity = PlaneStore.zoomSensitivity * PlaneStore.scale;
         const wheel = event.deltaY < 0 ? 1 : -1;
         const zoom = Math.exp(wheel * zoomIntensity);
 

@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useRef, useCallback } from 'react';
 import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners';
-import { useTimeStore } from '../store/useTimeStore';
-import { useEntityStore } from '../store/useEntityStore';
+import { useTimeStore } from '../stores/useTimeStore';
+import { useEntityStore } from '../stores/useEntityStore';
 import { useTheme } from 'next-themes';
 import { drawOriginPoint } from '../draws/drawOriginPoint';
 import { drawAxes } from '../draws/drawAxes';
