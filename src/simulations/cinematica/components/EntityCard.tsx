@@ -17,6 +17,7 @@ import {
 } from '@tabler/icons-react';
 import { useEntityStore } from '../stores/useEntityStore';
 import { Alert, AlertTitle } from '@/components/ui/alert';
+import ShapeSelector from './selector/ShapeSelector';
 
 interface EntityCardProps {
     entityId: string;
@@ -115,6 +116,7 @@ export default function EntityCard({
                         <IconCurrentLocation />
                     )}
                 </Button>
+                <ShapeSelector entityId={entityId} setError={setError} />
                 <Button
                     variant="destructive"
                     size="icon"

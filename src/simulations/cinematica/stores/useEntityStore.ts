@@ -20,6 +20,7 @@ type EntityStore = {
             | 'acceleration.x'
             | 'acceleration.y'
             | 'radius'
+            | 'shape'
             | 'color',
         value: number | string,
     ) => void;
