@@ -150,7 +150,10 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                         y: Math.random() * 1 - 0.5,
                     },
                     radius: 0.05,
-                    shape: 'circle',
+                    // random shape
+                    shape: ['circle', 'square', 'triangle'][
+                        Math.floor(Math.random() * 3)
+                    ] as 'circle' | 'square' | 'triangle',
                     color:
                         '#' +
                         Math.floor(Math.random() * 0xffffff)
