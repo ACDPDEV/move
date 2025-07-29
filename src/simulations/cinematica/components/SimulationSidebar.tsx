@@ -21,9 +21,11 @@ import {
     IconChartArea,
     IconLayoutSidebarLeftExpandFilled,
     IconMeteorFilled,
+    IconPlus,
 } from '@tabler/icons-react';
 import { PopoverContent } from '@radix-ui/react-popover';
 import { useSidebarStore } from '../stores/useSidebarStore';
+import { useEntityStore } from '../stores/useEntityStore';
 
 function SimulationSidebar({
     className,
@@ -78,6 +80,16 @@ function SimulationSidebar({
                 >
                     <ScrollArea className="w-full h-full">
                         <div className="flex flex-col gap-4 p-4">
+                            <Button
+                                variant="default"
+                                className="w-full justify-center text-left hover:border hover:border-bg-secondary"
+                                onClick={() =>
+                                    useEntityStore.getState().addEntity()
+                                }
+                            >
+                                <IconPlus size={20} />
+                                Añadir Móvil
+                            </Button>
                             {reversed.map(({ id, color }) => (
                                 <EntityCard
                                     entityId={id}
