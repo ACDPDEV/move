@@ -9,6 +9,11 @@ import {
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 function DisplayOptionsSelector() {
     const {
@@ -34,19 +39,24 @@ function DisplayOptionsSelector() {
 
     return (
         <Popover>
-            <PopoverTrigger asChild>
-                <Button
-                    className="text-stone-300 border-stone-300 hover:text-white hover:scale-125 p-2 rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-stone-400 flex"
-                    type="button"
-                    title="Opciones de visualización"
-                    variant="outline"
-                >
-                    <IconSettings
-                        className="stroke-stone-900 dark:stroke-stone-100"
-                        size={20}
-                    />
-                </Button>
-            </PopoverTrigger>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <PopoverTrigger asChild>
+                        <Button
+                            className="text-stone-300 border-stone-300 hover:text-white hover:scale-125 p-2 rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-stone-400 flex"
+                            type="button"
+                            title="Opciones de visualización"
+                            variant="outline"
+                        >
+                            <IconSettings
+                                className="stroke-stone-900 dark:stroke-stone-100"
+                                size={20}
+                            />
+                        </Button>
+                    </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Opciones de visualización</TooltipContent>
+            </Tooltip>
             <PopoverContent
                 className="w-56 dark:bg-stone-800 bg-stone-100 border-stone-700"
                 align="end"

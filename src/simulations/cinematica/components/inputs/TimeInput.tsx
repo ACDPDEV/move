@@ -2,6 +2,11 @@ import React, { memo, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { TimeStore, useTimeStore } from '../../stores/useTimeStore';
 import { useEntityStore } from '../../stores/useEntityStore';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface TimeInputProps {
     className?: string;
@@ -92,19 +97,24 @@ const TimeInput = memo(function TimeInput({
     };
 
     return (
-        <div className="relative w-full">
-            <Input
-                type="number"
-                name="time"
-                ref={inputRef}
-                onChange={onChange}
-                placeholder="0"
-                className={`${className} w-28 pr-6`} // espacio a la derecha para la "s"
-            />
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none select-none">
-                s
-            </span>
-        </div>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <div className="relative w-full  text-stone-700 dark:text-stone-300 dark:hover:bg-stone-700 rounded transition-all duration-200 hover:scale-115 focus:outline-none focus:ring-2 focus:ring-stone-500">
+                    <Input
+                        type="number"
+                        name="time"
+                        ref={inputRef}
+                        onChange={onChange}
+                        placeholder="0"
+                        className={`${className} w-28 pr-6`} // espacio a la derecha para la "s"
+                    />
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none select-none">
+                        s
+                    </span>
+                </div>
+            </TooltipTrigger>
+            <TooltipContent>Tiempo</TooltipContent>
+        </Tooltip>
     );
 });
 

@@ -1,9 +1,18 @@
 'use client';
 import React, { memo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverTrigger } from '@/components/ui/popover';
-import { PopoverContent } from '@radix-ui/react-popover';
 import { useTimeStore } from '../../stores/useTimeStore';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface TimeSpeedSelectorProps {
     className?: string;
@@ -17,63 +26,28 @@ const TimeSpeedSelector = memo(function TimeSelectorInput({
     const updateSpeed = useTimeStore((s) => s.updateSpeed);
 
     return (
-        <Popover>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    className={`border border-stone-300 dark:border-stone-700 ${className}`}
-                >
-                    x{speed}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="flex flex-col gap-2 p-2 w-fit dark:bg-stone-800 bg-stone-100 dark:border-stone-700 border-stone-300 rounded-md text-stone-800 dark:text-stone-300">
-                <Button
-                    variant="ghost"
-                    className={`w-full justify-center text-left hover:border hover:border-bg-secondary ${
-                        speed === 3 ? 'bg-primary-foreground' : ''
-                    }`}
-                    onClick={() => updateSpeed(3)}
-                >
-                    x3
-                </Button>
-                <Button
-                    variant="ghost"
-                    className={`w-full justify-center text-left hover:border hover:border-bg-secondary ${
-                        speed === 2 ? 'bg-primary-foreground' : ''
-                    }`}
-                    onClick={() => updateSpeed(2)}
-                >
-                    x2
-                </Button>
-                <Button
-                    variant="ghost"
-                    className={`w-full justify-center text-left hover:border hover:border-bg-secondary ${
-                        speed === 1 ? 'bg-primary-foreground' : ''
-                    }`}
-                    onClick={() => updateSpeed(1)}
-                >
-                    x1
-                </Button>
-                <Button
-                    variant="ghost"
-                    className={`w-full justify-center text-left hover:border hover:border-bg-secondary ${
-                        speed === 0.5 ? 'bg-primary-foreground' : ''
-                    }`}
-                    onClick={() => updateSpeed(0.5)}
-                >
-                    x0.5
-                </Button>
-                <Button
-                    variant="ghost"
-                    className={`w-full justify-center text-left hover:border hover:border-bg-secondary ${
-                        speed === 0.25 ? 'bg-primary-foreground' : ''
-                    }`}
-                    onClick={() => updateSpeed(0.25)}
-                >
-                    x0.25
-                </Button>
-            </PopoverContent>
-        </Popover>
+        <Select
+            onValueChange={(value) => updateSpeed(Number(value))}
+            defaultValue={speed.toFixed(2)}
+        >
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <SelectTrigger
+                        className={`text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500 ${className}`}
+                    >
+                        <SelectValue />
+                    </SelectTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Velocidad de reproducción</TooltipContent>
+            </Tooltip>
+            <SelectContent>
+                <SelectItem value="0.25">x 0.25</SelectItem>
+                <SelectItem value="0.50">x 0.5</SelectItem>
+                <SelectItem value="1.00">x 1</SelectItem>
+                <SelectItem value="2.00">x 2</SelectItem>
+                <SelectItem value="3.00">x 3</SelectItem>
+            </SelectContent>
+        </Select>
     );
 });
 

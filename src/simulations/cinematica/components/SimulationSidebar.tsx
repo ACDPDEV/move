@@ -26,6 +26,11 @@ import {
 import { PopoverContent } from '@radix-ui/react-popover';
 import { useSidebarStore } from '../stores/useSidebarStore';
 import { useEntityStore } from '../stores/useEntityStore';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 function SimulationSidebar({
     className,
@@ -132,11 +137,20 @@ function SimulationSidebar({
                         className="h-6 bg-stone-600"
                     />
                     <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant="outline" size="icon">
-                                <IconArrowUp size={20} />
-                            </Button>
-                        </PopoverTrigger>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500"
+                                    >
+                                        <IconArrowUp size={20} />
+                                    </Button>
+                                </PopoverTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>Más opciones</TooltipContent>
+                        </Tooltip>
                         <PopoverContent className="w-fit h-fit flex flex-col gap-2 p-2 justify-center items-center bg-stone-200 dark:bg-stone-800 text-stone-900 dark:text-stone-100">
                             <DisplayOptionsSelector />
                             <ModeToggle />
