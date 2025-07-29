@@ -85,11 +85,9 @@ class Entity {
         const plane = usePlaneStore.getState();
         const { width, height } = ctx.canvas;
 
-        const [eX, eY, eRadius] = [
-            (this.position.x + plane.position.x) * plane.scale,
-            (this.position.y + plane.position.y) * plane.scale * -1,
-            this.radius * plane.scale,
-        ];
+        const eX = (this.position.x + plane.position.x) * plane.scale;
+        const eY = (this.position.y + plane.position.y) * plane.scale * -1;
+        const eRadius = this.radius * plane.scale;
 
         if (
             eX + eRadius >= 0 &&
@@ -101,23 +99,101 @@ class Entity {
             if (borderColor) {
                 ctx.strokeStyle = borderColor;
                 ctx.lineWidth = 2;
+                ctx.lineJoin = 'round';
             }
+
+            const corner = eRadius * 0.15;
+
             if (this.shape === 'circle') {
                 ctx.arc(eX, eY, eRadius, 0, Math.PI * 2);
             } else if (this.shape === 'square') {
-                ctx.rect(eX - eRadius, eY - eRadius, eRadius * 2, eRadius * 2);
+                const x0 = eX - eRadius;
+                const y0 = eY - eRadius;
+                const size = eRadius * 2;
+                ctx.moveTo(x0 + corner, y0);
+                ctx.lineTo(x0 + size - corner, y0);
+                ctx.arcTo(x0 + size, y0, x0 + size, y0 + corner, corner);
+                ctx.lineTo(x0 + size, y0 + size - corner);
+                ctx.arcTo(
+                    x0 + size,
+                    y0 + size,
+                    x0 + size - corner,
+                    y0 + size,
+                    corner,
+                );
+                ctx.lineTo(x0 + corner, y0 + size);
+                ctx.arcTo(x0, y0 + size, x0, y0 + size - corner, corner);
+                ctx.lineTo(x0, y0 + corner);
+                ctx.arcTo(x0, y0, x0 + corner, y0, corner);
+                ctx.closePath();
             } else if (this.shape === 'triangle') {
-                ctx.moveTo(eX, eY - eRadius);
-                ctx.lineTo(eX + eRadius, eY + eRadius);
-                ctx.lineTo(eX - eRadius, eY + eRadius);
+                // Puntos del triángulo
+                const p1 = [eX, eY - eRadius]; // Vértice superior
+                const p2 = [eX + eRadius, eY + eRadius]; // Vértice inferior derecho
+                const p3 = [eX - eRadius, eY + eRadius]; // Vértice inferior izquierdo
+
+                // Calcular puntos para las esquinas redondeadas
+                // Para cada lado, necesitamos los puntos donde comienzan y terminan las curvas
+
+                // Lado 1 (p1 a p2)
+                const d12 = Math.sqrt(
+                    (p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2,
+                );
+                const ratio12 = corner / d12;
+                const start12 = [
+                    p1[0] + (p2[0] - p1[0]) * ratio12,
+                    p1[1] + (p2[1] - p1[1]) * ratio12,
+                ];
+                const end12 = [
+                    p2[0] - (p2[0] - p1[0]) * ratio12,
+                    p2[1] - (p2[1] - p1[1]) * ratio12,
+                ];
+
+                // Lado 2 (p2 a p3)
+                const d23 = Math.sqrt(
+                    (p3[0] - p2[0]) ** 2 + (p3[1] - p2[1]) ** 2,
+                );
+                const ratio23 = corner / d23;
+                const start23 = [
+                    p2[0] + (p3[0] - p2[0]) * ratio23,
+                    p2[1] + (p3[1] - p2[1]) * ratio23,
+                ];
+                const end23 = [
+                    p3[0] - (p3[0] - p2[0]) * ratio23,
+                    p3[1] - (p3[1] - p2[1]) * ratio23,
+                ];
+
+                // Lado 3 (p3 a p1)
+                const d31 = Math.sqrt(
+                    (p1[0] - p3[0]) ** 2 + (p1[1] - p3[1]) ** 2,
+                );
+                const ratio31 = corner / d31;
+                const start31 = [
+                    p3[0] + (p1[0] - p3[0]) * ratio31,
+                    p3[1] + (p1[1] - p3[1]) * ratio31,
+                ];
+                const end31 = [
+                    p1[0] - (p1[0] - p3[0]) * ratio31,
+                    p1[1] - (p1[1] - p3[1]) * ratio31,
+                ];
+
+                // Dibujar el triángulo con esquinas redondeadas
+                ctx.moveTo(start12[0], start12[1]);
+                ctx.lineTo(end12[0], end12[1]);
+                ctx.arcTo(p2[0], p2[1], start23[0], start23[1], corner);
+                ctx.lineTo(end23[0], end23[1]);
+                ctx.arcTo(p3[0], p3[1], start31[0], start31[1], corner);
+                ctx.lineTo(end31[0], end31[1]);
+                ctx.arcTo(p1[0], p1[1], start12[0], start12[1], corner);
                 ctx.closePath();
             }
+
             ctx.fillStyle = this.color;
             ctx.fill();
+
             if (borderColor) {
                 ctx.stroke();
             }
-            ctx.closePath();
         }
     }
 
