@@ -7,6 +7,8 @@ import { useSidebarStore } from './stores/useSidebarStore';
 import SimulationSidebar from './components/SimulationSidebar';
 import { Button } from '@/components/ui/button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
+import DisplayOptionsSelector from './components/selector/DisplayOptionsSelector';
+import { ModeToggle } from '@/components/layout/ToogleTheme';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
@@ -38,11 +40,21 @@ export default function CinematicaSimulation() {
                 />
 
                 <div
+                    className={`absolute top-1/2 translate-y-[-50%] right-4 z-50 ${
+                        isOpen ? 'hidden' : 'flex flex-col gap-2'
+                    }`}
+                >
+                    <FloatBar />
+                    <div className="text-stone-900 dark:text-stone-100 dark:bg-stone-800/90 bg-stone-200 border dark:border-stone-700 border-stone-300 items-center justify-center p-3 gap-2 rounded-lg backdrop-blur-md shadow-lg sm:hidden flex flex-col">
+                        <DisplayOptionsSelector />
+                        <ModeToggle />
+                    </div>
+                </div>
+                <div
                     className={`absolute flex flex-col bottom-0 left-1/2 translate-x-[-50%] gap-2 mb-10 justify-center items-center transition-all duration-300 ${
                         isOpen ? 'translate-x-full hidden' : 'translate-x-0'
                     }`}
                 >
-                    <FloatBar />
                     <TimeControls />
                 </div>
             </div>

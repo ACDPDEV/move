@@ -7,7 +7,7 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-function PlayerToggle() {
+function PlayerToggle({ className }: { className?: string }) {
     const isPlaying = useTimeStore((s) => s.isPlaying);
     const togglePlayer = useTimeStore((s) => s.togglePlayer);
 
@@ -16,7 +16,7 @@ function PlayerToggle() {
             <TooltipTrigger asChild>
                 <Button
                     onClick={togglePlayer}
-                    className="text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500"
+                    className={`text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500${className}`}
                     type="button"
                     variant="outline"
                 >

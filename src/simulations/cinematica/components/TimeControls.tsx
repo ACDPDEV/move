@@ -26,8 +26,11 @@ export default function TimeControls() {
                 <ResetButton />
                 <TimeSpeedSelector setError={setError} />
             </div>
-            <Separator orientation="vertical" className="h-6 bg-stone-600" />
-            <div className="flex items-center gap-2">
+            <Separator
+                orientation="vertical"
+                className="h-6 bg-stone-600 hidden sm:flex"
+            />
+            <div className="items-center gap-2 hidden sm:flex">
                 <DisplayOptionsSelector />
                 <ModeToggle />
             </div>
