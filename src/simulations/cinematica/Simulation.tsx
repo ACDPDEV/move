@@ -9,6 +9,11 @@ import { Button } from '@/components/ui/button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
 import DisplayOptionsSelector from './components/selector/DisplayOptionsSelector';
 import { ModeToggle } from '@/components/layout/ToogleTheme';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
@@ -22,16 +27,21 @@ export default function CinematicaSimulation() {
                         : 'w-full'
                 } h-full relative`}
             >
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={toggleIsOpen}
-                    className={`absolute top-4 right-4 z-50 ${
-                        isOpen ? 'hidden' : ''
-                    }`}
-                >
-                    <IconLayoutSidebarLeftCollapseFilled />
-                </Button>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={toggleIsOpen}
+                            className={`absolute top-4 right-4 z-50 text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500 ${
+                                isOpen ? 'hidden' : ''
+                            }`}
+                        >
+                            <IconLayoutSidebarLeftCollapseFilled />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Abrir panel lateral</TooltipContent>
+                </Tooltip>
                 <Canvas className="bg-white dark:bg-black w-full h-full" />
                 <TimeIndicators
                     className={`absolute top-2 left-2 z-50 ${
