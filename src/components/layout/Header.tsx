@@ -1,12 +1,14 @@
-import { IconPaperclip } from "@tabler/icons-react";
-import LinksNav from "@/components/layout/LinksNav";
+import { IconPaperclip } from '@tabler/icons-react';
+import LinksNav from '@/components/layout/LinksNav';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import GithubButton from './GithubButton';
+import { ModeToggle } from './ToogleTheme';
 import {
-    Button,
-} from '@/components/ui/button';
-import Link from "next/link";
-import GithubButton from "./GithubButton";
-import { ModeToggle } from "./ToogleTheme";
-
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 function Header() {
     return (
@@ -14,15 +16,20 @@ function Header() {
             <LinksNav />
             <ul className="flex flex-row gap-2">
                 <GithubButton />
-                <Link href="/paper/">
-                    <Button variant="secondary" size='icon'>
-                        <IconPaperclip />
-                    </Button>
-                </Link>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Link href="/paper/">
+                            <Button variant="secondary" size="icon">
+                                <IconPaperclip />
+                            </Button>
+                        </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>Revisa el informe</TooltipContent>
+                </Tooltip>
                 <ModeToggle />
             </ul>
         </header>
-    )
+    );
 }
 
 export default Header;
