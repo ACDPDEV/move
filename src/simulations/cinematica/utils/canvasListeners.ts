@@ -1,77 +1,100 @@
+'use client';
+
 import { initializeCanvas } from '@/simulations/cinematica/utils/canvasManagment';
 import { usePlaneStore } from '../stores/usePlaneStore';
 import { useMouseStore } from '../stores/useMouseStore';
 
-function listenCanvasEvents($canvas: HTMLCanvasElement) {
-    // Callback optimizado que evita llamadas innecesarias
-    let isUpdating = false;
+/**
+ * Añade soporte de eventos táctiles y de mouse (incluyendo gestos de pellizco) al canvas.
+ */
+function listenPointerEvents($canvas: HTMLCanvasElement) {
+    // Estado para múltiples punteros (touch/mouse)
+    const pointers = new Map<number, PointerEvent>();
+    let initialPinchDistance = 0;
 
-    const updateCallback = () => {
-        if (isUpdating) return; // Evitar llamadas múltiples
+    // ----- Callbacks -----
 
-        isUpdating = true;
+    const handlePointerDown = (e: PointerEvent) => {
+        // Capturar puntero para recibir eventos fuera del canvas
+        $canvas.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, e);
+
+        const position = { x: e.offsetX, y: e.offsetY };
+        const MouseStore = useMouseStore.getState();
+
+        if (pointers.size === 1) {
+            // Iniciar arrastre con un solo puntero
+            MouseStore.setIsDown(true);
+            MouseStore.setStartPosition(position);
+            MouseStore.setCurrentPosition(position);
+            MouseStore.setDeltaPosition({ x: 0, y: 0 });
+        } else if (pointers.size === 2) {
+            // Preparar pellizco: calcular distancia inicial
+            const [p1, p2] = Array.from(pointers.values());
+            initialPinchDistance = Math.hypot(
+                p2.clientX - p1.clientX,
+                p2.clientY - p1.clientY,
+            );
+        }
     };
 
-    // Usar la nueva función de inicialización mejorada
-    const cleanup = initializeCanvas($canvas, updateCallback);
+    const handlePointerMove = (e: PointerEvent) => {
+        if (!pointers.has(e.pointerId)) return;
+        pointers.set(e.pointerId, e);
 
-    return cleanup;
-}
-
-function listenMouseEvents($canvas: HTMLCanvasElement) {
-    // Callbacks
-    const handleMouseDown = (event: MouseEvent) => {
         const MouseStore = useMouseStore.getState();
-        const position = { x: event.offsetX, y: event.offsetY };
+        const PlaneStore = usePlaneStore.getState();
 
-        MouseStore.setIsDown(true);
-        MouseStore.setStartPosition(position);
-        MouseStore.setCurrentPosition(position);
-        MouseStore.setDeltaPosition({ x: 0, y: 0 });
-    };
+        if (pointers.size === 1 && MouseStore.isDown) {
+            // Lógica de arrastre
+            const newPos = { x: e.offsetX, y: e.offsetY };
+            const oldPos = MouseStore.currentPosition;
+            MouseStore.setCurrentPosition(newPos);
 
-    const handleMouseMove = (event: MouseEvent) => {
-        const MouseStore = useMouseStore.getState();
-        const newPosition = { x: event.offsetX, y: event.offsetY };
-
-        // Siempre actualizar la posición actual del mouse
-        const oldPosition = MouseStore.currentPosition;
-        MouseStore.setCurrentPosition(newPosition);
-
-        // Solo procesar el arrastre si el mouse está presionado
-        if (MouseStore.isDown) {
-            const PlaneStore = usePlaneStore.getState();
             const moveIntensity = PlaneStore.moveSensitivity / PlaneStore.scale;
+            const deltaX = newPos.x - oldPos.x;
+            const deltaY = newPos.y - oldPos.y;
 
-            // Calcular el delta basado en la posición anterior
-            const deltaX = newPosition.x - oldPosition.x;
-            const deltaY = newPosition.y - oldPosition.y;
-
-            const deltaPosition = { x: deltaX, y: deltaY };
-
-            // Actualizar el delta en el store
-            MouseStore.setDeltaPosition(deltaPosition);
-
-            // Actualizar la posición del plano
+            MouseStore.setDeltaPosition({ x: deltaX, y: deltaY });
             PlaneStore.setPosition({
                 x: PlaneStore.position.x + deltaX * moveIntensity,
                 y: PlaneStore.position.y - deltaY * moveIntensity,
             });
+        } else if (pointers.size === 2) {
+            // Lógica de zoom por pellizco
+            const [p1, p2] = Array.from(pointers.values());
+            const currentDistance = Math.hypot(
+                p2.clientX - p1.clientX,
+                p2.clientY - p1.clientY,
+            );
+
+            if (initialPinchDistance > 0) {
+                const zoomFactor = currentDistance / initialPinchDistance;
+                const newScale = Math.max(
+                    PlaneStore.minScale,
+                    Math.min(
+                        PlaneStore.maxScale,
+                        PlaneStore.scale * zoomFactor,
+                    ),
+                );
+                PlaneStore.setScale(newScale);
+                initialPinchDistance = currentDistance;
+            }
         }
     };
 
-    const handleMouseUp = () => {
-        const MouseStore = useMouseStore.getState();
-        MouseStore.setIsDown(false);
-        MouseStore.setDeltaPosition({ x: 0, y: 0 });
-    };
+    const handlePointerUp = (e: PointerEvent) => {
+        if (pointers.delete(e.pointerId)) {
+            $canvas.releasePointerCapture(e.pointerId);
+        }
 
-    // Manejar cuando el mouse sale del canvas
-    const handleMouseLeave = () => {
         const MouseStore = useMouseStore.getState();
-        if (MouseStore.isDown) {
+        if (pointers.size === 0 && MouseStore.isDown) {
             MouseStore.setIsDown(false);
             MouseStore.setDeltaPosition({ x: 0, y: 0 });
+        }
+        if (pointers.size < 2) {
+            initialPinchDistance = 0;
         }
     };
 
@@ -80,9 +103,8 @@ function listenMouseEvents($canvas: HTMLCanvasElement) {
         const PlaneStore = usePlaneStore.getState();
 
         const zoomIntensity = PlaneStore.zoomSensitivity * PlaneStore.scale;
-        const wheel = event.deltaY < 0 ? 1 : -1;
-        const zoom = Math.exp(wheel * zoomIntensity);
-
+        const wheelDir = event.deltaY < 0 ? 1 : -1;
+        const zoom = Math.exp(wheelDir * zoomIntensity);
         const newScale = Math.max(
             PlaneStore.minScale,
             Math.min(PlaneStore.maxScale, PlaneStore.scale * zoom),
@@ -91,35 +113,38 @@ function listenMouseEvents($canvas: HTMLCanvasElement) {
         PlaneStore.setScale(newScale);
     };
 
-    // Event listeners
-    $canvas.addEventListener('mousedown', handleMouseDown);
-    $canvas.addEventListener('mousemove', handleMouseMove);
-    $canvas.addEventListener('mouseup', handleMouseUp);
-    $canvas.addEventListener('mouseleave', handleMouseLeave);
+    // ----- Añadir listeners -----
+    $canvas.addEventListener('pointerdown', handlePointerDown);
+    $canvas.addEventListener('pointermove', handlePointerMove);
+    $canvas.addEventListener('pointerup', handlePointerUp);
+    $canvas.addEventListener('pointercancel', handlePointerUp);
     $canvas.addEventListener('wheel', handleWheel, { passive: false });
 
-    const cleanup = () => {
-        $canvas.removeEventListener('mousedown', handleMouseDown);
-        $canvas.removeEventListener('mousemove', handleMouseMove);
-        $canvas.removeEventListener('mouseup', handleMouseUp);
-        $canvas.removeEventListener('mouseleave', handleMouseLeave);
+    // Cleanup
+    return () => {
+        $canvas.removeEventListener('pointerdown', handlePointerDown);
+        $canvas.removeEventListener('pointermove', handlePointerMove);
+        $canvas.removeEventListener('pointerup', handlePointerUp);
+        $canvas.removeEventListener('pointercancel', handlePointerUp);
         $canvas.removeEventListener('wheel', handleWheel);
     };
-
-    return cleanup;
 }
 
+/**
+ * Inicializa canvas y añade listeners de interacción.
+ */
 function listenEvents($canvas: HTMLCanvasElement) {
-    const cleanupCanvas = listenCanvasEvents($canvas);
-    const cleanupMouse = listenMouseEvents($canvas);
+    const cleanupCanvas = initializeCanvas($canvas, () => {
+        /* Aquí podrías marcar que el frame necesita redibujar */
+    });
 
-    // Combined cleanup function
-    const cleanup = () => {
+    const cleanupPointer = listenPointerEvents($canvas);
+
+    // Función única de limpieza
+    return () => {
         cleanupCanvas();
-        cleanupMouse();
+        cleanupPointer();
     };
-
-    return cleanup;
 }
 
 export { listenEvents };
