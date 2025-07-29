@@ -84,7 +84,12 @@ export default function EntityCard({
             style={{ borderColor: color }}
         >
             <div className="flex justify-end">
-                <Button variant="outline" size="icon" onClick={deleteEntity}>
+                <Button
+                    variant="destructive"
+                    size="icon"
+                    className="bg-transparent border border-red-600 text-red-600 hover:bg-red-600 hover:text-white dark:bg-transparent dark:hover:bg-red-600"
+                    onClick={deleteEntity}
+                >
                     <IconTrash />
                 </Button>
             </div>
