@@ -8,16 +8,11 @@ import AccelerationXInput from './inputs/AccelerationXInput';
 import AccelerationYInput from './inputs/AccelerationYInput';
 import RadiusInput from './inputs/RadiusInput';
 import ColorInput from './inputs/ColorInput';
-import { Button } from '@/components/ui/button';
-import {
-    IconAlertCircle,
-    IconCurrentLocation,
-    IconCurrentLocationFilled,
-    IconTrash,
-} from '@tabler/icons-react';
-import { useEntityStore } from '../stores/useEntityStore';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import ShapeSelector from './selector/ShapeSelector';
+import FlowEntityButton from './buttons/FlowEntityButton';
+import DeleteEntityButton from './buttons/DeleteEntityButton';
+import { IconAlertCircle } from '@tabler/icons-react';
 
 interface EntityCardProps {
     entityId: string;
@@ -82,13 +77,6 @@ export default function EntityCard({
     color,
 }: Readonly<EntityCardProps>) {
     const [error, setError] = useState<string>('');
-    const deleteThisEntity = () =>
-        useEntityStore.getState().deleteEntity(entityId);
-    const setSelectedAsThisEntityId = () =>
-        useEntityStore.getState().setSelectedEntityId(entityId);
-    const deselectThisEntity = () =>
-        useEntityStore.getState().setSelectedEntityId(null);
-    const selectedEntityId = useEntityStore((s) => s.selectedEntityId);
 
     return (
         <div
@@ -96,35 +84,9 @@ export default function EntityCard({
             style={{ borderColor: color }}
         >
             <div className="flex justify-between">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={
-                        selectedEntityId === entityId
-                            ? deselectThisEntity
-                            : setSelectedAsThisEntityId
-                    }
-                    className={`${
-                        selectedEntityId === entityId
-                            ? 'bg-stone-300 dark:bg-stone-700'
-                            : ''
-                    }`}
-                >
-                    {selectedEntityId === entityId ? (
-                        <IconCurrentLocationFilled />
-                    ) : (
-                        <IconCurrentLocation />
-                    )}
-                </Button>
+                <FlowEntityButton entityId={entityId} />
                 <ShapeSelector entityId={entityId} setError={setError} />
-                <Button
-                    variant="destructive"
-                    size="icon"
-                    className="bg-transparent border border-red-600 text-red-600 hover:bg-red-600 hover:text-white dark:bg-transparent dark:hover:bg-red-600"
-                    onClick={deleteThisEntity}
-                >
-                    <IconTrash />
-                </Button>
+                <DeleteEntityButton entityId={entityId} />
             </div>
 
             {/* Vector posición */}
