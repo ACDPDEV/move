@@ -10,6 +10,11 @@ import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import { useEntityStore } from '../stores/useEntityStore';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import {
+    IconCircleFilled,
+    IconSquareFilled,
+    IconTriangleFilled,
+} from '@tabler/icons-react';
 
 function FloatBar({
     orientation = 'horizontal',
@@ -41,20 +46,39 @@ function FloatBar({
                         orientation === 'horizontal' ? 'flex-row' : 'flex-col'
                     } gap-1 w-fit h-fit justify-start items-center`}
                 >
-                    {reversedEntities.map(({ id, color }) => (
-                        <Popover key={id}>
-                            <PopoverTrigger asChild>
-                                <button
-                                    className="w-5 h-5 rounded-full"
-                                    style={{ backgroundColor: color }}
-                                    aria-label="Editar entidad"
-                                />
-                            </PopoverTrigger>
-                            <PopoverContent className="w-sm p-0">
-                                <EntityCard entityId={id} color={color} />
-                            </PopoverContent>
-                        </Popover>
-                    ))}
+                    {reversedEntities.map(({ id, color, shape }) => {
+                        return (
+                            <Popover key={id}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="w-5 h-5"
+                                    >
+                                        {shape === 'circle' ? (
+                                            <IconCircleFilled
+                                                color={color}
+                                                size={16}
+                                            />
+                                        ) : shape === 'square' ? (
+                                            <IconSquareFilled
+                                                color={color}
+                                                size={16}
+                                            />
+                                        ) : (
+                                            <IconTriangleFilled
+                                                color={color}
+                                                size={16}
+                                            />
+                                        )}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-sm p-0">
+                                    <EntityCard entityId={id} color={color} />
+                                </PopoverContent>
+                            </Popover>
+                        );
+                    })}
                 </div>
             </ScrollArea>
         </div>
