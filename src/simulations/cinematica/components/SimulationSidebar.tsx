@@ -121,14 +121,8 @@ function SimulationSidebar({
                 {/* Fila 3: Footer */}
                 <footer className="row-start-3 p-4 border-t flex flex-row items-center justify-center gap-3">
                     <div className="flex items-center gap-2">
-                        <TimeInput setError={setError} />
                         <MovementPredictionToggle />
-                    </div>
-                    <Separator
-                        orientation="vertical"
-                        className="h-6 bg-stone-600"
-                    />
-                    <div className="flex items-center gap-2">
+                        <TimeInput setError={setError} />
                         <PlayerToggle />
                         <ResetButton />
                         <TimeSpeedSelector setError={setError} />

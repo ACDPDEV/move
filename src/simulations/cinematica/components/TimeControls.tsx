@@ -22,9 +22,6 @@ export default function TimeControls() {
             <div className="flex items-center gap-2">
                 <TimeInput setError={setError} />
                 <MovementPredictionToggle />
-            </div>
-            <Separator orientation="vertical" className="h-6 bg-stone-600" />
-            <div className="flex items-center gap-2">
                 <PlayerToggle />
                 <ResetButton />
                 <TimeSpeedSelector setError={setError} />
