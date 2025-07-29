@@ -7,7 +7,6 @@ import {
 import { useEntitySummaries } from '../hooks/useEntityISummaries';
 import EntityCard from './EntityCard';
 import { Button } from '@/components/ui/button';
-import { PlusIcon } from 'lucide-react';
 import { useEntityStore } from '../stores/useEntityStore';
 
 import {
@@ -16,6 +15,11 @@ import {
     IconSquareFilled,
     IconTriangleFilled,
 } from '@tabler/icons-react';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 function FloatBar({ className }: { className?: string }) {
     const entities = useEntitySummaries();
@@ -34,14 +38,19 @@ function FloatBar({ className }: { className?: string }) {
                 ${className}
             `}
         >
-            <Button
-                onClick={() => useEntityStore.getState().addEntity()}
-                size="icon"
-                variant="outline"
-                className="rounded-full flex-shrink-0 mb-1"
-            >
-                <IconPlus size={16} />
-            </Button>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                        onClick={() => useEntityStore.getState().addEntity()}
+                        size="icon"
+                        variant="outline"
+                        className="rounded-full flex-shrink-0 mb-1 text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500"
+                    >
+                        <IconPlus size={16} />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>Añadir Móvil</TooltipContent>
+            </Tooltip>
 
             <div
                 className="
