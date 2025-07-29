@@ -12,7 +12,6 @@ function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
 
     // Prevenir bucles infinitos
     if (gap <= 0.1) {
-        console.log('DrawGrids - gap too small, returning');
         return;
     }
 

@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
 
 export default function CinematicaSimulation() {
-    console.log('render simulation');
     const { isOpen, toggleIsOpen } = useSidebarStore();
 
     return (

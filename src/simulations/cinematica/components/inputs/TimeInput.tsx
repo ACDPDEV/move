@@ -12,8 +12,6 @@ const TimeInput = memo(function TimeInput({
     className,
     setError,
 }: TimeInputProps) {
-    console.log('render time input');
-
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
     const isMovementPrediction = useTimeStore((s) => s.movementPrediction);
