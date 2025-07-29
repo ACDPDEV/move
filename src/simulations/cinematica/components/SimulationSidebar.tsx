@@ -51,14 +51,14 @@ function SimulationSidebar({
     return (
         <div
             className={`${
-                isOpen ? 'w-md' : 'w-0 hidden'
+                isOpen ? 'w-full sm:w-md' : 'w-0 hidden'
             } transition-all duration-300 h-full overflow-hidden ${
                 className ?? ''
             }`}
         >
             <Tabs
                 defaultValue="entities"
-                className="grid grid-rows-[auto_1fr_auto] h-full bg-stone-200 dark:bg-stone-800 text-stone-900 dark:text-white"
+                className="grid grid-rows-[auto_1fr_auto] w-full h-full bg-stone-200 dark:bg-stone-800 text-stone-900 dark:text-white"
             >
                 <div className="flex flex-row p-2 pb-0 justify-between items-center">
                     <TabsList className="row-start-1 flex bg-stone-300 dark:bg-stone-700">
@@ -81,7 +81,7 @@ function SimulationSidebar({
 
                 <TabsContent
                     value="entities"
-                    className="row-start-2 h-full overflow-hidden"
+                    className="row-start-2 w-full h-full overflow-hidden"
                 >
                     <ScrollArea className="w-full h-full">
                         <div className="flex flex-col gap-4 p-4">

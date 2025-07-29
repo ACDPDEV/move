@@ -15,7 +15,9 @@ export default function CinematicaSimulation() {
         <main className="w-screen h-screen bg-stone-900 flex flex-row">
             <div
                 className={`${
-                    isOpen ? 'w-[calc(100%-28rem)]' : 'w-full'
+                    isOpen
+                        ? 'w-0 hidden sm:w-[calc(100%-28rem)] sm:flex'
+                        : 'w-full'
                 } h-full relative`}
             >
                 <Button
@@ -29,7 +31,11 @@ export default function CinematicaSimulation() {
                     <IconLayoutSidebarLeftCollapseFilled />
                 </Button>
                 <Canvas className="bg-white dark:bg-black w-full h-full" />
-                <TimeIndicators />
+                <TimeIndicators
+                    className={`absolute top-2 left-2 z-50 ${
+                        isOpen ? 'hidden sm:flex' : ''
+                    }`}
+                />
 
                 <div
                     className={`absolute flex flex-col bottom-0 left-1/2 translate-x-[-50%] gap-2 mb-10 justify-center items-center transition-all duration-300 ${

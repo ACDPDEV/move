@@ -1,9 +1,9 @@
 import FPSBadge from './badges/FpsIndicator';
 import BackButton from './buttons/BackButton';
 
-function TimeIndicators() {
+function TimeIndicators({ className }: { className?: string }) {
     return (
-        <div className="absolute top-2 left-2 flex flex-col">
+        <div className={`${className} flex flex-col`}>
             <BackButton />
             <FPSBadge />
         </div>
