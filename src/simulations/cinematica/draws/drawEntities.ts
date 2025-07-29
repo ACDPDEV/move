@@ -1,11 +1,18 @@
 import { useDisplayStore } from '../stores/useDisplayStore';
 import { useEntityStore } from '../stores/useEntityStore';
 
-function drawEntities(ctx: CanvasRenderingContext2D): void {
+function drawEntities(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const entities = useEntityStore.getState().entities;
 
     entities.forEach((entity) => {
-        entity.draw(ctx);
+        entity.draw(
+            ctx,
+            useEntityStore.getState().selectedEntityId === entity.id
+                ? dark
+                    ? '#fff'
+                    : '#000'
+                : undefined,
+        );
         if (useDisplayStore.getState().trajectory) {
             entity.drawTrajectory(ctx);
         }

@@ -8,6 +8,7 @@ import { drawOriginPoint } from '../draws/drawOriginPoint';
 import { drawAxes } from '../draws/drawAxes';
 import { drawEntities } from '../draws/drawEntities';
 import { drawGrids } from '../draws/drawGrids';
+import { usePlaneStore } from '../stores/usePlaneStore';
 
 interface CanvasProps {
     style?: React.CSSProperties;
@@ -51,10 +52,28 @@ function Canvas({ style, className }: CanvasProps) {
         // Limpiar canvas
         ctx.clearRect(0, 0, width, height);
 
+        if (useEntityStore.getState().selectedEntityId) {
+            const selectedEntity = useEntityStore
+                .getState()
+                .entities.find(
+                    (e) => e.id === useEntityStore.getState().selectedEntityId,
+                );
+            if (selectedEntity) {
+                usePlaneStore.getState().setPosition({
+                    x:
+                        -selectedEntity.position.x +
+                        width / (2 * usePlaneStore.getState().scale),
+                    y:
+                        -selectedEntity.position.y -
+                        height / (2 * usePlaneStore.getState().scale),
+                });
+            }
+        }
+
         drawGrids(ctx, theme === 'dark');
         drawOriginPoint(ctx, theme === 'dark');
         drawAxes(ctx, theme === 'dark');
-        drawEntities(ctx);
+        drawEntities(ctx, theme === 'dark');
 
         // Continuar el loop
         animationIdRef.current = requestAnimationFrame(renderLoop);

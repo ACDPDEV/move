@@ -6,7 +6,7 @@ import {
 
 type EntityStore = {
     entities: Entity[];
-    selectedEntity: Entity | null;
+    selectedEntityId: string | null;
     updateEntities: (entities: Entity[]) => void;
     updateAllEntities: (deltaTime: number) => void;
     updateEntity: (id: string, updates: Partial<EntityProps>) => void;
@@ -25,7 +25,7 @@ type EntityStore = {
     ) => void;
     deleteEntity: (id: string) => void;
     addEntity: (props?: Partial<EntityProps>) => void;
-    setSelectedEntity: (entity: Entity | null) => void;
+    setSelectedEntityId: (id: string | null) => void;
 };
 
 const useEntityStore = create<EntityStore>((set, get) => ({
@@ -35,6 +35,7 @@ const useEntityStore = create<EntityStore>((set, get) => ({
             velocity: { x: 0.1, y: 0 },
             acceleration: { x: 0, y: 0 },
             radius: 0.05,
+            shape: 'circle',
             color: '#FF0039',
         }),
         new Entity({
@@ -42,6 +43,7 @@ const useEntityStore = create<EntityStore>((set, get) => ({
             velocity: { x: 0, y: 0.1 },
             acceleration: { x: 0, y: 0 },
             radius: 0.05,
+            shape: 'triangle',
             color: '#00FF66',
         }),
         new Entity({
@@ -49,10 +51,11 @@ const useEntityStore = create<EntityStore>((set, get) => ({
             velocity: { x: 0.1, y: 0.1 },
             acceleration: { x: 0, y: 0 },
             radius: 0.05,
+            shape: 'square',
             color: '#3F5FFF',
         }),
     ],
-    selectedEntity: null,
+    selectedEntityId: null,
 
     updateEntities: (entities) => set({ entities }),
 
@@ -92,6 +95,7 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                         | 'velocity'
                         | 'acceleration'
                         | 'radius'
+                        | 'shape'
                         | 'color'
                     ),
                     string,
@@ -113,7 +117,7 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                     });
                 }
 
-                // Para campos de primer nivel (radius, color)
+                // Para campos de primer nivel (radius, shape, color)
                 return new Entity({
                     ...props,
                     [root]: value,
@@ -145,6 +149,7 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                         y: Math.random() * 1 - 0.5,
                     },
                     radius: 0.05,
+                    shape: 'circle',
                     color:
                         '#' +
                         Math.floor(Math.random() * 0xffffff)
@@ -154,7 +159,7 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                 }),
             ],
         })),
-    setSelectedEntity: (entity) => set({ selectedEntity: entity }),
+    setSelectedEntityId: (id) => set({ selectedEntityId: id }),
 }));
 
 export { useEntityStore, type EntityStore };

@@ -7,6 +7,7 @@ interface EntityProps {
     position: { x: number; y: number };
     velocity: { x: number; y: number };
     acceleration: { x: number; y: number };
+    shape: 'circle' | 'square' | 'triangle';
     radius: number;
     color: string;
 }
@@ -33,6 +34,7 @@ class Entity {
     velocity: Vector2D;
     acceleration: Vector2D;
     radius: number;
+    shape: 'circle' | 'square' | 'triangle';
     color: string;
     private trajectory: { x: number; y: number }[] = [];
 
@@ -42,6 +44,7 @@ class Entity {
         velocity,
         acceleration,
         radius,
+        shape,
         color,
     }: EntityProps) {
         this.id = id ?? (typeof window !== 'undefined' ? uuidv4() : '');
@@ -49,6 +52,7 @@ class Entity {
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);
         this.radius = radius;
+        this.shape = shape;
         this.color = color;
         this.trajectory = [this.position];
     }
@@ -77,7 +81,7 @@ class Entity {
         this.velocity.y += this.acceleration.y * deltaTime;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, borderColor?: string): void {
         const plane = usePlaneStore.getState();
         const { width, height } = ctx.canvas;
 
@@ -87,11 +91,32 @@ class Entity {
             this.radius * plane.scale,
         ];
 
-        if (eX >= 0 && eX <= width && eY >= 0 && eY <= height) {
+        if (
+            eX + eRadius >= 0 &&
+            eX - eRadius <= width &&
+            eY + eRadius >= 0 &&
+            eY - eRadius <= height
+        ) {
             ctx.beginPath();
-            ctx.arc(eX, eY, eRadius, 0, Math.PI * 2);
+            if (borderColor) {
+                ctx.strokeStyle = borderColor;
+                ctx.lineWidth = 2;
+            }
+            if (this.shape === 'circle') {
+                ctx.arc(eX, eY, eRadius, 0, Math.PI * 2);
+            } else if (this.shape === 'square') {
+                ctx.rect(eX - eRadius, eY - eRadius, eRadius * 2, eRadius * 2);
+            } else if (this.shape === 'triangle') {
+                ctx.moveTo(eX, eY - eRadius);
+                ctx.lineTo(eX + eRadius, eY + eRadius);
+                ctx.lineTo(eX - eRadius, eY + eRadius);
+                ctx.closePath();
+            }
             ctx.fillStyle = this.color;
             ctx.fill();
+            if (borderColor) {
+                ctx.stroke();
+            }
             ctx.closePath();
         }
     }
@@ -379,6 +404,7 @@ class Entity {
             2,
         )}, ${this.acceleration.y.toFixed(2)})
         Radio: ${this.radius}
+        Forma: ${this.shape}
         Color: ${this.color}
         `;
     }
@@ -389,6 +415,7 @@ class Entity {
             velocity: this.velocity.copy(),
             acceleration: this.acceleration.copy(),
             radius: this.radius,
+            shape: this.shape,
             color: this.color,
         });
     }
@@ -400,6 +427,7 @@ class Entity {
             velocity: this.velocity,
             acceleration: this.acceleration,
             radius: this.radius,
+            shape: this.shape,
             color: this.color,
         };
     }
