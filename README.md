@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MOVE 
 
-## Getting Started
+**MOVE** es una plataforma educativa interactiva diseñada para facilitar el aprendizaje de física y matemáticas mediante simulaciones visuales accesibles desde la web. Está construida con [Astro], lo que garantiza un rendimiento óptimo y una arquitectura moderna orientada a componentes.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Descripción
+
+Este repositorio contiene el código fuente de *MOVE*, una iniciativa orientada a estudiantes de nivel secundario y universitario que busca ofrecer herramientas intuitivas para el estudio de conceptos científicos a través de experiencias digitales interactivas.
+
+El proyecto está pensado para ser:
+
+- Claro y navegable
+- Rápido y eficiente
+- Modular y mantenible
+- Accesible desde cualquier dispositivo
+
+---
+
+## Estructura
+
+```text
+/
+├── public/                # Recursos estáticos (favicon, imágenes, etc.)
+├── src/
+│   ├── components/        # Componentes reutilizables de interfaz.
+│   ├── layouts/           # Estructuras generales de página.
+│   ├── pages/             # Rutas visibles del sitio.
+│   ├── styles/            # Estilos globales o utilitarios.
+│   └── env.d.ts           # Tipos para desarrollo con Astro.
+├── astro.config.mjs       # Configuración principal del framework.
+├── tsconfig.json          # Configuración de TypeScript.
+└── package.json           # Dependencias y scripts del proyecto.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tecnologías utilizadas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [Astro](https://astro.build)
+- [TypeScript](https://www.typescriptlang.org/)
+- [pnpm](https://pnpm.io/)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts disponibles
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Comando         | Descripción                                                   |
+|-----------------|---------------------------------------------------------------|
+| `pnpm install`  | Instala todas las dependencias.                               |
+| `pnpm dev`      | Inicia un servidor local de desarrollo.                       |
+| `pnpm build`    | Genera la versión optimizada para producción.                 |
+| `pnpm preview`  | Muestra una vista previa del sitio generado.                  |
+| `pnpm test`     | Ejecuta las pruebas automáticas para verificar el código.     |
+| `pnpm coverage` | Muestra el porcentaje de cobertura de las pruebas.            |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> **Nota:** el entorno de desarrollo no es necesario para usuarios finales. El sitio ya está disponible en línea.
+---
 
-## Deploy on Vercel
+## Licencia
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Distribuido bajo la licencia [MIT](LICENSE).  
+© 2025 - [ACDPDEV](https://github.com/ACDPDEV)
