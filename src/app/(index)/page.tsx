@@ -12,17 +12,17 @@ function Home() {
     return (
         <main className="flex flex-col w-full min-h-[calc(100vh-4.5rem)] justify-center items-center">
             <section className="relative w-full max-w-3xl h-[calc(100vh-4.5rem)] flex flex-col items-center justify-center">
-                <div className="w-full h-auto px-12 pb-8 [&>*]:w-auto [&>*]:h-full flex flex-row -space-x-6 sm:-space-x-12 justify-center items-center">
+                <div className="w-full h-auto px-2 sm:px-12 pb-8 [&>*]:w-auto [&>*]:h-full flex flex-row -space-x-6 sm:-space-x-12 justify-center items-center">
                     <M className="M" />
                     <O className="O" />
                     <V className="V" />
                     <E className="E" />
                 </div>
-                <h2 className="typing-26 block box-border text-center text-xl sm:text-2xl font-bold text-[#9DA3AF] whitespace-nowrap w-[27ch] font-mono border-r-4 overflow-hidden">
+                <h2 className="typing-26 block box-border text-center text-lg sm:text-2xl font-bold text-[#9DA3AF] whitespace-nowrap w-[27ch] font-mono border-r-4 overflow-hidden">
                     Aprende<span className="text-[#A3A3DC]"> ciencias </span>de
                     manera
                 </h2>
-                <h2 className="typing-23 block box-border text-center text-xl sm:text-2xl font-bold text-[#9DA3AF] whitespace-nowrap w-[24ch] font-mono border-r-4 overflow-hidden mb-32 sm:mb-0">
+                <h2 className="typing-23 block box-border text-center text-lg sm:text-2xl font-bold text-[#9DA3AF] whitespace-nowrap w-[24ch] font-mono border-r-4 overflow-hidden mb-32 sm:mb-0">
                     <span className="text-[#A2DCA2]"> interactiva </span>y
                     <span className="text-[#F79C6E]"> divertida </span>
                 </h2>
@@ -38,17 +38,17 @@ function Home() {
                         href="/simulations/"
                         className="flex p-0.5 rounded-lg border border-[#302D55] hover:scale-120 transition-all duration-300 ease-in"
                     >
-                        <button className="flex flex-row w-fit gap-2 p-3 bg-[#5646ED] border border-[#5848EE] rounded-md justify-center items-center shadow-inset-double">
-                            <IconSearch />
+                        <button className="flex flex-row w-fit gap-1 sm:gap-2 p-2 sm:p-3 bg-[#5646ED] border border-[#5848EE] rounded-md justify-between items-center shadow-inset-double text-sm sm:text-md">
+                            <IconSearch className="size-4 sm:size-5" />
                             Busca una simulación
-                            <IconChevronRight />
+                            <IconChevronRight className="size-4 sm:size-5" />
                         </button>
                     </Link>
-                    <Link href="/docs/guide/">
-                        <button className="flex flex-row w-fit gap-2 p-3 backdrop-blur-sm border border-[#302D55] rounded-md justify-center items-center hover:shadow-inset-double hover:scale-120 transition-all duration-300 ease-in">
-                            <IconBook />
+                    <Link href="/docs/guide/" className="w-full sm:w-fit">
+                        <button className="flex flex-row w-full sm:w-fit gap-1 sm:gap-2 p-2 sm:p-3 backdrop-blur-sm border border-[#302D55] rounded-md justify-between items-center hover:shadow-inset-double hover:scale-120 transition-all duration-300 ease-in text-sm md:text-md">
+                            <IconBook className="size-4 sm:size-5" />
                             Lee la guía
-                            <IconChevronRight />
+                            <IconChevronRight className="size-4 sm:size-5" />
                         </button>
                     </Link>
                 </div>
