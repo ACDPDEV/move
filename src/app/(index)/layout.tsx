@@ -1,13 +1,11 @@
-import LayoutContainer from "@/components/layout/LayoutContainer";
+import LayoutContainer from '@/components/layout/LayoutContainer';
 
-function Layout({ children }: Readonly<{ 
+function Layout({
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <LayoutContainer>
-            {children}
-        </LayoutContainer>
-    );
+    return <LayoutContainer overflow="visible">{children}</LayoutContainer>;
 }
 
 export default Layout;
