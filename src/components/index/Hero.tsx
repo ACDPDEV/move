@@ -53,6 +53,7 @@ function Hero() {
                     alt="stars"
                     className="absolute top-1/2 left-1/2 -translate-1/2 min-w-6xl w-full max-w-none h-auto -z-2 opacity-60 animate-pulse animate-iteration-count-infinite"
                 />
+                <div className="absolute bottom-0 w-screen h-[calc(100vh/4)] bg-gradient-to-t from-[#151618] to-[#131217] -z-9" />
             </section>
         </>
     );
