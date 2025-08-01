@@ -1,69 +1,58 @@
-import Link from "next/link";
-import { Button } from "../ui/button";
-import { IconArrowRight, IconBook, IconSearch } from "@tabler/icons-react";
-import { Badge } from "../ui/badge";
+/* eslint-disable @next/next/no-img-element */
+import Aureola from '@/components/svgs/Aureola';
+import E from '@/components/svgs/E';
+import M from '@/components/svgs/M';
+import O from '@/components/svgs/O';
+import V from '@/components/svgs/V';
+import Line from '@/components/svgs/Line';
+import Link from 'next/link';
+import { IconBook, IconChevronRight, IconSearch } from '@tabler/icons-react';
 
 function Hero() {
     return (
-        <section className="w-full h-[calc(100vh-68px)] relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 rounded-t-xl">
-            {/*Animated background elements*/}
-            <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute top-60 right-32 w-24 h-24 bg-purple-500 rounded-full blur-2xl animate-pulse" ></div>
-                <div className="absolute bottom-40 left-1/3 w-20 h-20 bg-cyan-500 rounded-full blur-2xl animate-pulse" ></div>
+        <section className="relative w-full max-w-3xl h-[calc(100vh-4.5rem)] flex flex-col items-center justify-center">
+            <div className="w-full h-auto px-2 sm:px-12 pb-8 [&>*]:w-auto [&>*]:h-full flex flex-row -space-x-6 sm:-space-x-12 justify-center items-center">
+                <M className="M" />
+                <O className="O" />
+                <V className="V" />
+                <E className="E" />
             </div>
-
-            {/* Grid pattern overlay */}
-            <div className="absolute inset-0 opacity-10">
-                <div className="w-full h-full bg-[radial-gradient(circle_800px_at_50%_300px,rgba(56,189,248,0.3),transparent)]"></div>
-            </div>
-
-            <div className="relative z-10 flex flex-col w-full h-full gap-8 justify-center items-center px-6 animate-fade-in">
-                {/* Badge */}
-                <Link href="https://www.facebook.com/ColegioSanJuanTrujillo/" target="_blank" rel="noreferrer">
-                    <Badge className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-300 text-sm font-medium backdrop-blur-sm">
-                        <IconSearch size={24} />
-                        FENCYT 2025 - Colegio San Juan
-                    </Badge>
+            <h2 className="typing-26 block box-border text-center text-lg sm:text-2xl font-bold text-[#9DA3AF] whitespace-nowrap w-[27ch] font-mono border-r-4 overflow-hidden">
+                Aprende<span className="text-[#A3A3DC]"> ciencias </span>de
+                manera
+            </h2>
+            <h2 className="typing-23 block box-border text-center text-lg sm:text-2xl font-bold text-[#9DA3AF] whitespace-nowrap w-[24ch] font-mono border-r-4 overflow-hidden mb-32 sm:mb-0">
+                <span className="text-[#A2DCA2]"> interactiva </span>y
+                <span className="text-[#F79C6E]"> divertida </span>
+            </h2>
+            <Aureola className="absolute top-1/2 left-1/2 -translate-1/2 min-w-[90rem] w-full h-auto z-100 pointer-events-none animate-fade-in animate-duration-[1.4s]" />
+            <Line className="absolute top-0 bottom-0 left-0 right-0 w-full h-full -z-1 animate-fade-in animate-duration-[1.4s]" />
+            <img
+                src="/Stars.avif"
+                alt="stars"
+                className="absolute top-1/2 left-1/2 -translate-1/2 min-w-6xl w-full max-w-none h-auto -z-2 opacity-60 animate-pulse animate-iteration-count-infinite"
+            />
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-20 justify-center items-center absolute bottom-8 sm:static sm:my-12 font-medium">
+                <Link
+                    href="/simulations/"
+                    className="flex p-0.5 rounded-lg border border-[#302D55] hover:scale-120 transition-all duration-300 ease-in"
+                >
+                    <button className="flex flex-row w-fit gap-1 sm:gap-2 p-2 sm:p-3 bg-[#5646ED] border border-[#5848EE] rounded-md justify-between items-center shadow-inset-double text-sm sm:text-md">
+                        <IconSearch className="size-4 sm:size-5" />
+                        Busca una simulación
+                        <IconChevronRight className="size-4 sm:size-5" />
+                    </button>
                 </Link>
-
-                {/* Main heading */}
-                <div className="text-center space-y-4">
-                    <h1 className="font-black text-8xl md:text-9xl bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent animate-fade-in">
-                        MOVE
-                    </h1>
-                </div>
-
-                {/* Subtitle */}
-                <p className="text-xl md:text-2xl text-gray-300 text-center max-w-3xl leading-relaxed">
-                    Aprender ciencias de manera <span className="text-blue-400 font-semibold">interactiva</span> y <span className="text-purple-400 font-semibold">divertida</span>
-                </p>
-
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link href="/simulations/">
-                        <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2">
-                            Explorar simulaciones
-                            <IconArrowRight size={24} />
-                        </Button>
-                    </Link>
-                    <Link href="/paper/">
-                        <Button size="lg" className="border-2 border-white/30 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm font-semibold px-8 py-3 rounded-full transition-all duration-300 flex items-center gap-2">
-                            Leer documentación
-                            <IconBook size={24} />
-                        </Button>
-                    </Link>
-                </div>
-
-                {/* Scroll indicator */}
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bouncing animate-iteration-count-infinite">
-                    <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-                        <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
-                    </div>
-                </div>
+                <Link href="/docs/guide/" className="w-full sm:w-fit">
+                    <button className="flex flex-row w-full sm:w-fit gap-1 sm:gap-2 p-2 sm:p-3 backdrop-blur-sm border border-[#302D55] rounded-md justify-between items-center hover:shadow-inset-double hover:scale-120 transition-all duration-300 ease-in text-sm md:text-md">
+                        <IconBook className="size-4 sm:size-5" />
+                        Lee la guía
+                        <IconChevronRight className="size-4 sm:size-5" />
+                    </button>
+                </Link>
             </div>
         </section>
-    )
+    );
 }
 
 export default Hero;
