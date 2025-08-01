@@ -32,7 +32,7 @@ function Hero() {
                 alt="stars"
                 className="absolute top-1/2 left-1/2 -translate-1/2 min-w-6xl w-full max-w-none h-auto -z-2 opacity-60 animate-pulse animate-iteration-count-infinite"
             />
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-20 justify-center items-center absolute bottom-8 sm:static sm:my-12 font-medium">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-20 justify-center items-center absolute bottom-8 sm:static sm:my-12 font-medium animate-fade-in animate-duration-400 animate-delay-400">
                 <Link
                     href="/simulations/"
                     className="flex p-0.5 rounded-lg border border-[#302D55] hover:scale-120 transition-all duration-300 ease-in"
