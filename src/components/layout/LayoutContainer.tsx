@@ -9,8 +9,8 @@ function LayoutContainer({
     return (
         <>
             <Header />
-            <ScrollArea className="flex flex-col w-screen h-screen overflow-hidden p-2 rounded-md">
-                <main className="w-[calc(100vw-1rem)] min-h-[calc(100vh-4.5rem)] mt-14 rounded-md overflow-hidden">
+            <ScrollArea className="flex flex-col w-screen h-screen overflow-visible rounded-md">
+                <main className="w-[calc(100vw-1rem)] min-h-[calc(100vh-4.5rem)] mt-14 rounded-md overflow-visible">
                     {children}
                 </main>
             </ScrollArea>

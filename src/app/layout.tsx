@@ -1,13 +1,20 @@
 import type { Metadata } from 'next';
-import { Ubuntu } from 'next/font/google';
+import { Geist } from 'next/font/google';
+import { Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Toaster } from '@/components/ui/sonner';
 
-const ubuntu = Ubuntu({
+const geist = Geist({
     subsets: ['latin'],
-    variable: '--font-ubuntu',
+    variable: '--font-geist',
+    weight: ['300', '400', '500', '700'],
+});
+
+const geistMono = Geist_Mono({
+    subsets: ['latin'],
+    variable: '--font-geist-mono',
     weight: ['300', '400', '500', '700'],
 });
 
@@ -24,7 +31,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="es" suppressHydrationWarning>
-            <body className={`${ubuntu.className} bg-background text-primary`}>
+            <body
+                className={`${geist.variable} ${geistMono.variable} ${geist.className}`}
+            >
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
