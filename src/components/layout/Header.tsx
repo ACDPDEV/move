@@ -26,7 +26,6 @@ function Header() {
                     </TooltipTrigger>
                     <TooltipContent>Revisa el informe</TooltipContent>
                 </Tooltip>
-                <ModeToggle />
             </ul>
         </header>
     );
