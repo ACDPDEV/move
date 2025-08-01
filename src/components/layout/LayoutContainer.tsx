@@ -4,7 +4,6 @@ import { ScrollArea } from '../ui/scroll-area';
 function LayoutContainer({
     children,
     bgColor = '#151618',
-    overflow = 'hidden',
 }: Readonly<{
     children: React.ReactNode;
     bgColor?: string;
@@ -14,12 +13,10 @@ function LayoutContainer({
         <>
             <Header />
             <ScrollArea
-                className="flex flex-col w-screen h-screen overflow-visible rounded-md -z-100"
+                className="flex flex-col w-screen h-screen rounded-md"
                 style={{ backgroundColor: bgColor }}
             >
-                <main
-                    className={`w-screen min-h-[calc(100vh-4rem)] mt-14 rounded-md overflow-${overflow}`}
-                >
+                <main className="w-screen min-h-[calc(100vh-4rem)] mt-14 rounded-md">
                     {children}
                 </main>
             </ScrollArea>
