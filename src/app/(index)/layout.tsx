@@ -5,7 +5,7 @@ function Layout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return <LayoutContainer overflow="visible">{children}</LayoutContainer>;
+    return <LayoutContainer>{children}</LayoutContainer>;
 }
 
 export default Layout;
