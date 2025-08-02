@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Fumadocs
 .source/
+
+# Local test files
+src/app/test-components/page.tsx
