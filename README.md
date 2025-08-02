@@ -58,5 +58,5 @@ El proyecto está pensado para ser:
 
 ## Licencia
 
-Distribuido bajo la licencia [MIT](LICENSE).  
+Distribuido bajo la licencia [GPL v3](LICENSE).  
 © 2025 - [ACDPDEV](https://github.com/ACDPDEV) - [TheDormitabis](https://github.com/TheDormitabis)
