@@ -1,6 +1,6 @@
 # MOVE 
 
-**MOVE** es una plataforma educativa interactiva diseñada para facilitar el aprendizaje de física y matemáticas mediante simulaciones visuales accesibles desde la web. Está construida con [Astro], lo que garantiza un rendimiento óptimo y una arquitectura moderna orientada a componentes.
+**MOVE** es una plataforma educativa interactiva diseñada para facilitar el aprendizaje de física y matemáticas mediante simulaciones visuales accesibles desde la web. Está construida con [Nextjs](https://nextjs.org), lo que garantiza un rendimiento óptimo y una arquitectura moderna orientada a componentes.
 
 
 ## Descripción
@@ -36,7 +36,7 @@ El proyecto está pensado para ser:
 
 ## Tecnologías utilizadas
 
-- [Astro](https://astro.build)
+- [Nextjs](https://nextjs.com)
 - [TypeScript](https://www.typescriptlang.org/)
 - [pnpm](https://pnpm.io/)
 
