@@ -120,23 +120,6 @@
     --main-background: oklch(18.569% 0.0102 294.515);
 }
 
-@layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-main-background text-foreground;
-    }
-    .shadow-inset-double {
-        box-shadow: inset 4px 4px 8px 0 rgba(204, 204, 204, 0.2),
-            4px 4px 8px 0 rgba(0, 0, 0, 0.2);
-    }
-    .hover\:shadow-inset-double:hover {
-        box-shadow: inset 4px 4px 8px 0 rgba(204, 204, 204, 0.2),
-            4px 4px 8px 0 rgba(0, 0, 0, 0.2);
-    }
-}
-
 @keyframes my-typing {
     from {
         width: 0;
@@ -176,34 +159,50 @@
     }
 }
 
-.typing-26 {
-    border-color: transparent;
-    animation: my-typing 2s steps(26), my-blink 0.5s step-end alternate 4;
-}
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-main-background text-foreground;
+    }
+    .shadow-inset-double {
+        box-shadow: inset 4px 4px 8px 0 rgba(204, 204, 204, 0.2),
+            4px 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+    .hover\:shadow-inset-double:hover {
+        box-shadow: inset 4px 4px 8px 0 rgba(204, 204, 204, 0.2),
+            4px 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+    .typing-26 {
+        border-color: transparent;
+        animation: my-typing 2s steps(26), my-blink 0.5s step-end alternate 4;
+    }
 
-.typing-23 {
-    border-color: transparent;
-    animation: my-typing 2s steps(23) both,
-        my-blink 0.5s infinite step-end alternate;
-    animation-delay: 2s;
-}
+    .typing-23 {
+        border-color: transparent;
+        animation: my-typing 2s steps(23) both,
+            my-blink 0.5s infinite step-end alternate;
+        animation-delay: 2s;
+    }
 
-.M {
-    translate: translateY(100%);
-    animation: fade-in-brightness-up 1s ease-in-out both;
-}
+    .M {
+        translate: translateY(100%);
+        animation: fade-in-brightness-up 1s ease-in-out both;
+    }
 
-.O {
-    translate: translateY(100%);
-    animation: fade-in-brightness-up 1s ease-in-out 0.2s both;
-}
+    .O {
+        translate: translateY(100%);
+        animation: fade-in-brightness-up 1s ease-in-out 0.2s both;
+    }
 
-.V {
-    translate: translateY(100%);
-    animation: fade-in-brightness-up 1s ease-in-out 0.4s both;
-}
+    .V {
+        translate: translateY(100%);
+        animation: fade-in-brightness-up 1s ease-in-out 0.4s both;
+    }
 
-.E {
-    translate: translateY(100%);
-    animation: fade-in-brightness-up 1s ease-in-out 0.6s both;
+    .E {
+        translate: translateY(100%);
+        animation: fade-in-brightness-up 1s ease-in-out 0.6s both;
+    }
 }
