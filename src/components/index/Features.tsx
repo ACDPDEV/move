@@ -1,62 +1,69 @@
-import { IconBulb, IconCalculator, IconPlanet, IconWorld } from "@tabler/icons-react";
+import Link from 'next/link';
+import PlayerBar from '@/components/index/PlayerBar';
+import PageURL from '@/components/index/PageURL';
+import PlanePreview from '@/components/index/PlanePreview';
+import Colaborators from '@/components/index/Colaborators';
 
 function Features() {
     return (
-        <section className="py-20 bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
-            <div className="container mx-auto px-6">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">¿Qué ofrecemos?</h2>
-                    <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-                        Simulaciones interactivas que transforman conceptos abstractos en experiencias visuales y comprensibles
+        <section className="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 pt-16 w-full min-h-screen justify-center items-center bg-gradient-to-t from-[#222326] to-[#151618] px-px gap-px [&_h1]:font-semibold [&_h1]:text-xl [&_h1]:text-[#FCFCFD] [&_p]:text-sm [&_p]:font-medium [&_p]:text-[#9A9CAC] [&>div>div]:bg-[#151618] [&>div>div]:p-10 [&>div>div]:flex [&>div>div]:flex-col [&>div>div]:gap-2 [&>div>div]:overflow-hidden [&>div]:flex [&>div]:flex-col [&>div>div]:min-h-84 [&>div]:gap-px [&>div]:h-full">
+            <div>
+                <div>
+                    <h1>Renderizado en tiempo real</h1>
+                    <p>
+                        Visualiza los cálculos físicos al instante, actualizando
+                        posiciones, velocidades y colisiones sin recargar la
+                        página.
                     </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Cinemática Card */}
-                    <div className="bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/20 dark:to-blue-800/20 backdrop-blur-sm rounded-2xl p-8 border border-blue-300 dark:border-blue-500/30 shadow-lg dark:shadow-none hover:shadow-xl dark:hover:shadow-blue-500/20 transition-all duration-300">
-                        <div className="p-4 bg-blue-200 dark:bg-blue-500/20 rounded-full w-fit mb-6 shadow-md dark:shadow-none">
-                            <IconCalculator size={36} className="text-blue-700 dark:text-blue-300" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Cinemática</h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-6">4 simulaciones completas de movimiento que cubren desde conceptos básicos hasta aplicaciones avanzadas</p>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li>• Movimiento rectilíneo uniforme</li>
-                            <li>• Movimiento uniformemente acelerado</li>
-                            <li>• Caída libre y lanzamiento vertical</li>
-                            <li>• Movimiento parabólico</li>
-                        </ul>
-                    </div>
-
-                    {/* Física Aplicada Card */}
-                    <div className="bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/20 dark:to-purple-800/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-300 dark:border-purple-500/30 shadow-lg dark:shadow-none hover:shadow-xl dark:hover:shadow-purple-500/20 transition-all duration-300">
-                        <div className="p-4 bg-purple-200 dark:bg-purple-500/20 rounded-full w-fit mb-6 shadow-md dark:shadow-none">
-                            <IconBulb size={36} className="text-purple-700 dark:text-purple-300" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Física Aplicada</h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-6">Conceptos complejos simplificados a través de visualizaciones interactivas y ejemplos prácticos</p>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li>• Gráficos interactivos en tiempo real</li>
-                            <li>• Parámetros ajustables</li>
-                            <li>• Ejemplos del mundo real</li>
-                            <li>• Análisis paso a paso</li>
-                        </ul>
-                    </div>
-
-                    {/* Lenguas Originarias Card */}
-                    <div className="bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900/20 dark:to-cyan-800/20 backdrop-blur-sm rounded-2xl p-8 border border-cyan-300 dark:border-cyan-500/30 shadow-lg dark:shadow-none hover:shadow-xl dark:hover:shadow-cyan-500/20 transition-all duration-300">
-                        <div className="p-4 bg-cyan-200 dark:bg-cyan-500/20 rounded-full w-fit mb-6 shadow-md dark:shadow-none">
-                            <IconWorld size={36} className="text-cyan-700 dark:text-cyan-300" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Lenguas Originarias</h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-6">Próximamente disponible en quechua y otras lenguas del Perú para mayor accesibilidad</p>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li>• Quechua (en desarrollo)</li>
-                            <li>• Términos científicos localizados</li>
-                            <li>• Educación inclusiva</li>
-                            <li>• Preservación cultural</li>
-                        </ul>
+                    <div className="relative flex grow w-full h-50 overflow-visible">
+                        <PlanePreview className="absolute bottom-0 left-1/2 -translate-x-1/2" />
                     </div>
                 </div>
+                <div>
+                    <h1>Código Abierto y Extensible</h1>
+                    <p>
+                        Repositorio público en{' '}
+                        <Link
+                            href="https://github.com/acdpdev/move"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[#675dbe] hover:underline"
+                        >
+                            GitHub
+                        </Link>
+                        , bajo licencia GPL-3.0. Si quieres contribuir, ¡eres
+                        bienvenido!, crea una issue o pull request.
+                    </p>
+                    <div className="relative flex grow w-full h-24 overflow-visible">
+                        <Colaborators className="absolute top-1/2 left-1/2 -translate-1/2" />
+                    </div>
+                </div>
+                <span className="flex-1 bg-[#151618]" />
+            </div>
+            <div>
+                <div>
+                    <h1>100% Interactivo</h1>
+                    <p>
+                        Controla los parámetros que quieras, y mira al momento
+                        cómo cambian los resultados. Puedes realizar múltiples
+                        acciones en una simulación.
+                    </p>
+                    <div className="relative flex grow w-full h-24 overflow-visible">
+                        <PlayerBar className="absolute bottom-0 left-1/2 -translate-x-1/2" />
+                    </div>
+                </div>
+                <div>
+                    <h1>Comparte tus resultados</h1>
+                    <p>
+                        Copia la URL de tu simulación y comparte con tus amigos,
+                        colegas o compañeros de clase. Tus datos se guardarán
+                        automáticamente.
+                    </p>
+                    <div className="relative flex grow w-full h-50 overflow-visible">
+                        <PageURL className="absolute bottom-0 right-0 scale-150" />
+                    </div>
+                </div>
+                <span className="flex-1 bg-[#151618]" />
             </div>
         </section>
     );
