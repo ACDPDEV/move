@@ -27,7 +27,7 @@ function Features() {
                             href="https://github.com/acdpdev/move"
                             target="_blank"
                             rel="noreferrer"
-                            className="text-[#675dbe] hover:underline"
+                            className="text-[#7a74a5] hover:underline"
                         >
                             GitHub
                         </Link>
