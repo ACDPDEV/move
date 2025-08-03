@@ -1,29 +1,31 @@
-import { IconArrowRight, IconBook } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { IconBook, IconChevronRight, IconSearch } from '@tabler/icons-react';
+import Link from 'next/link';
 
 function Ready() {
     return (
-        <section className="py-20 bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-900 dark:to-purple-900 transition-colors duration-300">
-            <div className="container mx-auto px-6 text-center">
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">¿Listo para explorar?</h2>
-                <p className="text-xl text-blue-50 dark:text-blue-100 mb-8 max-w-2xl mx-auto">
-                    Descubre cómo la física puede ser divertida y fácil de entender con nuestras simulaciones interactivas
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link href="/simulations/">
-                        <Button className="bg-white dark:bg-gray-100 text-blue-900 dark:text-blue-800 font-semibold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 flex items-center gap-2">
-                            Comenzar ahora
-                            <IconArrowRight size={24} />
-                        </Button>
-                    </Link>
-                    <Link href="/paper/">
-                        <Button className="border-2 border-white dark:border-gray-200 text-white dark:text-gray-100 bg-transparent hover:bg-white/10 dark:hover:bg-gray-100/10 font-semibold px-8 py-4 rounded-full transition-all duration-300 flex items-center gap-2 backdrop-blur-sm">
-                            Ver documentación
-                            <IconBook size={24} />
-                        </Button>
-                    </Link>
-                </div>
+        <section className="w-full flex flex-col justify-center items-center gap-16 px-24 py-16 [&_h1]:font-semibold [&_h1]:text-2xl [&_h1]:text-[#FCFCFD] [&_h2]:text-md [&_h2]:font-medium [&_h2]:text-[#D9D9D9] border-x border-[#222326]">
+            <div className="flex flex-col gap-2 justify-center items-center">
+                <h1>¿Listo para comenzar?</h1>
+                <h2>Explora nuestro catálogo de simulaciones</h2>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-20 justify-center items-center font-medium">
+                <Link
+                    href="/simulations/"
+                    className="flex p-0.5 rounded-lg border border-[#302D55] hover:scale-120 transition-all duration-300 ease-in"
+                >
+                    <button className="flex flex-row w-fit gap-1 sm:gap-2 p-2 sm:p-3 bg-[#5646ED] border border-[#5848EE] rounded-md justify-between items-center shadow-inset-double text-sm sm:text-md">
+                        <IconSearch className="size-4 sm:size-5" />
+                        Explorar
+                        <IconChevronRight className="size-4 sm:size-5" />
+                    </button>
+                </Link>
+                <Link href="/docs/guide/" className="w-full sm:w-fit">
+                    <button className="flex flex-row w-full sm:w-fit gap-1 sm:gap-2 p-2 sm:p-3 backdrop-blur-sm border border-[#302D55] rounded-md justify-between items-center hover:shadow-inset-double hover:scale-120 transition-all duration-300 ease-in text-sm md:text-md">
+                        <IconBook className="size-4 sm:size-5" />
+                        Lee más
+                        <IconChevronRight className="size-4 sm:size-5" />
+                    </button>
+                </Link>
             </div>
         </section>
     );
