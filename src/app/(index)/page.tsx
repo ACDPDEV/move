@@ -7,6 +7,7 @@ import PlayerBar from '@/components/index/PlayerBar';
 import Ready from '@/components/index/Ready';
 import Link from 'next/link';
 import PageURL from '../../components/index/PageURL';
+import Colaborators from '@/components/index/Colaborators';
 
 function Home() {
     return (
@@ -42,6 +43,9 @@ function Home() {
                                 ¡eres bienvenido!, crea una issue o pull
                                 request.
                             </p>
+                            <div className="relative flex grow w-full h-24 overflow-visible">
+                                <Colaborators className="absolute top-1/2 left-1/2 -translate-1/2" />
+                            </div>
                         </div>
                         <span className="flex-1 bg-[#151618]" />
                     </div>
