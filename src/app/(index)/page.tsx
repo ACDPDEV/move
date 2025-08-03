@@ -2,6 +2,7 @@ import Hero from '@/components/index/Hero';
 import Features from '@/components/index/Features';
 import Logos from '@/components/index/Logos';
 import About from '@/components/index/About';
+import Ready from '@/components/index/Ready';
 
 function Home() {
     return (
@@ -11,6 +12,7 @@ function Home() {
                 <Features />
                 <Logos />
                 <About />
+                <Ready />
             </article>
         </main>
     );
