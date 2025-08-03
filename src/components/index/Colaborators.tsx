@@ -7,20 +7,20 @@ function Colaborators({ className }: { className?: string }) {
                 <img
                     src="/ACDPDEV.avif"
                     alt="ACDPDEV"
-                    className="w-12 h-12 rounded-full shadow-md shadow-black z-5"
+                    className="w-12 h-12 rounded-full shadow-md shadow-stone-950 z-5"
                 />
                 <img
                     src="/TheDormitabis.avif"
                     alt="TheDormitabis"
-                    className="w-12 h-12 rounded-full shadow-md shadow-black z-4"
+                    className="w-12 h-12 rounded-full shadow-md shadow-stone-950 z-4"
                 />
-                <div className="w-12 h-12 flex justify-center items-center rounded-full shadow-md shadow-black bg-[#222326] z-3">
+                <div className="w-12 h-12 flex justify-center items-center rounded-full shadow-md shadow-stone-950 bg-[#222326] z-3">
                     <IconUser size={32} color="#9A9CAC" />
                 </div>
-                <div className="w-12 h-12 flex justify-center items-center rounded-full shadow-md shadow-black bg-[#222326] z-2">
+                <div className="w-12 h-12 flex justify-center items-center rounded-full shadow-md shadow-stone-950 bg-[#222326] z-2">
                     <IconUser size={32} color="#9A9CAC" />
                 </div>
-                <div className="w-12 h-12 flex justify-center items-center rounded-full shadow-md shadow-black bg-[#222326] z-1">
+                <div className="w-12 h-12 flex justify-center items-center rounded-full shadow-md shadow-stone-950 bg-[#222326] z-1">
                     <IconUser size={32} color="#9A9CAC" />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 top-0 w-full h-full bg-gradient-to-r from-transparent to-[#151618] z-6" />
