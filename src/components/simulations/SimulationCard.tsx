@@ -37,10 +37,10 @@ function SimulationCard({
                         <p className="text-slate-600 dark:text-slate-400 mb-6">
                             No pudimos encontrar el simulador que buscas.
                         </p>
-                        <Link href="/">
+                        <Link href="/simulations/">
                             <Button variant="outline" className="group">
                                 <IconArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                                Volver al inicio
+                                Volver
                             </Button>
                         </Link>
                     </CardContent>
