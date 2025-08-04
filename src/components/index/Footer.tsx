@@ -1,5 +1,5 @@
 import { IconStereoGlasses } from '@tabler/icons-react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import MBorder from '../svgs/MBorder';
 import OBorder from '../svgs/OBorder';
 import VBorder from '../svgs/VBorder';

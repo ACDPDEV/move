@@ -1,7 +1,7 @@
 import { IconPaperclip } from '@tabler/icons-react';
 import LinksNav from '@/components/layout/LinksNav';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import GithubButton from './GithubButton';
 import { ModeToggle } from './ToogleTheme';
 import {

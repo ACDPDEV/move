@@ -5,7 +5,7 @@ import M from '@/components/svgs/M';
 import O from '@/components/svgs/O';
 import V from '@/components/svgs/V';
 import Line from '@/components/svgs/Line';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import { IconBook, IconChevronRight, IconSearch } from '@tabler/icons-react';
 
 function Hero() {

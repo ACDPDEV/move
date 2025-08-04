@@ -19,7 +19,7 @@ export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
 
     return (
-        <main className="w-screen h-screen bg-stone-900 flex flex-row">
+        <>
             <div
                 className={`${
                     isOpen
@@ -71,6 +71,6 @@ export default function CinematicaSimulation() {
 
             {/* Sidebar con ancho fijo */}
             <SimulationSidebar isOpen={isOpen} />
-        </main>
+        </>
     );
 }

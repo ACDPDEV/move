@@ -1,5 +1,5 @@
 import { IconBook, IconChevronRight, IconSearch } from '@tabler/icons-react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import { Meteors } from '../ui/meteors';
 import Aureola from '../svgs/Aureola';
 import Line from '../svgs/Line';

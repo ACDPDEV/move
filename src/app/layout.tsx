@@ -3,8 +3,8 @@ import { Geist } from 'next/font/google';
 import { Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
-import { RootProvider } from 'fumadocs-ui/provider';
 import { Toaster } from '@/components/ui/sonner';
+import { ViewTransitions } from 'next-view-transitions';
 
 const geist = Geist({
     subsets: ['latin'],
@@ -30,19 +30,21 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="es" suppressHydrationWarning>
-            <body
-                className={`${geist.variable} ${geistMono.variable} ${geist.className}`}
-            >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    disableTransitionOnChange
+        <ViewTransitions>
+            <html lang="es" suppressHydrationWarning>
+                <body
+                    className={`${geist.variable} ${geistMono.variable} ${geist.className}`}
                 >
-                    {children}
-                    <Toaster />
-                </ThemeProvider>
-            </body>
-        </html>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        disableTransitionOnChange
+                    >
+                        {children}
+                        <Toaster />
+                    </ThemeProvider>
+                </body>
+            </html>
+        </ViewTransitions>
     );
 }

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { IconDownload, IconFileDigit } from '@tabler/icons-react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 
 export default function Paper() {
     return (

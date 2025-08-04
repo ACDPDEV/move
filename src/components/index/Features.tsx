@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import PlayerBar from '@/components/index/PlayerBar';
 import PageURL from '@/components/index/PageURL';
 import PlanePreview from '@/components/index/PlanePreview';
