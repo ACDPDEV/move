@@ -89,13 +89,11 @@ function SimulationCard({
                 {showBackButton && (
                     <div className="mb-6 sm:mb-8">
                         <Link
-                            href="/"
+                            href="/simulations/"
                             className="inline-flex items-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors group"
                         >
                             <IconArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                            <span className="text-sm sm:text-base">
-                                Volver a simuladores
-                            </span>
+                            <span className="text-sm sm:text-base">Volver</span>
                         </Link>
                     </div>
                 )}
