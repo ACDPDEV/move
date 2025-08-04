@@ -1,6 +1,6 @@
 function Logos() {
     return (
-        <div className="w-full h-40 border-x border-b border-[#222326] flex flex-row items-center justify-center py-8 gap-8 sm:gap-32">
+        <div className="w-full h-40 bg-[#151618] flex flex-row items-center justify-center py-8 gap-8 sm:gap-32">
             <img
                 src="/sanjuan.avif"
                 alt="San Juan"

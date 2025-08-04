@@ -6,7 +6,7 @@ import Colaborators from '@/components/index/Colaborators';
 
 function Features() {
     return (
-        <section className="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 pt-16 w-full min-h-screen justify-center items-center bg-gradient-to-t from-[#222326] to-[#151618] px-px gap-px [&_h1]:font-semibold [&_h1]:text-xl [&_h1]:text-[#FCFCFD] [&_p]:text-sm [&_p]:font-medium [&_p]:text-[#9A9CAC] [&>div>div]:bg-[#151618] [&>div>div]:p-10 [&>div>div]:flex [&>div>div]:flex-col [&>div>div]:gap-2 [&>div>div]:overflow-hidden [&>div]:flex [&>div]:flex-col [&>div>div]:min-h-84 [&>div]:gap-px [&>div]:h-full">
+        <section className="grid grid-cols-1 sm:grid-cols-2 grid-rows-1 w-full min-h-screen justify-center items-center gap-px [&_h1]:font-semibold [&_h1]:text-xl [&_h1]:text-[#FCFCFD] [&_p]:text-sm [&_p]:font-medium [&_p]:text-[#9A9CAC] [&>div>div]:bg-[#151618] [&>div>div]:p-10 [&>div>div]:flex [&>div>div]:flex-col [&>div>div]:gap-2 [&>div>div]:overflow-hidden [&>div]:flex [&>div]:flex-col [&>div>div]:min-h-84 [&>div]:gap-px [&>div]:h-full">
             <div>
                 <div>
                     <h1>Renderizado en tiempo real</h1>
@@ -38,7 +38,7 @@ function Features() {
                         <Colaborators className="absolute top-1/2 left-1/2 -translate-1/2" />
                     </div>
                 </div>
-                <span className="flex-1 bg-[#151618]" />
+                <span className="flex-1 bg-[#151618] min-h-12" />
             </div>
             <div>
                 <div>
@@ -63,7 +63,7 @@ function Features() {
                         <PageURL className="absolute bottom-0 right-0 scale-150" />
                     </div>
                 </div>
-                <span className="flex-1 bg-[#151618]" />
+                <span className="flex-1 bg-[#151618] w-full min-h-12" />
             </div>
         </section>
     );

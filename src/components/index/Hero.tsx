@@ -10,7 +10,7 @@ import { IconBook, IconChevronRight, IconSearch } from '@tabler/icons-react';
 
 function Hero() {
     return (
-        <section className="relative w-full h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center z-1">
+        <section className="relative w-full h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center z-5">
             <div className="w-full h-auto px-2 sm:px-12 pb-8 [&>*]:w-auto [&>*]:h-full flex flex-row -space-x-6 sm:-space-x-12 justify-center items-center">
                 <M className="M" />
                 <O className="O" />

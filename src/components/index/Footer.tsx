@@ -7,7 +7,7 @@ import EBorder from '../svgs/EBorder';
 
 function Footer() {
     return (
-        <footer className="relative w-full overflow-hidden bg-[#151618] py-12 border-t border-[#222326]">
+        <footer className="relative w-full overflow-hidden bg-[#151618] py-12 border-t border-[#222326] z-5">
             <div className="container mx-auto px-6 z-2">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="col-span-1 sm:col-span-2">
@@ -106,7 +106,7 @@ function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="absolute left-1/2 bottom-0 translate-y-1/2 -translate-x-1/2 w-full h-auto px-2 sm:px-12 pb-8 [&>*]:w-auto [&>*]:h-full [&>*]:text-[#222326] flex flex-row justify-center items-center space-x-2 opacity-50 z-1">
+            <div className="absolute left-1/2 bottom-0 translate-y-1/2 -translate-x-1/2 w-full h-auto px-2 sm:px-12 pb-8 [&>*]:w-auto [&>*]:h-full [&>*]:text-[#222326] flex flex-row justify-center items-center space-x-2 opacity-50 z-1 pointer-events-none">
                 <MBorder />
                 <OBorder />
                 <VBorder />

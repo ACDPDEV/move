@@ -3,7 +3,7 @@ import ColaboratorsList from './ColaboratorsList';
 
 function About() {
     return (
-        <section className="w-full min-h-screen flex flex-col items-center justify-start border-x border-b border-[#222326] px-8 sm:px-36 py-24 gap-10 [&_h1]:font-semibold [&_h1]:text-2xl [&_h1]:text-[#FCFCFD] [&_p]:text-md [&_p]:font-medium [&_p]:text-[#D9D9D9]">
+        <section className="w-full min-h-screen flex flex-col items-center justify-start bg-[#151618] px-8 sm:px-36 py-24 gap-10 [&_h1]:font-semibold [&_h1]:text-2xl [&_h1]:text-[#FCFCFD] [&_p]:text-md [&_p]:font-medium [&_p]:text-[#D9D9D9]">
             <h1>¿Quiénes están detrás de MOVE?</h1>
             <p>
                 Somos un equipo de estudiantes del{' '}

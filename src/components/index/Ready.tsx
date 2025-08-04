@@ -6,7 +6,7 @@ import Line from '../svgs/Line';
 
 function Ready() {
     return (
-        <section className="relative overflow-hidden w-full flex flex-col justify-center items-center gap-16 px-24 py-16 [&_h1]:font-semibold [&_h1]:text-2xl [&_h1]:text-[#FCFCFD] [&_h2]:text-md [&_h2]:font-medium [&_h2]:text-[#D9D9D9] border-x border-[#222326]">
+        <section className="relative overflow-hidden w-full flex flex-col justify-center items-center gap-16 px-24 py-16 bg-[#151618] [&_h1]:font-semibold [&_h1]:text-2xl [&_h1]:text-[#FCFCFD] [&_h2]:text-md [&_h2]:font-medium [&_h2]:text-[#D9D9D9]">
             <div className="flex flex-col gap-2 justify-center items-center z-2">
                 <h1>¿Listo para comenzar?</h1>
                 <h2>Explora nuestro catálogo de simulaciones</h2>
