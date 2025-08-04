@@ -177,6 +177,9 @@ function SimulationCard({
                                 <AspectRatio
                                     ratio={16 / 10}
                                     className="relative overflow-hidden"
+                                    style={{
+                                        viewTransitionName: `CardImage-${simulation.slug}`,
+                                    }}
                                 >
                                     {/* Imagen con efecto de degradado */}
                                     <div className="absolute inset-0">

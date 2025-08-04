@@ -39,6 +39,9 @@ function PreviewCard({
                             <AspectRatio
                                 ratio={16 / 10}
                                 className="relative overflow-hidden"
+                                style={{
+                                    viewTransitionName: `CardImage-${simulation.slug}`,
+                                }}
                             >
                                 <img
                                     src={simulation.image}

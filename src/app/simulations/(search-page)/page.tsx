@@ -1,9 +1,11 @@
 import SimulationsForm from '@/components/simulations/SimulationsForm';
+import Aureola from '@/components/svgs/Aureola';
+import Line from '@/components/svgs/Line';
 
 function Simulations() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-            <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen relative">
+            <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 z-4">
                 <SimulationsForm />
             </div>
         </div>
