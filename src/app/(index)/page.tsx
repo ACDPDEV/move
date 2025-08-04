@@ -11,7 +11,7 @@ function Home() {
             <article className="relative w-full max-w-3xl h-full flex flex-col items-center justify-center">
                 <Hero />
                 <div className="relative flex flex-col w-full h-fit">
-                    <div className="fixed top-1/2 w-full max-w-3xl h-64 bg-gradient-to-t from-transparent via-[#4329AC] to-transparent z-1" />
+                    <div className="fixed top-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-gradient-to-t from-transparent via-[#4329AC] to-transparent z-1" />
                     <div className="w-full h-fit flex flex-col p-px gap-px z-2">
                         <Features />
                         <Logos />
