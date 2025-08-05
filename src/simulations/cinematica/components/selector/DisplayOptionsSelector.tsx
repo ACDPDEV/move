@@ -14,8 +14,14 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { compressDisplay } from '../../utils/encodeAndDecodeDisplay';
 
 function DisplayOptionsSelector() {
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
+
     const {
         position,
         velocity,
@@ -36,6 +42,111 @@ function DisplayOptionsSelector() {
         toggleCoordinates,
         toggleAxes,
     } = useDisplayStore();
+
+    const display = {
+        position: {
+            resultant: position.resultant,
+            components: position.components,
+            angle: position.angle,
+        },
+        velocity: {
+            resultant: velocity.resultant,
+            components: velocity.components,
+            angle: velocity.angle,
+        },
+        acceleration: {
+            resultant: acceleration.resultant,
+            components: acceleration.components,
+            angle: acceleration.angle,
+        },
+        trajectory,
+        coordinates,
+        axes,
+    };
+
+    const onCheckedChangePR = (checked: boolean) => {
+        togglePositionResultant();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangePC = (checked: boolean) => {
+        togglePositionComponents();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangePA = (checked: boolean) => {
+        togglePositionAngle();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeVR = (checked: boolean) => {
+        toggleVelocityResultant();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeVC = (checked: boolean) => {
+        toggleVelocityComponents();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeVA = (checked: boolean) => {
+        toggleVelocityAngle();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeAR = (checked: boolean) => {
+        toggleAccelerationResultant();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeAC = (checked: boolean) => {
+        toggleAccelerationComponents();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeAA = (checked: boolean) => {
+        toggleAccelerationAngle();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeTR = (checked: boolean) => {
+        toggleTrajectory();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeCR = (checked: boolean) => {
+        toggleCoordinates();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const onCheckedChangeAX = (checked: boolean) => {
+        toggleAxes();
+        const params = new URLSearchParams(searchParams);
+        params.set('o', compressDisplay(useDisplayStore.getState().toProps()));
+        replace(`${pathname}?${params.toString()}`);
+    };
 
     return (
         <Popover>
@@ -71,7 +182,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="position.resultant"
-                                    onCheckedChange={togglePositionResultant}
+                                    onCheckedChange={onCheckedChangePR}
                                     checked={position.resultant}
                                 />
                                 <Label htmlFor="position.resultant">
@@ -81,7 +192,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="postion.compontents"
-                                    onCheckedChange={togglePositionComponents}
+                                    onCheckedChange={onCheckedChangePC}
                                     checked={position.components}
                                 />
                                 <Label htmlFor="postion.compontents">
@@ -91,7 +202,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="position.angle"
-                                    onCheckedChange={togglePositionAngle}
+                                    onCheckedChange={onCheckedChangePA}
                                     checked={position.angle}
                                 />
                                 <Label htmlFor="position.angle">Ángulo</Label>
@@ -108,7 +219,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="velocity.resultant"
-                                    onCheckedChange={toggleVelocityResultant}
+                                    onCheckedChange={onCheckedChangeVR}
                                     checked={velocity.resultant}
                                 />
                                 <Label htmlFor="velocity.resultant">
@@ -118,7 +229,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="velocity.compontets"
-                                    onCheckedChange={toggleVelocityComponents}
+                                    onCheckedChange={onCheckedChangeVC}
                                     checked={velocity.components}
                                 />
                                 <Label htmlFor="velocity.compontets">
@@ -128,7 +239,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="velocity.angle"
-                                    onCheckedChange={toggleVelocityAngle}
+                                    onCheckedChange={onCheckedChangeVA}
                                     checked={velocity.angle}
                                 />
                                 <Label htmlFor="velocity.angle">Ángulo</Label>
@@ -145,9 +256,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="acceleration.resultant"
-                                    onCheckedChange={
-                                        toggleAccelerationResultant
-                                    }
+                                    onCheckedChange={onCheckedChangeAR}
                                     checked={acceleration.resultant}
                                 />
                                 <Label htmlFor="acceleration.resultant">
@@ -157,9 +266,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="acceleration.components"
-                                    onCheckedChange={
-                                        toggleAccelerationComponents
-                                    }
+                                    onCheckedChange={onCheckedChangeAC}
                                     checked={acceleration.components}
                                 />
                                 <Label htmlFor="acceleration.components">
@@ -169,7 +276,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="acceleration.angle"
-                                    onCheckedChange={toggleAccelerationAngle}
+                                    onCheckedChange={onCheckedChangeAA}
                                     checked={acceleration.angle}
                                 />
                                 <Label htmlFor="acceleration.angle">
@@ -190,7 +297,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="trajectories"
-                                    onCheckedChange={toggleTrajectory}
+                                    onCheckedChange={onCheckedChangeTR}
                                     checked={trajectory}
                                 />
                                 <Label htmlFor="trajectories">
@@ -200,7 +307,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="coordinates"
-                                    onCheckedChange={toggleCoordinates}
+                                    onCheckedChange={onCheckedChangeCR}
                                     checked={coordinates}
                                 />
                                 <Label htmlFor="coordinates">Coordenadas</Label>
@@ -208,7 +315,7 @@ function DisplayOptionsSelector() {
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="axes"
-                                    onCheckedChange={toggleAxes}
+                                    onCheckedChange={onCheckedChangeAX}
                                     checked={axes}
                                 />
                                 <Label htmlFor="axes">Ejes</Label>

@@ -1,5 +1,26 @@
 import { create } from 'zustand';
 
+interface Display {
+    position: {
+        resultant: boolean;
+        components: boolean;
+        angle: boolean;
+    };
+    velocity: {
+        resultant: boolean;
+        components: boolean;
+        angle: boolean;
+    };
+    acceleration: {
+        resultant: boolean;
+        components: boolean;
+        angle: boolean;
+    };
+    trajectory: boolean;
+    coordinates: boolean;
+    axes: boolean;
+}
+
 type DisplayStore = {
     position: {
         resultant: boolean;
@@ -31,6 +52,8 @@ type DisplayStore = {
     toggleTrajectory: () => void;
     toggleCoordinates: () => void;
     toggleAxes: () => void;
+    setDisplay: (display: Display) => void;
+    toProps: () => Display;
 };
 
 export const useDisplayStore = create<DisplayStore>((set, get) => ({
@@ -96,4 +119,27 @@ export const useDisplayStore = create<DisplayStore>((set, get) => ({
     toggleTrajectory: () => set({ trajectory: !get().trajectory }),
     toggleCoordinates: () => set({ coordinates: !get().coordinates }),
     toggleAxes: () => set({ axes: !get().axes }),
+    setDisplay: (display) => set(display),
+    toProps: () => {
+        return {
+            position: {
+                resultant: get().position.resultant,
+                components: get().position.components,
+                angle: get().position.angle,
+            },
+            velocity: {
+                resultant: get().velocity.resultant,
+                components: get().velocity.components,
+                angle: get().velocity.angle,
+            },
+            acceleration: {
+                resultant: get().acceleration.resultant,
+                components: get().acceleration.components,
+                angle: get().acceleration.angle,
+            },
+            trajectory: get().trajectory,
+            coordinates: get().coordinates,
+            axes: get().axes,
+        };
+    },
 }));

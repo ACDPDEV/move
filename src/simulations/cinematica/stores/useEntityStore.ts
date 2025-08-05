@@ -30,32 +30,7 @@ type EntityStore = {
 };
 
 const useEntityStore = create<EntityStore>((set, get) => ({
-    entities: [
-        new Entity({
-            position: { x: 0.1, y: 0.3 },
-            velocity: { x: 0.1, y: 0 },
-            acceleration: { x: 0, y: 0 },
-            radius: 0.05,
-            shape: 'circle',
-            color: '#FF0039',
-        }),
-        new Entity({
-            position: { x: 0.3, y: 0.3 },
-            velocity: { x: 0, y: 0.1 },
-            acceleration: { x: 0, y: 0 },
-            radius: 0.05,
-            shape: 'triangle',
-            color: '#00FF66',
-        }),
-        new Entity({
-            position: { x: 0.5, y: 0.3 },
-            velocity: { x: 0.1, y: 0.1 },
-            acceleration: { x: 0, y: 0 },
-            radius: 0.05,
-            shape: 'square',
-            color: '#3F5FFF',
-        }),
-    ],
+    entities: [],
     selectedEntityId: null,
 
     updateEntities: (entities) => set({ entities }),

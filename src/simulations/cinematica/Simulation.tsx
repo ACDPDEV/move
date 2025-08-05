@@ -14,9 +14,30 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useSearchParams } from 'next/navigation';
+import { useTimeStore } from './stores/useTimeStore';
+import { useEffect } from 'react';
+import { useEntityStore } from './stores/useEntityStore';
+import { decodeCompact, decompressData } from './utils/encodeAndDecodeEntities';
+import { useDisplayStore } from './stores/useDisplayStore';
+import { decompressDisplay } from './utils/encodeAndDecodeDisplay';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
+
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const setTime = useTimeStore.getState().updateTime;
+        const setEntities = useEntityStore.getState().updateEntities;
+        const setDisplay = useDisplayStore.getState().setDisplay;
+
+        const data = decompressData(decodeCompact(searchParams.get('d') ?? ''));
+
+        setEntities(data);
+        setTime(parseFloat(searchParams.get('t') ?? '0'));
+        setDisplay(decompressDisplay(searchParams.get('o') ?? ''));
+    }, []);
 
     return (
         <>
