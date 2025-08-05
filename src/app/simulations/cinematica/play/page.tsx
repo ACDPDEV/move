@@ -1,9 +1,21 @@
-import CinematicaSimulation from "@/simulations/cinematica/Simulation";
+// app/simulations/cinematica/play/page.jsx
+import { Suspense } from 'react';
+import CinematicaSimulation from '@/simulations/cinematica/Simulation';
 
-function CinematicaSimulationPlay() {
+function LoadingFallback() {
   return (
-    <CinematicaSimulation />
+    <div className="w-full h-screen flex items-center justify-center bg-black">
+      <div className="text-white">
+        Cargando simulación...
+      </div>
+    </div>
   );
 }
 
-export default CinematicaSimulationPlay;
+export default function PlayPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <CinematicaSimulation />
+    </Suspense>
+  );
+}
