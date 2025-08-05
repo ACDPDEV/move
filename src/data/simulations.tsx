@@ -24,7 +24,8 @@ const simulations: Simulation[] = [
         area: ['Mecánica', 'Cinemática'],
         image: '/mru.avif',
         previewLink: '/simulations/cinematica/mru',
-        playLink: '/simulations/cinematica/play',
+        playLink:
+            '/simulations/cinematica/play?t=0&d=yy0X5x0X5x0X5x0x0x0x0X05x~s~x~wbdc201~Yxy0X5x0x1x0x0x0x0X05x~t~x~w1bb715~Yxy0X5x-0X5x0X25x0x0x0x0X05x~c~x~wf5ffa7~YY',
         isAvaible: true,
         difficulty: 'Básico',
         rating: 4.6,
@@ -75,7 +76,8 @@ const simulations: Simulation[] = [
         area: ['Mecánica', 'Cinemática'],
         image: '/mruv.avif',
         previewLink: '/simulations/cinematica/mruv',
-        playLink: '/simulations/cinematica/play',
+        playLink:
+            '/simulations/cinematica/play?t=0&d=yy0X5x0X5x0X5x0x0X1x0x0X05x~s~x~wbdc201~Yxy0X5x0x1x0x-0X5x0x0X05x~t~x~w1bb715~Yxy0X5x-0X5x0X25x0x0X5x0x0X05x~c~x~wf5ffa7~YY',
         isAvaible: true,
         difficulty: 'Intermedio',
         rating: 4.7,
@@ -130,7 +132,8 @@ const simulations: Simulation[] = [
         area: ['Mecánica', 'Cinemática', 'Gravitación'],
         image: '/mvcl.avif',
         previewLink: '/simulations/cinematica/mvcl',
-        playLink: '/simulations/cinematica/play',
+        playLink:
+            '/simulations/cinematica/play?t=0&d=yy1X5x0x0x0x0x-9X81x0X05x~s~x~w518390~Yxy1x0x0x-3x0x-9X81x0X05x~t~x~wdd4646~Yxy0X5x0x0x3x0x-9X81x0X05x~c~x~w3d82db~YY',
         isAvaible: true,
         difficulty: 'Intermedio',
         rating: 4.5,
@@ -183,7 +186,8 @@ const simulations: Simulation[] = [
         area: ['Mecánica', 'Cinemática'],
         image: '/mp.avif',
         previewLink: '/simulations/cinematica/mp',
-        playLink: '/simulations/cinematica/play',
+        playLink:
+            '/simulations/cinematica/play?t=0&d=yy0X5x0x3x3x0x-9X81x0X05x~c~x~w3d82db~YY',
         isAvaible: true,
         difficulty: 'Avanzado',
         rating: 4.9,
