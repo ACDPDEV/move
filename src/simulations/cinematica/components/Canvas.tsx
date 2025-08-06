@@ -7,7 +7,7 @@ import { useTheme } from 'next-themes';
 import { drawOriginPoint } from '../draws/drawOriginPoint';
 import { drawAxes } from '../draws/drawAxes';
 import { drawEntities } from '../draws/drawEntities';
-import { drawGrids } from '../draws/drawGrids';
+import { drawGridLabels, drawGrids } from '../draws/drawGrids';
 import { usePlaneStore } from '../stores/usePlaneStore';
 
 interface CanvasProps {
@@ -73,6 +73,7 @@ function Canvas({ style, className }: CanvasProps) {
         drawGrids(ctx, theme === 'dark');
         drawOriginPoint(ctx, theme === 'dark');
         drawAxes(ctx, theme === 'dark');
+        drawGridLabels(ctx, theme === 'dark');
         drawEntities(ctx, theme === 'dark');
 
         // Continuar el loop
