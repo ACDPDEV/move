@@ -5,12 +5,14 @@ type PlaneStore = {
     scale: number;
     minScale: number;
     maxScale: number;
-    minGridsWidthInScreen: number;
-    maxGridsWidthInScreen: number;
     zoomSensitivity: number;
     moveSensitivity: number;
     setPosition: (position: { x: number; y: number }) => void;
     setScale: (scale: number) => void;
+    setMinScale: (minScale: number) => void;
+    setMaxScale: (maxScale: number) => void;
+    setZoomSensitivity: (zoomSensitivity: number) => void;
+    setMoveSensitivity: (moveSensitivity: number) => void;
 };
 
 const usePlaneStore = create<PlaneStore>((set) => ({
@@ -18,12 +20,16 @@ const usePlaneStore = create<PlaneStore>((set) => ({
     scale: 300,
     minScale: 0.00001,
     maxScale: 100000000,
-    minGridsWidthInScreen: 3,
-    maxGridsWidthInScreen: 10,
     zoomSensitivity: 0.1,
     moveSensitivity: 1,
     setPosition: (position) => set({ position: position }),
     setScale: (scale) => set({ scale: scale }),
+    setMinScale: (minScale) => set({ minScale: minScale }),
+    setMaxScale: (maxScale) => set({ maxScale: maxScale }),
+    setZoomSensitivity: (zoomSensitivity) =>
+        set({ zoomSensitivity: zoomSensitivity }),
+    setMoveSensitivity: (moveSensitivity) =>
+        set({ moveSensitivity: moveSensitivity }),
 }));
 
 export { usePlaneStore, type PlaneStore };
