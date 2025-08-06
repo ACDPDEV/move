@@ -10,7 +10,7 @@ function gapFactor(number: number): number {
     }
     const match = decimalPart.match(/^0+/);
     const count = match ? match[0].length : 0;
-    return count;
+    return count * -1;
 }
 
 function getGap(length: number, scale: number): number {
