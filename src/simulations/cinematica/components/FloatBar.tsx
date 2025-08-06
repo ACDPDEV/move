@@ -20,10 +20,15 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { compressData, encodeCompact } from '../utils/encodeAndDecodeEntities';
 
 function FloatBar({ className }: { className?: string }) {
     const entities = useEntitySummaries();
     const reversedEntities = [...entities].reverse();
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
 
     return (
         <div
@@ -41,7 +46,19 @@ function FloatBar({ className }: { className?: string }) {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Button
-                        onClick={() => useEntityStore.getState().addEntity()}
+                        onClick={() => {
+                            useEntityStore.getState().addEntity();
+                            const params = new URLSearchParams(searchParams);
+                            params.set(
+                                'd',
+                                encodeCompact(
+                                    compressData(
+                                        useEntityStore.getState().entities,
+                                    ),
+                                ),
+                            );
+                            replace(`${pathname}?${params.toString()}`);
+                        }}
                         size="icon"
                         variant="outline"
                         className="rounded-full flex-shrink-0 mb-1 text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500"
