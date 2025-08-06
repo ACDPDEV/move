@@ -34,78 +34,36 @@ function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
             ? getGap(height, plane.scale)
             : getGap(width, plane.scale);
 
-    // Prevenir bucles infinitos
-    if (gap <= 0.1) {
-        return;
-    }
-
-    const pointer = { x: pX, y: pY };
-
     ctx.strokeStyle = dark ? '#999' : '#777';
     ctx.lineWidth = 0.5;
 
-    let lineCount = 0;
+    // Calcular posiciones de inicio usando módulo
+    let startX = pX % gap;
+    let startY = pY % gap;
 
-    // Líneas verticales hacia la derecha
-    while (pointer.x <= width) {
-        ctx.beginPath();
-        ctx.moveTo(pointer.x, 0);
-        ctx.lineTo(pointer.x, height);
-        ctx.stroke();
-        pointer.x += gap;
-        lineCount++;
-        if (lineCount > 1000) {
-            // Safety break
-            console.error('Too many lines - breaking loop');
-            break;
+    // Si el módulo es negativo, ajustar para que esté en rango positivo
+    if (startX < 0) startX += gap;
+    if (startY < 0) startY += gap;
+
+    // Líneas verticales
+    // Empezar desde antes del borde izquierdo y terminar después del derecho
+    for (let x = startX - gap; x <= width + gap; x += gap) {
+        if (x >= 0 && x <= width) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, height);
+            ctx.stroke();
         }
     }
 
-    // Reset x position para ir hacia la izquierda
-    pointer.x = pX - gap;
-    while (pointer.x >= 0) {
-        ctx.beginPath();
-        ctx.moveTo(pointer.x, 0);
-        ctx.lineTo(pointer.x, height);
-        ctx.stroke();
-        pointer.x -= gap;
-        lineCount++;
-        if (lineCount > 1000) {
-            // Safety break
-            console.error('Too many lines - breaking loop');
-            break;
-        }
-    }
-
-    // Reset y position y líneas horizontales hacia abajo
-    pointer.y = pY;
-    while (pointer.y <= height) {
-        ctx.beginPath();
-        ctx.moveTo(0, pointer.y);
-        ctx.lineTo(width, pointer.y);
-        ctx.stroke();
-        pointer.y += gap;
-        lineCount++;
-        if (lineCount > 1000) {
-            // Safety break
-            console.error('Too many lines - breaking loop');
-            break;
-        }
-    }
-
-    // Reset y position para ir hacia arriba
-    pointer.y = pY - gap;
-    while (pointer.y >= 0) {
-        ctx.beginPath();
-        ctx.moveTo(0, pointer.y);
-        ctx.lineTo(width, pointer.y);
-        ctx.stroke();
-        pointer.y -= gap;
-        lineCount++;
-        if (lineCount > 1000) {
-            // Safety break
-            console.error('Too many lines - breaking loop');
-            break;
+    // Líneas horizontales
+    // Empezar desde antes del borde superior y terminar después del inferior
+    for (let y = startY - gap; y <= height + gap; y += gap) {
+        if (y >= 0 && y <= height) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
+            ctx.stroke();
         }
     }
 }
