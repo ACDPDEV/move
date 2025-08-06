@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { useEntityStore } from './useEntityStore';
 
 type TimeStore = {
     time: number;
@@ -45,9 +44,6 @@ const useTimeStore = create<TimeStore>((set, get) => ({
     pause: () => set({ isPlaying: false }),
     togglePlayer: () => set({ isPlaying: !get().isPlaying }),
     reset: () => {
-        const timeBeforeReset = get().time;
-        const updateAllEntities = useEntityStore.getState().updateAllEntities;
-        updateAllEntities(-timeBeforeReset * get().speed);
         set({ time: 0, isPlaying: false });
     },
     updateSpeed: (speed) => set({ speed: Math.max(0.1, Math.min(3, speed)) }),

@@ -33,6 +33,9 @@ class Entity {
     position: Vector2D;
     velocity: Vector2D;
     acceleration: Vector2D;
+    initialPosition: { x: number; y: number };
+    initialVelocity: { x: number; y: number };
+    initialAcceleration: { x: number; y: number };
     radius: number;
     shape: 'circle' | 'square' | 'triangle';
     color: string;
@@ -51,6 +54,9 @@ class Entity {
         this.position = new Vector2D(position.x, position.y);
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);
+        this.initialPosition = position;
+        this.initialVelocity = velocity;
+        this.initialAcceleration = acceleration;
         this.radius = radius;
         this.shape = shape;
         this.color = color;
@@ -455,6 +461,30 @@ class Entity {
         }
     }
     drawAccelerationVectorAngle(ctx: CanvasRenderingContext2D): void {}
+
+    setInitialProperties() {
+        this.initialPosition = { x: this.position.x, y: this.position.y };
+        this.initialVelocity = { x: this.velocity.x, y: this.velocity.y };
+        this.initialAcceleration = {
+            x: this.acceleration.x,
+            y: this.acceleration.y,
+        };
+    }
+
+    resetProperties() {
+        this.position = new Vector2D(
+            this.initialPosition.x,
+            this.initialPosition.y,
+        );
+        this.velocity = new Vector2D(
+            this.initialVelocity.x,
+            this.initialVelocity.y,
+        );
+        this.acceleration = new Vector2D(
+            this.initialAcceleration.x,
+            this.initialAcceleration.y,
+        );
+    }
 
     toString(): string {
         return `Movil {

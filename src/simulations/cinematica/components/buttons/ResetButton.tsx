@@ -18,9 +18,10 @@ function ResetButton() {
 
     const onClick = () => {
         reset();
-        useEntityStore
-            .getState()
-            .entities.forEach((entity) => entity.resetTrajectory());
+        useEntityStore.getState().entities.forEach((entity) => {
+            entity.resetProperties();
+            entity.resetTrajectory();
+        });
         const params = new URLSearchParams(searchParams);
         params.set('t', '0');
         replace(`${pathname}?${params.toString()}`);
