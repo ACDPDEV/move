@@ -23,7 +23,7 @@ const usePlaneStore = create<PlaneStore>((set) => ({
     maxScale: 1000,
     minGridsWidthInScreen: 3,
     maxGridsWidthInScreen: 10,
-    zoomSensitivity: 0.001,
+    zoomSensitivity: 0.1,
     moveSensitivity: 1,
     setPosition: (position) => set({ position: position }),
     setScale: (scale) => set({ scale: scale }),

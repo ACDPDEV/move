@@ -102,7 +102,7 @@ function listenPointerEvents($canvas: HTMLCanvasElement) {
         event.preventDefault();
         const PlaneStore = usePlaneStore.getState();
 
-        const zoomIntensity = PlaneStore.zoomSensitivity * PlaneStore.scale;
+        const zoomIntensity = PlaneStore.zoomSensitivity;
         const wheelDir = event.deltaY < 0 ? 1 : -1;
         const zoom = Math.exp(wheelDir * zoomIntensity);
         const newScale = Math.max(
