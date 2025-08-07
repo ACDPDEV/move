@@ -17,11 +17,11 @@ function ResetButton() {
     const reset = useTimeStore((s) => s.reset);
 
     const onClick = () => {
-        reset();
         useEntityStore.getState().entities.forEach((entity) => {
-            entity.resetProperties();
+            entity.update(-useTimeStore.getState().time);
             entity.resetTrajectory();
         });
+        reset();
         const params = new URLSearchParams(searchParams);
         params.set('t', '0');
         replace(`${pathname}?${params.toString()}`);
