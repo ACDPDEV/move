@@ -70,7 +70,7 @@ const useTimeStore = create<TimeStore>((set, get) => ({
         const fps = 1 / delta;
         let time = get().time;
         if (get().isPlaying) {
-            time += delta;
+            time += delta * get().speed;
         }
         set({ delta: delta, fps: fps, time: time, lastTimeUpdate: now });
     },
