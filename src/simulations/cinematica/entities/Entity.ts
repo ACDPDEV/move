@@ -12,7 +12,6 @@ interface EntityProps {
     color: string;
 }
 
-// Tipo para las opciones de visualización de vectores
 type VectorDisplayOptions = {
     resultant: boolean;
     components: boolean;
@@ -33,13 +32,10 @@ class Entity {
     position: Vector2D;
     velocity: Vector2D;
     acceleration: Vector2D;
-    initialPosition: { x: number; y: number };
-    initialVelocity: { x: number; y: number };
-    initialAcceleration: { x: number; y: number };
     radius: number;
     shape: 'circle' | 'square' | 'triangle';
     color: string;
-    private trajectory: { x: number; y: number }[] = [];
+    private trajectory: Vector2D[] = [];
 
     constructor({
         id,
@@ -54,35 +50,91 @@ class Entity {
         this.position = new Vector2D(position.x, position.y);
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);
-        this.initialPosition = position;
-        this.initialVelocity = velocity;
-        this.initialAcceleration = acceleration;
         this.radius = radius;
         this.shape = shape;
         this.color = color;
-        this.trajectory = [this.position];
+        this.trajectory = [this.position.copy()];
+    }
+
+    private drawArrow(
+        ctx: CanvasRenderingContext2D,
+        fromX: number,
+        fromY: number,
+        toX: number,
+        toY: number,
+        lineWidth: number,
+    ) {
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+        const headLen = 10;
+        ctx.beginPath();
+        ctx.moveTo(fromX, fromY);
+        ctx.lineTo(toX, toY);
+        ctx.lineWidth = lineWidth;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(toX, toY);
+        ctx.lineTo(
+            toX - headLen * Math.cos(angle - Math.PI / 6),
+            toY - headLen * Math.sin(angle - Math.PI / 6),
+        );
+        ctx.lineTo(
+            toX - headLen * Math.cos(angle + Math.PI / 6),
+            toY - headLen * Math.sin(angle + Math.PI / 6),
+        );
+        ctx.lineTo(toX, toY);
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    private drawAngle(
+        ctx: CanvasRenderingContext2D,
+        cx: number,
+        cy: number,
+        vecX: number,
+        vecY: number,
+    ) {
+        // Ángulo trigonométrico real: sin invertir eje Y
+        const rawRad = Math.atan2(vecY, vecX); // rango -π a π
+        const deg = rawRad * (180 / Math.PI);
+        const rounded = Math.round(deg * 10) / 10;
+        const degStr = Number.isInteger(rounded)
+            ? rounded.toString()
+            : rounded.toFixed(1);
+
+        const radius = 20;
+        ctx.beginPath();
+        // Arco de 0 a rawRad, sentido anticlockwise si rawRad negativo
+        ctx.arc(cx, cy, radius, 0, -rawRad, rawRad > 0);
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.closePath();
+
+        // Texto en medio del arco, mostrando signo
+        const mid = rawRad / 2;
+        const textX = cx + (radius + 15) * Math.cos(mid);
+        const textY = cy + (radius + 15) * Math.sin(mid) * -1;
+        ctx.fillStyle = this.color;
+        ctx.font = '12px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+            `${rounded >= 0 ? '' : '-'}${Math.abs(Number(degStr)).toFixed(1)}°`,
+            textX,
+            textY,
+        );
     }
 
     update(deltaTime: number): void {
         if (deltaTime === 0) return;
-
-        // Guardar posición actual para la trayectoria
         this.trajectory.push(this.position.copy());
-
-        // Limitar el tamaño de la trayectoria para optimización
-        if (this.trajectory.length > 1000) {
-            this.trajectory.shift();
-        }
-
-        // Actualización de posición usando ecuaciones cinemáticas
+        if (this.trajectory.length > 1000) this.trajectory.shift();
         this.position.x +=
             this.velocity.x * deltaTime +
-            this.acceleration.x * deltaTime * deltaTime * 0.5;
+            0.5 * this.acceleration.x * deltaTime * deltaTime;
         this.position.y +=
             this.velocity.y * deltaTime +
-            this.acceleration.y * deltaTime * deltaTime * 0.5;
-
-        // Actualización de velocidad
+            0.5 * this.acceleration.y * deltaTime * deltaTime;
         this.velocity.x += this.acceleration.x * deltaTime;
         this.velocity.y += this.acceleration.y * deltaTime;
     }
@@ -90,429 +142,236 @@ class Entity {
     draw(ctx: CanvasRenderingContext2D, borderColor?: string): void {
         const plane = usePlaneStore.getState();
         const { width, height } = ctx.canvas;
-
         const eX = (this.position.x + plane.position.x) * plane.scale;
         const eY = (this.position.y + plane.position.y) * plane.scale * -1;
         const eRadius = this.radius * plane.scale;
 
         if (
-            eX + eRadius >= 0 &&
-            eX - eRadius <= width &&
-            eY + eRadius >= 0 &&
-            eY - eRadius <= height
-        ) {
-            ctx.beginPath();
-            if (borderColor) {
-                ctx.strokeStyle = borderColor;
-                ctx.lineWidth = 2;
-                ctx.lineJoin = 'round';
-            }
+            eX + eRadius < 0 ||
+            eX - eRadius > width ||
+            eY + eRadius < 0 ||
+            eY - eRadius > height
+        )
+            return;
 
-            const corner = eRadius * 0.15;
-
-            if (this.shape === 'circle') {
-                ctx.arc(eX, eY, eRadius, 0, Math.PI * 2);
-            } else if (this.shape === 'square') {
-                const x0 = eX - eRadius;
-                const y0 = eY - eRadius;
-                const size = eRadius * 2;
-                ctx.moveTo(x0 + corner, y0);
-                ctx.lineTo(x0 + size - corner, y0);
-                ctx.arcTo(x0 + size, y0, x0 + size, y0 + corner, corner);
-                ctx.lineTo(x0 + size, y0 + size - corner);
-                ctx.arcTo(
-                    x0 + size,
-                    y0 + size,
-                    x0 + size - corner,
-                    y0 + size,
-                    corner,
-                );
-                ctx.lineTo(x0 + corner, y0 + size);
-                ctx.arcTo(x0, y0 + size, x0, y0 + size - corner, corner);
-                ctx.lineTo(x0, y0 + corner);
-                ctx.arcTo(x0, y0, x0 + corner, y0, corner);
-                ctx.closePath();
-            } else if (this.shape === 'triangle') {
-                // Puntos del triángulo
-                const p1 = [eX, eY - eRadius]; // Vértice superior
-                const p2 = [eX + eRadius, eY + eRadius]; // Vértice inferior derecho
-                const p3 = [eX - eRadius, eY + eRadius]; // Vértice inferior izquierdo
-
-                // Calcular puntos para las esquinas redondeadas
-                // Para cada lado, necesitamos los puntos donde comienzan y terminan las curvas
-
-                // Lado 1 (p1 a p2)
-                const d12 = Math.sqrt(
-                    (p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2,
-                );
-                const ratio12 = corner / d12;
-                const start12 = [
-                    p1[0] + (p2[0] - p1[0]) * ratio12,
-                    p1[1] + (p2[1] - p1[1]) * ratio12,
-                ];
-                const end12 = [
-                    p2[0] - (p2[0] - p1[0]) * ratio12,
-                    p2[1] - (p2[1] - p1[1]) * ratio12,
-                ];
-
-                // Lado 2 (p2 a p3)
-                const d23 = Math.sqrt(
-                    (p3[0] - p2[0]) ** 2 + (p3[1] - p2[1]) ** 2,
-                );
-                const ratio23 = corner / d23;
-                const start23 = [
-                    p2[0] + (p3[0] - p2[0]) * ratio23,
-                    p2[1] + (p3[1] - p2[1]) * ratio23,
-                ];
-                const end23 = [
-                    p3[0] - (p3[0] - p2[0]) * ratio23,
-                    p3[1] - (p3[1] - p2[1]) * ratio23,
-                ];
-
-                // Lado 3 (p3 a p1)
-                const d31 = Math.sqrt(
-                    (p1[0] - p3[0]) ** 2 + (p1[1] - p3[1]) ** 2,
-                );
-                const ratio31 = corner / d31;
-                const start31 = [
-                    p3[0] + (p1[0] - p3[0]) * ratio31,
-                    p3[1] + (p1[1] - p3[1]) * ratio31,
-                ];
-                const end31 = [
-                    p1[0] - (p1[0] - p3[0]) * ratio31,
-                    p1[1] - (p1[1] - p3[1]) * ratio31,
-                ];
-
-                // Dibujar el triángulo con esquinas redondeadas
-                ctx.moveTo(start12[0], start12[1]);
-                ctx.lineTo(end12[0], end12[1]);
-                ctx.arcTo(p2[0], p2[1], start23[0], start23[1], corner);
-                ctx.lineTo(end23[0], end23[1]);
-                ctx.arcTo(p3[0], p3[1], start31[0], start31[1], corner);
-                ctx.lineTo(end31[0], end31[1]);
-                ctx.arcTo(p1[0], p1[1], start12[0], start12[1], corner);
-                ctx.closePath();
-            }
-
-            ctx.fillStyle = this.color;
-            ctx.fill();
-
-            if (borderColor) {
-                ctx.stroke();
-            }
+        ctx.beginPath();
+        if (borderColor) {
+            ctx.strokeStyle = borderColor;
+            ctx.lineWidth = 2;
+            ctx.lineJoin = 'round';
         }
+        const corner = eRadius * 0.15;
+        if (this.shape === 'circle') {
+            ctx.arc(eX, eY, eRadius, 0, 2 * Math.PI);
+        } else if (this.shape === 'square') {
+            const x0 = eX - eRadius;
+            const y0 = eY - eRadius;
+            const size = eRadius * 2;
+            ctx.moveTo(x0 + corner, y0);
+            ctx.lineTo(x0 + size - corner, y0);
+            ctx.arcTo(x0 + size, y0, x0 + size, y0 + corner, corner);
+            ctx.lineTo(x0 + size, y0 + size - corner);
+            ctx.arcTo(
+                x0 + size,
+                y0 + size,
+                x0 + size - corner,
+                y0 + size,
+                corner,
+            );
+            ctx.lineTo(x0 + corner, y0 + size);
+            ctx.arcTo(x0, y0 + size, x0, y0 + size - corner, corner);
+            ctx.lineTo(x0, y0 + corner);
+            ctx.arcTo(x0, y0, x0 + corner, y0, corner);
+            ctx.closePath();
+        } else {
+            const p1 = [eX, eY - eRadius];
+            const p2 = [eX + eRadius, eY + eRadius];
+            const p3 = [eX - eRadius, eY + eRadius];
+            const compute = (a: number[], b: number[]) => {
+                const d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+                const r = corner / d;
+                return [
+                    [a[0] + (b[0] - a[0]) * r, a[1] + (b[1] - a[1]) * r],
+                    [b[0] - (b[0] - a[0]) * r, b[1] - (b[1] - a[1]) * r],
+                ];
+            };
+            const [s12, e12] = compute(p1, p2);
+            const [s23, e23] = compute(p2, p3);
+            const [s31, e31] = compute(p3, p1);
+            ctx.moveTo(s12[0], s12[1]);
+            ctx.lineTo(e12[0], e12[1]);
+            ctx.arcTo(p2[0], p2[1], s23[0], s23[1], corner);
+            ctx.lineTo(e23[0], e23[1]);
+            ctx.arcTo(p3[0], p3[1], s31[0], s31[1], corner);
+            ctx.lineTo(e31[0], e31[1]);
+            ctx.arcTo(p1[0], p1[1], s12[0], s12[1], corner);
+            ctx.closePath();
+        }
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        if (borderColor) ctx.stroke();
     }
 
     drawTrajectory(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
-
         ctx.beginPath();
         ctx.strokeStyle = this.color;
         ctx.globalAlpha = 0.6;
         ctx.lineWidth = 1;
-
-        // Convertir primera posición de la trayectoria
-        const firstPos = this.trajectory[0];
-        let absX = (firstPos.x + plane.position.x) * plane.scale;
-        let absY = (firstPos.y + plane.position.y) * plane.scale * -1;
-        ctx.moveTo(absX, absY);
-
-        // Dibujar el resto de la trayectoria
+        let x = (this.trajectory[0].x + plane.position.x) * plane.scale;
+        let y = (this.trajectory[0].y + plane.position.y) * plane.scale * -1;
+        ctx.moveTo(x, y);
         for (let i = 1; i < this.trajectory.length; i++) {
-            const pos = this.trajectory[i];
-            absX = (pos.x + plane.position.x) * plane.scale;
-            absY = (pos.y + plane.position.y) * plane.scale * -1;
-            ctx.lineTo(absX, absY);
+            const p = this.trajectory[i];
+            x = (p.x + plane.position.x) * plane.scale;
+            y = (p.y + plane.position.y) * plane.scale * -1;
+            ctx.lineTo(x, y);
         }
-
         ctx.stroke();
-        ctx.globalAlpha = 1.0;
+        ctx.globalAlpha = 1;
         ctx.closePath();
     }
 
     resetTrajectory(): void {
-        this.trajectory = [this.position];
+        this.trajectory = [this.position.copy()];
     }
 
     drawPositionVectorResultant(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
-        const { width, height } = ctx.canvas;
-
-        const [pX, pY] = [
-            plane.position.x * plane.scale,
-            plane.position.y * plane.scale * -1,
-        ];
-
-        const [eX, eY] = [
-            (this.position.x + plane.position.x) * plane.scale,
-            (this.position.y + plane.position.y) * plane.scale * -1,
-        ];
-
-        if (
-            eX >= 0 ||
-            eX <= width ||
-            eY >= 0 ||
-            eY <= height ||
-            pX >= 0 ||
-            pX <= width ||
-            pY >= 0 ||
-            pY <= height
-        ) {
-            ctx.beginPath();
-            ctx.moveTo(pX, pY);
-            ctx.lineTo(eX, eY);
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.closePath();
-        }
+        const fromX = plane.position.x * plane.scale;
+        const fromY = plane.position.y * plane.scale * -1;
+        const toX = (this.position.x + plane.position.x) * plane.scale;
+        const toY = (this.position.y + plane.position.y) * plane.scale * -1;
+        ctx.strokeStyle = this.color;
+        ctx.fillStyle = this.color;
+        this.drawArrow(ctx, fromX, fromY, toX, toY, 2);
     }
 
     drawPositionVectorComponents(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
-        const { width, height } = ctx.canvas;
-
-        const [pX, pY] = [
-            plane.position.x * plane.scale,
-            plane.position.y * plane.scale * -1,
-        ];
-
-        const [eX, eY] = [
-            (this.position.x + plane.position.x) * plane.scale,
-            (this.position.y + plane.position.y) * plane.scale * -1,
-        ];
-
-        if (
-            eX >= 0 ||
-            eX <= width ||
-            eY >= 0 ||
-            eY <= height ||
-            pX >= 0 ||
-            pX <= width ||
-            pY >= 0 ||
-            pY <= height
-        ) {
-            ctx.beginPath();
-            ctx.moveTo(pX, pY);
-            ctx.lineTo(eX, pY);
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.closePath();
-
-            ctx.beginPath();
-            ctx.moveTo(pX, pY);
-            ctx.lineTo(pX, eY);
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.closePath();
-        }
+        const fromX = plane.position.x * plane.scale;
+        const fromY = plane.position.y * plane.scale * -1;
+        const toX = (this.position.x + plane.position.x) * plane.scale;
+        const toY = (this.position.y + plane.position.y) * plane.scale * -1;
+        ctx.strokeStyle = this.color;
+        ctx.fillStyle = this.color;
+        this.drawArrow(ctx, fromX, fromY, toX, fromY, 1);
+        this.drawArrow(ctx, fromX, fromY, fromX, toY, 1);
     }
 
-    drawPositionVectorAngle(ctx: CanvasRenderingContext2D): void {}
+    drawPositionVectorAngle(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const cx = plane.position.x * plane.scale;
+        const cy = plane.position.y * plane.scale * -1;
+        this.drawAngle(
+            ctx,
+            cx,
+            cy,
+            this.position.x * plane.scale,
+            this.position.y * plane.scale,
+        );
+    }
 
     drawVelocityVectorResultant(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
-        const { width, height } = ctx.canvas;
-
-        const [eX, eY] = [
-            (this.position.x + plane.position.x) * plane.scale,
-            (this.position.y + plane.position.y) * plane.scale * -1,
-        ];
-
-        const [vX, vY] = [
-            eX + this.velocity.x * plane.scale,
-            eY + this.velocity.y * plane.scale * -1,
-        ];
-
-        if (
-            eX >= 0 ||
-            eX <= width ||
-            eY >= 0 ||
-            eY <= height ||
-            vX >= 0 ||
-            vX <= width ||
-            vY >= 0 ||
-            vY <= height
-        ) {
-            ctx.beginPath();
-            ctx.moveTo(eX, eY);
-            ctx.lineTo(vX, vY);
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.closePath();
-        }
+        const sx = (this.position.x + plane.position.x) * plane.scale;
+        const sy = (this.position.y + plane.position.y) * plane.scale * -1;
+        const ex = sx + this.velocity.x * plane.scale;
+        const ey = sy + this.velocity.y * plane.scale * -1;
+        ctx.strokeStyle = this.color;
+        ctx.fillStyle = this.color;
+        this.drawArrow(ctx, sx, sy, ex, ey, 2);
     }
 
     drawVelocityVectorComponents(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
-        const { width, height } = ctx.canvas;
-
-        const [eX, eY] = [
-            (this.position.x + plane.position.x) * plane.scale,
-            (this.position.y + plane.position.y) * plane.scale * -1,
-        ];
-
-        const [vX, vY] = [
-            eX + this.velocity.x * plane.scale,
-            eY + this.velocity.y * plane.scale * -1,
-        ];
-
-        if (
-            eX >= 0 ||
-            eX <= width ||
-            eY >= 0 ||
-            eY <= height ||
-            vX >= 0 ||
-            vX <= width ||
-            vY >= 0 ||
-            vY <= height
-        ) {
-            ctx.beginPath();
-            ctx.moveTo(eX, eY);
-            ctx.lineTo(vX, eY);
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.closePath();
-
-            ctx.beginPath();
-            ctx.moveTo(eX, eY);
-            ctx.lineTo(eX, vY);
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.closePath();
-        }
+        const sx = (this.position.x + plane.position.x) * plane.scale;
+        const sy = (this.position.y + plane.position.y) * plane.scale * -1;
+        const ex = sx + this.velocity.x * plane.scale;
+        const ey = sy + this.velocity.y * plane.scale * -1;
+        ctx.strokeStyle = this.color;
+        ctx.fillStyle = this.color;
+        this.drawArrow(ctx, sx, sy, ex, sy, 1);
+        this.drawArrow(ctx, sx, sy, sx, ey, 1);
     }
 
-    drawVelocityVectorAngle(ctx: CanvasRenderingContext2D): void {}
+    drawVelocityVectorAngle(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const cx = (this.position.x + plane.position.x) * plane.scale;
+        const cy = (this.position.y + plane.position.y) * plane.scale * -1;
+        this.drawAngle(
+            ctx,
+            cx,
+            cy,
+            this.velocity.x * plane.scale,
+            this.velocity.y * plane.scale,
+        );
+    }
 
     drawAccelerationVectorResultant(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
-        const { width, height } = ctx.canvas;
-
-        const [eX, eY] = [
-            (this.position.x + plane.position.x) * plane.scale,
-            (this.position.y + plane.position.y) * plane.scale * -1,
-        ];
-
-        const [aX, aY] = [
-            eX + this.acceleration.x * plane.scale,
-            eY + this.acceleration.y * plane.scale * -1,
-        ];
-
-        if (
-            eX >= 0 ||
-            eX <= width ||
-            eY >= 0 ||
-            eY <= height ||
-            aX >= 0 ||
-            aX <= width ||
-            aY >= 0 ||
-            aY <= height
-        ) {
-            ctx.beginPath();
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 2;
-            ctx.moveTo(eX, eY);
-            ctx.lineTo(aX, aY);
-            ctx.stroke();
-            ctx.closePath();
-        }
+        const sx = (this.position.x + plane.position.x) * plane.scale;
+        const sy = (this.position.y + plane.position.y) * plane.scale * -1;
+        const ex = sx + this.acceleration.x * plane.scale;
+        const ey = sy + this.acceleration.y * plane.scale * -1;
+        ctx.strokeStyle = this.color;
+        ctx.fillStyle = this.color;
+        this.drawArrow(ctx, sx, sy, ex, ey, 2);
     }
+
     drawAccelerationVectorComponents(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
-        const { width, height } = ctx.canvas;
-        const [eX, eY] = [
-            (this.position.x + plane.position.x) * plane.scale,
-            (this.position.y + plane.position.y) * plane.scale * -1,
-        ];
-        const [aX, aY] = [
-            eX + this.acceleration.x * plane.scale,
-            eY + this.acceleration.y * plane.scale * -1,
-        ];
-        if (
-            eX >= 0 ||
-            eX <= width ||
-            eY >= 0 ||
-            eY <= height ||
-            aX >= 0 ||
-            aX <= width ||
-            aY >= 0 ||
-            aY <= height
-        ) {
-            ctx.beginPath();
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
-            ctx.moveTo(eX, eY);
-            ctx.lineTo(aX, eY);
-            ctx.stroke();
-            ctx.closePath();
-            ctx.beginPath();
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
-            ctx.moveTo(eX, eY);
-            ctx.lineTo(eX, aY);
-            ctx.stroke();
-            ctx.closePath();
-        }
-    }
-    drawAccelerationVectorAngle(ctx: CanvasRenderingContext2D): void {}
-
-    setInitialProperties() {
-        this.initialPosition = { x: this.position.x, y: this.position.y };
-        this.initialVelocity = { x: this.velocity.x, y: this.velocity.y };
-        this.initialAcceleration = {
-            x: this.acceleration.x,
-            y: this.acceleration.y,
-        };
+        const sx = (this.position.x + plane.position.x) * plane.scale;
+        const sy = (this.position.y + plane.position.y) * plane.scale * -1;
+        const ex = sx + this.acceleration.x * plane.scale;
+        const ey = sy + this.acceleration.y * plane.scale * -1;
+        ctx.strokeStyle = this.color;
+        ctx.fillStyle = this.color;
+        this.drawArrow(ctx, sx, sy, ex, sy, 1);
+        this.drawArrow(ctx, sx, sy, sx, ey, 1);
     }
 
-    resetProperties() {
-        this.position = new Vector2D(
-            this.initialPosition.x,
-            this.initialPosition.y,
-        );
-        this.velocity = new Vector2D(
-            this.initialVelocity.x,
-            this.initialVelocity.y,
-        );
-        this.acceleration = new Vector2D(
-            this.initialAcceleration.x,
-            this.initialAcceleration.y,
+    drawAccelerationVectorAngle(ctx: CanvasRenderingContext2D): void {
+        const plane = usePlaneStore.getState();
+        const cx = (this.position.x + plane.position.x) * plane.scale;
+        const cy = (this.position.y + plane.position.y) * plane.scale * -1;
+        this.drawAngle(
+            ctx,
+            cx,
+            cy,
+            this.acceleration.x * plane.scale,
+            this.acceleration.y * plane.scale,
         );
     }
 
     toString(): string {
-        return `Movil {
-            position: (${this.position.x.toFixed(2)}, ${this.position.y.toFixed(
+        return `Movil { position: (${this.position.x.toFixed(
             2,
-        )}), 
-            velocity: (${this.velocity.x.toFixed(2)}, ${this.velocity.y.toFixed(
+        )}, ${this.position.y.toFixed(
             2,
-        )}),
-            acceleration: (${this.acceleration.x.toFixed(
-                2,
-            )}, ${this.acceleration.y.toFixed(2)})
-        }`;
+        )}), velocity: (${this.velocity.x.toFixed(
+            2,
+        )}, ${this.velocity.y.toFixed(
+            2,
+        )}), acceleration: (${this.acceleration.x.toFixed(
+            2,
+        )}, ${this.acceleration.y.toFixed(2)}) }`;
     }
 
     getDebugInfo(): string {
-        return `
-        Posición: (${this.position.x.toFixed(2)}, ${this.position.y.toFixed(2)})
-        Velocidad: (${this.velocity.x.toFixed(2)}, ${this.velocity.y.toFixed(
+        return `Posición: (${this.position.x.toFixed(
             2,
-        )})
-        Aceleración: (${this.acceleration.x.toFixed(
+        )}, ${this.position.y.toFixed(
             2,
-        )}, ${this.acceleration.y.toFixed(2)})
-        Radio: ${this.radius}
-        Forma: ${this.shape}
-        Color: ${this.color}
-        `;
+        )})\nVelocidad: (${this.velocity.x.toFixed(
+            2,
+        )}, ${this.velocity.y.toFixed(
+            2,
+        )})\nAceleración: (${this.acceleration.x.toFixed(
+            2,
+        )}, ${this.acceleration.y.toFixed(2)})\nRadio: ${this.radius}\nForma: ${
+            this.shape
+        }\nColor: ${this.color}`;
     }
 
     clone(): Entity {
