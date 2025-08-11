@@ -1,3 +1,4 @@
+// /simulations/entities/Entity.ts
 import { Vector2D } from '@/simulations/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
 import { usePlaneStore } from '../stores/usePlaneStore';
@@ -93,7 +94,6 @@ class Entity {
         vecX: number,
         vecY: number,
     ) {
-        // Ángulo trigonométrico real: sin invertir eje Y
         const rawRad = Math.atan2(vecY, vecX); // rango -π a π
         const deg = rawRad * (180 / Math.PI);
         const rounded = Math.round(deg * 10) / 10;
@@ -103,14 +103,12 @@ class Entity {
 
         const radius = 20;
         ctx.beginPath();
-        // Arco de 0 a rawRad, sentido anticlockwise si rawRad negativo
         ctx.arc(cx, cy, radius, 0, -rawRad, rawRad > 0);
         ctx.strokeStyle = this.color;
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.closePath();
 
-        // Texto en medio del arco, mostrando signo
         const mid = rawRad / 2;
         const textX = cx + (radius + 15) * Math.cos(mid);
         const textY = cy + (radius + 15) * Math.sin(mid) * -1;
@@ -127,8 +125,8 @@ class Entity {
 
     update(deltaTime: number): void {
         if (deltaTime === 0) return;
-        this.trajectory.push(this.position.copy());
-        if (this.trajectory.length > 1000) this.trajectory.shift();
+
+        // 1) Aplica la física primero
         this.position.x +=
             this.velocity.x * deltaTime +
             0.5 * this.acceleration.x * deltaTime * deltaTime;
@@ -137,6 +135,17 @@ class Entity {
             0.5 * this.acceleration.y * deltaTime * deltaTime;
         this.velocity.x += this.acceleration.x * deltaTime;
         this.velocity.y += this.acceleration.y * deltaTime;
+
+        // 2) Luego guardamos snapshot (copy) de la posición actual
+        // Opcional: reducir puntos guardando solo si se movió lo suficiente (mejora rendimiento)
+        // const last = this.trajectory[this.trajectory.length - 1];
+        // const dx = this.position.x - last.x;
+        // const dy = this.position.y - last.y;
+        // const THRESHOLD_SQ = 0.01; // ajustar según escala
+        // if (dx*dx + dy*dy > THRESHOLD_SQ) this.trajectory.push(this.position.copy());
+        this.trajectory.push(this.position.copy());
+
+        if (this.trajectory.length > 1000) this.trajectory.shift();
     }
 
     draw(ctx: CanvasRenderingContext2D, borderColor?: string): void {
@@ -213,14 +222,22 @@ class Entity {
     }
 
     drawTrajectory(ctx: CanvasRenderingContext2D): void {
+        if (this.trajectory.length === 0) return;
         const plane = usePlaneStore.getState();
+
+        ctx.save();
         ctx.beginPath();
         ctx.strokeStyle = this.color;
         ctx.globalAlpha = 0.6;
         ctx.lineWidth = 1;
-        let x = (this.trajectory[0].x + plane.position.x) * plane.scale;
-        let y = (this.trajectory[0].y + plane.position.y) * plane.scale * -1;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        const first = this.trajectory[0];
+        let x = (first.x + plane.position.x) * plane.scale;
+        let y = (first.y + plane.position.y) * plane.scale * -1;
         ctx.moveTo(x, y);
+
         for (let i = 1; i < this.trajectory.length; i++) {
             const p = this.trajectory[i];
             x = (p.x + plane.position.x) * plane.scale;
@@ -228,8 +245,8 @@ class Entity {
             ctx.lineTo(x, y);
         }
         ctx.stroke();
-        ctx.globalAlpha = 1;
         ctx.closePath();
+        ctx.restore();
     }
 
     resetTrajectory(): void {
