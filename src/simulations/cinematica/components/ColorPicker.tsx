@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { forwardRef, useEffect, useState, memo } from 'react';
 import { Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,153 +25,193 @@ const PRESET_COLORS = [
     '#6b7280', // gray-500
 ];
 
-interface ColorPickerProps {
+export interface ColorPickerProps {
     className?: string;
-    value: string;
+    value: string; // hex color, e.g. "#ff0000"
     onChange: (color: string) => void;
     disabled?: boolean;
-    ref?: React.Ref<HTMLInputElement | null>;
+    size?: 'sm' | 'md';
 }
 
-export function ColorPicker({
-    className,
-    value,
-    onChange,
-    disabled,
-    ref,
-}: ColorPickerProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [customColor, setCustomColor] = useState(value || '#000000');
+const isValidHexColor = (color: string) =>
+    /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
 
-    const handleColorSelect = (color: string) => {
-        onChange(color);
-        setCustomColor(color);
-        setIsOpen(false);
-    };
+const ColorPickerInner = forwardRef<HTMLInputElement, ColorPickerProps>(
+    ({ className, value, onChange, disabled, size = 'sm' }, ref) => {
+        const [isOpen, setIsOpen] = useState(false);
+        const [customColor, setCustomColor] = useState(
+            isValidHexColor(value) ? value : '#000000',
+        );
 
-    const handleCustomColorChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        const newColor = e.target.value;
-        setCustomColor(newColor);
-        onChange(newColor);
-    };
+        // Mantener sincronizado si value cambia desde fuera
+        useEffect(() => {
+            if (isValidHexColor(value)) setCustomColor(value);
+        }, [value]);
 
-    const isValidHexColor = (color: string) => {
-        return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
-    };
+        const applyColor = (color: string) => {
+            if (!isValidHexColor(color)) return;
+            onChange(color);
+            setCustomColor(color);
+            setIsOpen(false);
+        };
 
-    return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    disabled={disabled}
-                    className={className}
-                >
-                    <div
-                        className="w-4 h-4 rounded-sm border border-gray-300"
-                        style={{
-                            backgroundColor: isValidHexColor(value)
-                                ? value
-                                : '#000000',
-                        }}
-                    />
-                    <span className="flex-1 text-left">
-                        {value || 'Seleccionar color'}
-                    </span>
-                    <Palette className="h-4 w-4 text-muted-foreground" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-64 p-4" align="start">
-                <div className="space-y-4">
-                    {/* Colores predefinidos */}
-                    <div>
-                        <p className="text-sm font-medium mb-3">
-                            Colores predefinidos
-                        </p>
-                        <div className="grid grid-cols-6 gap-2">
-                            {PRESET_COLORS.map((color) => (
-                                <button
-                                    key={color}
-                                    onClick={() => handleColorSelect(color)}
-                                    className="w-8 h-8 rounded-md border-2 border-gray-200 hover:border-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                                    style={{ backgroundColor: color }}
-                                    title={color}
-                                    type="button"
-                                />
-                            ))}
+        const handleCustomInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const v = e.target.value;
+            setCustomColor(v);
+            // no llamar onChange hasta que sea válido; pero permitir tipo color tambien
+        };
+
+        const handleColorInputChange = (
+            e: React.ChangeEvent<HTMLInputElement>,
+        ) => {
+            const v = e.target.value;
+            setCustomColor(v);
+            if (isValidHexColor(v)) onChange(v);
+        };
+
+        const triggerClass =
+            size === 'sm'
+                ? 'px-2 py-1 text-sm h-8'
+                : 'px-3 py-2 text-base h-10';
+
+        return (
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        disabled={disabled}
+                        className={`${triggerClass} ${
+                            className ?? ''
+                        } flex items-center gap-2`}
+                        aria-label="Seleccionar color"
+                        title={value || 'Seleccionar color'}
+                    >
+                        <div
+                            aria-hidden
+                            className="w-4 h-4 rounded-sm border border-gray-300 shrink-0"
+                            style={{
+                                backgroundColor: isValidHexColor(value)
+                                    ? value
+                                    : '#000000',
+                            }}
+                        />
+                        <span className="truncate max-w-[6rem]">
+                            {isValidHexColor(value) ? value : '—'}
+                        </span>
+                        <Palette className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-64 p-3" align="start">
+                    <div className="space-y-3">
+                        <div>
+                            <p className="text-sm font-medium mb-2">
+                                Colores predefinidos
+                            </p>
+                            <div className="grid grid-cols-6 gap-2">
+                                {PRESET_COLORS.map((color) => (
+                                    <button
+                                        key={color}
+                                        onClick={() => applyColor(color)}
+                                        className="w-8 h-8 rounded-md border-2 border-gray-200 hover:border-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                                        style={{ backgroundColor: color }}
+                                        title={color}
+                                        type="button"
+                                        aria-label={`Seleccionar ${color}`}
+                                    />
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Selector de color personalizado */}
-                    <div>
-                        <p className="text-sm font-medium mb-3">
-                            Color personalizado
-                        </p>
-                        <div className="flex gap-2">
-                            <div className="relative flex-1">
+                        <div>
+                            <p className="text-sm font-medium mb-2">
+                                Color personalizado
+                            </p>
+                            <div className="flex gap-2 items-center">
+                                <div className="relative flex-1">
+                                    <Input
+                                        ref={ref as any}
+                                        type="text"
+                                        value={customColor}
+                                        onChange={handleCustomInput}
+                                        onBlur={() => {
+                                            if (isValidHexColor(customColor)) {
+                                                onChange(customColor);
+                                            } else {
+                                                // revertir a último value válido
+                                                setCustomColor(
+                                                    isValidHexColor(value)
+                                                        ? value
+                                                        : '#000000',
+                                                );
+                                            }
+                                        }}
+                                        placeholder="#000000"
+                                        aria-label="Color hexadecimal"
+                                        className="pr-10"
+                                    />
+                                    <div
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded border border-gray-300"
+                                        style={{
+                                            backgroundColor: isValidHexColor(
+                                                customColor,
+                                            )
+                                                ? customColor
+                                                : '#ffffff',
+                                        }}
+                                        aria-hidden
+                                    />
+                                </div>
+
                                 <Input
-                                    type="text"
-                                    value={customColor}
-                                    onChange={handleCustomColorChange}
-                                    placeholder="#000000"
-                                    className="pr-10"
-                                />
-                                <div
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded border border-gray-300"
-                                    style={{
-                                        backgroundColor: isValidHexColor(
-                                            customColor,
-                                        )
+                                    type="color"
+                                    value={
+                                        isValidHexColor(customColor)
                                             ? customColor
-                                            : '#ffffff',
-                                    }}
+                                            : '#000000'
+                                    }
+                                    onChange={handleColorInputChange}
+                                    className="w-12 h-10 p-1 border rounded"
+                                    aria-label="Selector de color"
                                 />
                             </div>
-                            <Input
-                                type="color"
-                                value={
-                                    isValidHexColor(customColor)
-                                        ? customColor
-                                        : '#000000'
-                                }
-                                onChange={(e) => handleCustomColorChange(e)}
-                                className="w-12 h-10 p-1 border rounded"
-                            />
-                        </div>
-                        {!isValidHexColor(customColor) &&
-                            customColor !== '' && (
-                                <p className="text-xs text-red-500 mt-1">
-                                    Formato de color inválido. Use formato hex
-                                    (#000000)
-                                </p>
-                            )}
-                    </div>
 
-                    {/* Botones de acción */}
-                    <div className="flex gap-2">
-                        <Button
-                            onClick={() => setIsOpen(false)}
-                            variant="outline"
-                            size="sm"
-                            className="flex-1"
-                            type="button"
-                        >
-                            Cancelar
-                        </Button>
-                        <Button
-                            onClick={() => handleColorSelect(customColor)}
-                            size="sm"
-                            className="flex-1"
-                            disabled={!isValidHexColor(customColor)}
-                            type="button"
-                        >
-                            Aplicar
-                        </Button>
+                            {!isValidHexColor(customColor) &&
+                                customColor !== '' && (
+                                    <p className="text-xs text-red-500 mt-1">
+                                        Formato inválido — usa hex (p. ej.
+                                        #0f0f0f).
+                                    </p>
+                                )}
+                        </div>
+
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={() => setIsOpen(false)}
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                type="button"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                onClick={() => applyColor(customColor)}
+                                size="sm"
+                                className="flex-1"
+                                disabled={!isValidHexColor(customColor)}
+                                type="button"
+                            >
+                                Aplicar
+                            </Button>
+                        </div>
                     </div>
-                </div>
-            </PopoverContent>
-        </Popover>
-    );
-}
+                </PopoverContent>
+            </Popover>
+        );
+    },
+);
+
+ColorPickerInner.displayName = 'ColorPicker';
+export const ColorPicker = memo(ColorPickerInner);
+export default ColorPicker;
