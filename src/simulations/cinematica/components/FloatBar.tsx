@@ -21,14 +21,13 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { compressData, encodeCompact } from '../utils/encodeAndDecodeEntities';
+import { compressData } from '../utils/encodeAndDecodeEntities';
+import { useURL } from '../hooks/useURL';
 
 function FloatBar({ className }: { className?: string }) {
     const entities = useEntitySummaries();
     const reversedEntities = [...entities].reverse();
-    const searchParams = useSearchParams();
-    const pathname = usePathname();
-    const { replace } = useRouter();
+    const { setURLParams } = useURL();
 
     return (
         <div
@@ -48,16 +47,11 @@ function FloatBar({ className }: { className?: string }) {
                     <Button
                         onClick={() => {
                             useEntityStore.getState().addEntity();
-                            const params = new URLSearchParams(searchParams);
-                            params.set(
-                                'd',
-                                encodeCompact(
-                                    compressData(
-                                        useEntityStore.getState().entities,
-                                    ),
+                            setURLParams({
+                                d: compressData(
+                                    useEntityStore.getState().entities,
                                 ),
-                            );
-                            replace(`${pathname}?${params.toString()}`);
+                            });
                         }}
                         size="icon"
                         variant="outline"
