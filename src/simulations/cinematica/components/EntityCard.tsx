@@ -13,6 +13,8 @@ import ShapeSelector from './selector/ShapeSelector';
 import FlowEntityButton from './buttons/FlowEntityButton';
 import DeleteEntityButton from './buttons/DeleteEntityButton';
 import { IconAlertCircle } from '@tabler/icons-react';
+import Button from './ui/button';
+import styles from '../consts/styles';
 
 interface EntityCardProps {
     entityId: string;
@@ -80,7 +82,7 @@ export default function EntityCard({
 
     return (
         <div
-            className={`border-2 rounded-lg p-4 space-y-4`}
+            className={`border-2 rounded-lg bg-[#202C25] p-4 space-y-4`}
             style={{ borderColor: color }}
         >
             <div className="flex justify-between">
@@ -91,13 +93,14 @@ export default function EntityCard({
 
             {/* Vector posición */}
             <div className="flex items-center space-x-2">
-                <VectorLetterIcon letter="x" size={16} />
+                <Button>
+                    <VectorLetterIcon letter="x" className={styles.icon} />
+                </Button>
                 <PositionXInput
                     entityId={entityId}
                     setError={setError}
                     className="flex-1"
                 />
-                <span className="text-gray-400">|</span>
                 <PositionYInput
                     entityId={entityId}
                     setError={setError}
@@ -107,13 +110,14 @@ export default function EntityCard({
 
             {/* Vector velocidad */}
             <div className="flex items-center space-x-2">
-                <VectorLetterIcon letter="v" size={16} />
+                <Button>
+                    <VectorLetterIcon letter="v" className={styles.icon} />
+                </Button>
                 <VelocityXInput
                     entityId={entityId}
                     setError={setError}
                     className="flex-1"
                 />
-                <span className="text-gray-400">|</span>
                 <VelocityYInput
                     entityId={entityId}
                     setError={setError}
@@ -123,13 +127,14 @@ export default function EntityCard({
 
             {/* Vector aceleración */}
             <div className="flex items-center space-x-2">
-                <VectorLetterIcon letter="a" size={16} />
+                <Button>
+                    <VectorLetterIcon letter="a" className={styles.icon} />
+                </Button>
                 <AccelerationXInput
                     entityId={entityId}
                     setError={setError}
                     className="flex-1"
                 />
-                <span className="text-gray-400">|</span>
                 <AccelerationYInput
                     entityId={entityId}
                     setError={setError}
@@ -139,26 +144,16 @@ export default function EntityCard({
 
             {/* Radio y Color lado a lado */}
             <div className="flex space-x-4">
-                <div className="flex-1 border rounded-lg p-3">
-                    <label className="block text-sm font-medium mb-1">
-                        Radio
-                    </label>
-                    <RadiusInput
-                        entityId={entityId}
-                        setError={setError}
-                        className="w-full"
-                    />
-                </div>
-                <div className="flex-1 border rounded-lg p-3">
-                    <label className="block text-sm font-medium mb-1">
-                        Color
-                    </label>
-                    <ColorInput
-                        entityId={entityId}
-                        setError={setError}
-                        className="w-full"
-                    />
-                </div>
+                <RadiusInput
+                    entityId={entityId}
+                    setError={setError}
+                    className="flex flex-1 w-full"
+                />
+                <ColorInput
+                    entityId={entityId}
+                    setError={setError}
+                    className="flex flex-1 w-full"
+                />
             </div>
 
             {/* Error */}
