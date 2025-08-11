@@ -17,6 +17,7 @@ import {
     IconTriangle,
     IconTriangleFilled,
 } from '@tabler/icons-react';
+import Button from '../ui/button';
 
 interface ShapeSelectorProps {
     className?: string;
@@ -38,9 +39,13 @@ const ShapeSelector = memo(function ShapeSelector({
             onValueChange={(value) => updateX(entityId, 'shape', value)}
             defaultValue={shape}
         >
-            <SelectTrigger className={`${className} w-[180px]`}>
-                <SelectValue />
-            </SelectTrigger>
+            <Button className="p-0">
+                <SelectTrigger
+                    className={`${className} border-0 bg-transparent w-[180px]`}
+                >
+                    <SelectValue className="bg-transparent" />
+                </SelectTrigger>
+            </Button>
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Forma</SelectLabel>
