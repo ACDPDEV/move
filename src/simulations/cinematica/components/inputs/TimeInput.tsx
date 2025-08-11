@@ -99,16 +99,19 @@ const TimeInput = memo(function TimeInput({
     return (
         <Tooltip>
             <TooltipTrigger asChild>
-                <div className="relative w-full  text-stone-700 dark:text-stone-300 dark:hover:bg-stone-700 rounded transition-all duration-200 hover:scale-115 focus:outline-none focus:ring-2 focus:ring-stone-500">
-                    <Input
-                        type="number"
+                <div className="w-32 h-9 bg-[#2B3B31] rounded-md flex flex-row p-2 gap-1 items-center justify-between cursor-pointer">
+                    <span className="text-[#89A996] w-3 h-5 text-sm font-mono">
+                        t
+                    </span>
+                    <input
+                        type="text"
                         name="time"
                         ref={inputRef}
                         onChange={onChange}
                         placeholder="0"
-                        className={`${className} w-28 pr-6`} // espacio a la derecha para la "s"
+                        className="w-19 h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
                     />
-                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none select-none">
+                    <span className="text-[#567663] w-3 h-5 text-sm font-mono">
                         s
                     </span>
                 </div>

@@ -5,6 +5,8 @@ import {
 } from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { Input } from '@/components/ui/input';
+import { useURL } from '../../hooks/useURL';
+import { compressData } from '../../utils/encodeAndDecodeEntities';
 
 interface PositionYInputProps {
     className?: string;
@@ -75,16 +77,33 @@ const PositionYInput = memo(function PositionYInput({
         updateY(entityId, 'position.y', n);
         setError('');
     };
+    const { setURLParams } = useURL();
+    const onBlur = () => {
+        setURLParams({
+            d: compressData(useEntityStore.getState().entities),
+        });
+    };
+    const onSubmit = (e: React.InputEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setURLParams({
+            d: compressData(useEntityStore.getState().entities),
+        });
+    };
 
     return (
-        <Input
-            type="number"
-            name="positionY"
-            ref={inputRef}
-            onChange={onChange}
-            placeholder="0"
-            className={className}
-        />
+        <div className="w-full h-9 bg-[#2B3B31] rounded-md flex flex-1 flex-row p-2 gap-1 items-center justify-between cursor-pointer">
+            <span className="text-[#89A996] w-3 h-5 text-sm font-mono">y</span>
+            <input
+                type="text"
+                name="time"
+                ref={inputRef}
+                onChange={onChange}
+                onBlur={onBlur}
+                onSubmit={onSubmit}
+                placeholder="0"
+                className="flex grow w-full h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
+            />
+        </div>
     );
 });
 
