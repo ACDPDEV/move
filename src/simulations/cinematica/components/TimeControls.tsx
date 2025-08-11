@@ -8,7 +8,6 @@ import DisplayOptionsSelector from './selector/DisplayOptionsSelector';
 import PlayerToggle from './buttons/PlayerToogle';
 import ResetButton from './buttons/ResetButton';
 import { toast } from 'sonner';
-import { ModeToggle } from '@/components/layout/ToogleTheme';
 
 export default function TimeControls() {
     const [error, setError] = useState<string>('');
@@ -18,13 +17,13 @@ export default function TimeControls() {
     }
 
     return (
-        <div className="flex flex-row text-stone-900 dark:text-stone-100 dark:bg-stone-800/90 bg-stone-200 border dark:border-stone-700 border-stone-300 items-center justify-center p-3 gap-3 rounded-lg backdrop-blur-md shadow-lg">
+        <div className="flex flex-row w-fit h-fit p-4 gap-4 bg-[#202C25] rounded-lg">
             <div className="flex items-center gap-2">
                 <TimeInput setError={setError} />
                 <MovementPredictionToggle />
                 <PlayerToggle />
                 <ResetButton />
-                <TimeSpeedSelector setError={setError} />
+                <TimeSpeedSelector />
             </div>
             <Separator
                 orientation="vertical"
@@ -32,7 +31,6 @@ export default function TimeControls() {
             />
             <div className="items-center gap-2 hidden sm:flex">
                 <DisplayOptionsSelector />
-                <ModeToggle />
             </div>
         </div>
     );
