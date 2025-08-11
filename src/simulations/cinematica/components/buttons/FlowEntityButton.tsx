@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { useEntityStore } from '../../stores/useEntityStore';
 import {
     IconCurrentLocation,
@@ -9,6 +8,8 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import Button from '../ui/button';
+import styles from '../../consts/styles';
 
 function FlowEntityButton({ entityId }: { entityId: string }) {
     const selectedEntityId = useEntityStore((s) => s.selectedEntityId);
@@ -18,31 +19,24 @@ function FlowEntityButton({ entityId }: { entityId: string }) {
         useEntityStore.getState().setSelectedEntityId(null);
 
     return (
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={
-                        selectedEntityId === entityId
-                            ? deselectThisEntity
-                            : setSelectedAsThisEntityId
-                    }
-                    className={`${
-                        selectedEntityId === entityId
-                            ? 'bg-stone-300 dark:bg-stone-700'
-                            : ''
-                    }`}
-                >
-                    {selectedEntityId === entityId ? (
-                        <IconCurrentLocationFilled />
-                    ) : (
-                        <IconCurrentLocation />
-                    )}
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>Seguir Móvil</TooltipContent>
-        </Tooltip>
+        <Button
+            onClick={
+                selectedEntityId === entityId
+                    ? deselectThisEntity
+                    : setSelectedAsThisEntityId
+            }
+            tooltip={
+                selectedEntityId === entityId
+                    ? 'Deseleccionar Móvil'
+                    : 'Seleccionar Móvil'
+            }
+        >
+            {selectedEntityId === entityId ? (
+                <IconCurrentLocationFilled className={styles.icon} />
+            ) : (
+                <IconCurrentLocation className={styles.icon} />
+            )}
+        </Button>
     );
 }
 
