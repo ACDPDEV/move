@@ -14,29 +14,29 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useSearchParams } from 'next/navigation';
 import { useTimeStore } from './stores/useTimeStore';
 import { useEffect } from 'react';
 import { useEntityStore } from './stores/useEntityStore';
-import { decodeCompact, decompressData } from './utils/encodeAndDecodeEntities';
+import { decompressData } from './utils/encodeAndDecodeEntities';
 import { useDisplayStore } from './stores/useDisplayStore';
 import { decompressDisplay } from './utils/encodeAndDecodeDisplay';
+import { useURL } from './hooks/useURL';
+import { AnimatePresence, motion } from 'motion/react';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
+    console.log(isOpen);
 
-    const searchParams = useSearchParams();
+    const { getURLParams } = useURL();
 
     useEffect(() => {
         const setTime = useTimeStore.getState().updateTime;
         const setEntities = useEntityStore.getState().updateEntities;
         const setDisplay = useDisplayStore.getState().setDisplay;
 
-        const data = decompressData(decodeCompact(searchParams.get('d') ?? ''));
-
-        setEntities(data);
-        setTime(parseFloat(searchParams.get('t') ?? '0'));
-        setDisplay(decompressDisplay(searchParams.get('o') ?? ''));
+        setEntities(decompressData(getURLParams('d') ?? ''));
+        setTime(parseFloat(getURLParams('t') ?? '0'));
+        setDisplay(decompressDisplay(getURLParams('o') ?? ''));
     }, []);
 
     return (
@@ -63,7 +63,7 @@ export default function CinematicaSimulation() {
                     </TooltipTrigger>
                     <TooltipContent>Abrir panel lateral</TooltipContent>
                 </Tooltip>
-                <Canvas className="bg-white dark:bg-black w-full h-full" />
+                <Canvas className="bg-[#101713] w-full h-full" />
                 <TimeIndicators
                     className={`absolute top-2 left-2 z-50 ${
                         isOpen ? 'hidden sm:flex' : ''
@@ -81,13 +81,19 @@ export default function CinematicaSimulation() {
                         <ModeToggle />
                     </div>
                 </div>
-                <div
-                    className={`absolute flex flex-col bottom-0 left-1/2 translate-x-[-50%] gap-2 mb-10 justify-center items-center transition-all duration-300 ${
-                        isOpen ? 'translate-x-full hidden' : 'translate-x-0'
-                    }`}
-                >
-                    <TimeControls />
-                </div>
+                <AnimatePresence>
+                    {!isOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 50 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute flex flex-col bottom-0 left-1/2 translate-x-[-50%] gap-2 mb-10 justify-center items-center"
+                        >
+                            <TimeControls />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             {/* Sidebar con ancho fijo */}
