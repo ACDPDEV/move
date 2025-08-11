@@ -5,14 +5,6 @@ function drawEntities(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const entities = useEntityStore.getState().entities;
 
     entities.forEach((entity) => {
-        entity.draw(
-            ctx,
-            useEntityStore.getState().selectedEntityId === entity.id
-                ? dark
-                    ? '#fff'
-                    : '#000'
-                : undefined,
-        );
         if (useDisplayStore.getState().trajectory) {
             entity.drawTrajectory(ctx);
         }
@@ -43,6 +35,14 @@ function drawEntities(ctx: CanvasRenderingContext2D, dark: boolean): void {
         if (useDisplayStore.getState().acceleration.angle) {
             entity.drawAccelerationVectorAngle(ctx);
         }
+        entity.draw(
+            ctx,
+            useEntityStore.getState().selectedEntityId === entity.id
+                ? dark
+                    ? '#fff'
+                    : '#000'
+                : undefined,
+        );
     });
 }
 

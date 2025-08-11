@@ -34,7 +34,7 @@ function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
             ? getGap(height, plane.scale)
             : getGap(width, plane.scale);
 
-    ctx.strokeStyle = dark ? '#999' : '#777';
+    ctx.strokeStyle = dark ? '#567663' : '#777';
     ctx.lineWidth = 0.5;
 
     // Calcular posiciones de inicio usando módulo

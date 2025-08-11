@@ -12,7 +12,7 @@ function drawAxes(ctx: CanvasRenderingContext2D, dark: boolean): void {
         ctx.beginPath();
         ctx.moveTo(0, pY);
         ctx.lineTo(width, pY);
-        ctx.strokeStyle = dark ? '#fff' : '#000';
+        ctx.strokeStyle = dark ? '#D3DFD8' : '#000';
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.closePath();
@@ -23,7 +23,7 @@ function drawAxes(ctx: CanvasRenderingContext2D, dark: boolean): void {
         ctx.beginPath();
         ctx.moveTo(pX, 0);
         ctx.lineTo(pX, height);
-        ctx.strokeStyle = dark ? '#fff' : '#000';
+        ctx.strokeStyle = dark ? '#D3DFD8' : '#000';
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.closePath();
