@@ -48,3 +48,6 @@ config.json
 
 # Local test files
 src/app/test-components/page.tsx
+
+# prettier
+.prettierrc
