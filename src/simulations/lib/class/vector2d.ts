@@ -27,7 +27,7 @@ class Vector2D {
 
     div(vector: Vector2D): Vector2D {
         if (vector.x === 0 || vector.y === 0) {
-            throw new Error("Division by zero");
+            throw new Error('Division by zero');
         }
         this.x /= vector.x;
         this.y /= vector.y;
@@ -41,7 +41,7 @@ class Vector2D {
     normalize(): Vector2D {
         const mag = this.mag();
         if (mag === 0) {
-            throw new Error("Cannot normalize a zero vector");
+            throw new Error('Cannot normalize a zero vector');
         }
         this.x /= mag;
         this.y /= mag;
@@ -56,16 +56,22 @@ class Vector2D {
 
     setMag(mag: number): Vector2D {
         if (this.x === 0 && this.y === 0) {
-            throw new Error("Cannot set magnitude of a zero vector");
+            throw new Error('Cannot set magnitude of a zero vector');
         }
         this.normalize();
         this.scale(mag);
         return this;
     }
-    
+
     angle(): number {
-        if (this.x === 0 && this.y === 0) return 0; 
+        if (this.x === 0 && this.y === 0) return 0;
         return Math.atan2(this.y, this.x);
+    }
+
+    setAngle(angle: number): Vector2D {
+        this.x = Math.cos(angle);
+        this.y = Math.sin(angle);
+        return this;
     }
 
     rotate(angle: number): Vector2D {
@@ -98,23 +104,21 @@ class Vector2D {
         return new Vector2D(this.x, this.y);
     }
 
-    toString(
-        type: "object" | "tuple" | "objectWithLabel" = "object"
-    ): string {
-        if (type === "object") {
+    toString(type: 'object' | 'tuple' | 'objectWithLabel' = 'object'): string {
+        if (type === 'object') {
             return `{x: ${this.x}, y: ${this.y}}`;
         }
-        if (type === "tuple") {
+        if (type === 'tuple') {
             return `(${this.x}, ${this.y})`;
         }
-        if (type === "objectWithLabel") {
+        if (type === 'objectWithLabel') {
             return `Vector2D {x: ${this.x}, y: ${this.y}}`;
         }
-        throw new Error("Invalid type");
+        throw new Error('Invalid type');
     }
 
     static add(vectors: Vector2D[]): Vector2D {
-        if (vectors.length === 0) throw new Error("No vectors provided");
+        if (vectors.length === 0) throw new Error('No vectors provided');
         const result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
             result.add(vectors[i]);
@@ -123,7 +127,7 @@ class Vector2D {
     }
 
     static sub(vectors: Vector2D[]): Vector2D {
-        if (vectors.length === 0) throw new Error("No vectors provided");
+        if (vectors.length === 0) throw new Error('No vectors provided');
         const result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
             result.sub(vectors[i]);
@@ -132,7 +136,7 @@ class Vector2D {
     }
 
     static mul(vectors: Vector2D[]): Vector2D {
-        if (vectors.length === 0) throw new Error("No vectors provided");
+        if (vectors.length === 0) throw new Error('No vectors provided');
         const result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
             result.mul(vectors[i]);
@@ -141,11 +145,11 @@ class Vector2D {
     }
 
     static div(vectors: Vector2D[]): Vector2D {
-        if (vectors.length === 0) throw new Error("No vectors provided");
+        if (vectors.length === 0) throw new Error('No vectors provided');
         const result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
             if (vectors[i].x === 0 || vectors[i].y === 0) {
-                throw new Error("Division by zero");
+                throw new Error('Division by zero');
             }
             result.div(vectors[i]);
         }
@@ -155,12 +159,13 @@ class Vector2D {
     static angleBetween(vector1: Vector2D, vector2: Vector2D): number {
         const mag1 = vector1.mag();
         const mag2 = vector2.mag();
-        
-        if (mag1 === 0 || mag2 === 0) throw new Error("Cannot calculate angle between zero vectors");
-        
+
+        if (mag1 === 0 || mag2 === 0)
+            throw new Error('Cannot calculate angle between zero vectors');
+
         const dot = Vector2D.dot(vector1, vector2);
         const cosAngle = dot / (mag1 * mag2);
-        
+
         const clampedCos = Math.max(-1, Math.min(1, cosAngle));
         return Math.acos(clampedCos);
     }

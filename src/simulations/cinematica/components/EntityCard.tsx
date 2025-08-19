@@ -10,70 +10,29 @@ import { IconAlertCircle } from '@tabler/icons-react';
 import Button from './ui/button';
 import styles from '../consts/styles';
 import EntityInput from './inputs/EntityInput';
+import VectorLetterIcon from './svgs/VectorSymbol';
+import AngleInput from './inputs/AngleInput';
+import MagnitudeInput from './inputs/MagnitudeInput';
 
 interface EntityCardProps {
     entityId: string;
     color: string;
 }
 
-const VectorLetterIcon = ({
-    letter = 'x',
-    className = '',
-    size = 24,
-    ...props
-}) => {
-    // El tamaño base del SVG para calcular las proporciones
-    const baseSize = 24;
-
-    return (
-        <svg
-            className={className}
-            width={size}
-            height={size}
-            viewBox={`0 0 ${baseSize} ${baseSize}`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            {...props}
-        >
-            {/* Flecha hacia la derecha */}
-            <line
-                x1={baseSize / 4}
-                y1={baseSize / 4}
-                x2={(baseSize * 3) / 4}
-                y2={baseSize / 4}
-            />
-            <polyline
-                points={`${(baseSize * 3) / 4 - 3},${baseSize / 4 - 3} ${
-                    (baseSize * 3) / 4
-                },${baseSize / 4} ${(baseSize * 3) / 4 - 3},${
-                    baseSize / 4 + 3
-                }`}
-            />
-
-            {/* Letra variable */}
-            <text
-                x="50%"
-                y="75%"
-                dominantBaseline="middle"
-                textAnchor="middle"
-                fontSize={baseSize * 0.8}
-                fill="currentColor"
-                stroke="none"
-            >
-                {letter}
-            </text>
-        </svg>
-    );
-};
-
 export default function EntityCard({
     entityId,
     color,
 }: Readonly<EntityCardProps>) {
     const [error, setError] = useState<string>('');
+    const [groupInputTypeX, setGroupInputTypeX] = useState<
+        'vectorComponents' | 'AngleAndMAgnitude'
+    >('vectorComponents');
+    const [groupInputTypeV, setGroupInputTypeV] = useState<
+        'vectorComponents' | 'AngleAndMAgnitude'
+    >('vectorComponents');
+    const [groupInputTypeA, setGroupInputTypeA] = useState<
+        'vectorComponents' | 'AngleAndMAgnitude'
+    >('vectorComponents');
 
     return (
         <div
@@ -88,53 +47,131 @@ export default function EntityCard({
 
             {/* Vector posición */}
             <div className="flex items-center space-x-2">
-                <Button>
+                <Button
+                    onClick={() =>
+                        setGroupInputTypeX(
+                            groupInputTypeX === 'vectorComponents'
+                                ? 'AngleAndMAgnitude'
+                                : 'vectorComponents',
+                        )
+                    }
+                >
                     <VectorLetterIcon letter="x" className={styles.icon} />
                 </Button>
-                <EntityInput
-                    entityId={entityId}
-                    entityProp="position.x"
-                    setError={setError}
-                />
-                <EntityInput
-                    entityId={entityId}
-                    entityProp="position.y"
-                    setError={setError}
-                />
+                {groupInputTypeX === 'vectorComponents' && (
+                    <div className="flex items-center space-x-2">
+                        <EntityInput
+                            entityId={entityId}
+                            entityProp="position.x"
+                            setError={setError}
+                        />
+                        <EntityInput
+                            entityId={entityId}
+                            entityProp="position.y"
+                            setError={setError}
+                        />
+                    </div>
+                )}
+                {groupInputTypeX === 'AngleAndMAgnitude' && (
+                    <div className="flex items-center space-x-2">
+                        <AngleInput
+                            entityId={entityId}
+                            entityProp="position"
+                            setError={setError}
+                        />
+                        <MagnitudeInput
+                            entityId={entityId}
+                            entityProp="position"
+                            setError={setError}
+                        />
+                    </div>
+                )}
             </div>
 
             {/* Vector velocidad */}
             <div className="flex items-center space-x-2">
-                <Button>
+                <Button
+                    onClick={() =>
+                        setGroupInputTypeV(
+                            groupInputTypeV === 'vectorComponents'
+                                ? 'AngleAndMAgnitude'
+                                : 'vectorComponents',
+                        )
+                    }
+                >
                     <VectorLetterIcon letter="v" className={styles.icon} />
                 </Button>
-                <EntityInput
-                    entityId={entityId}
-                    entityProp="velocity.x"
-                    setError={setError}
-                />
-                <EntityInput
-                    entityId={entityId}
-                    entityProp="velocity.y"
-                    setError={setError}
-                />
+                {groupInputTypeV === 'vectorComponents' && (
+                    <div className="flex items-center space-x-2">
+                        <EntityInput
+                            entityId={entityId}
+                            entityProp="velocity.x"
+                            setError={setError}
+                        />
+                        <EntityInput
+                            entityId={entityId}
+                            entityProp="velocity.y"
+                            setError={setError}
+                        />
+                    </div>
+                )}
+                {groupInputTypeV === 'AngleAndMAgnitude' && (
+                    <div className="flex items-center space-x-2">
+                        <AngleInput
+                            entityId={entityId}
+                            entityProp="velocity"
+                            setError={setError}
+                        />
+                        <MagnitudeInput
+                            entityId={entityId}
+                            entityProp="velocity"
+                            setError={setError}
+                        />
+                    </div>
+                )}
             </div>
 
             {/* Vector aceleración */}
             <div className="flex items-center space-x-2">
-                <Button>
+                <Button
+                    onClick={() =>
+                        setGroupInputTypeA(
+                            groupInputTypeA === 'vectorComponents'
+                                ? 'AngleAndMAgnitude'
+                                : 'vectorComponents',
+                        )
+                    }
+                >
                     <VectorLetterIcon letter="a" className={styles.icon} />
                 </Button>
-                <EntityInput
-                    entityId={entityId}
-                    entityProp="acceleration.x"
-                    setError={setError}
-                />
-                <EntityInput
-                    entityId={entityId}
-                    entityProp="acceleration.y"
-                    setError={setError}
-                />
+                {groupInputTypeA === 'vectorComponents' && (
+                    <div className="flex items-center space-x-2">
+                        <EntityInput
+                            entityId={entityId}
+                            entityProp="acceleration.x"
+                            setError={setError}
+                        />
+                        <EntityInput
+                            entityId={entityId}
+                            entityProp="acceleration.y"
+                            setError={setError}
+                        />
+                    </div>
+                )}
+                {groupInputTypeA === 'AngleAndMAgnitude' && (
+                    <div className="flex items-center space-x-2">
+                        <AngleInput
+                            entityId={entityId}
+                            entityProp="acceleration"
+                            setError={setError}
+                        />
+                        <MagnitudeInput
+                            entityId={entityId}
+                            entityProp="acceleration"
+                            setError={setError}
+                        />
+                    </div>
+                )}
             </div>
 
             {/* Radio y Color lado a lado */}
