@@ -1,11 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import PositionXInput from './inputs/PositionXInput';
-import PositionYInput from './inputs/PositionYInput';
-import VelocityXInput from './inputs/VelocityXInput';
-import VelocityYInput from './inputs/VelocityYInput';
-import AccelerationXInput from './inputs/AccelerationXInput';
-import AccelerationYInput from './inputs/AccelerationYInput';
 import RadiusInput from './inputs/RadiusInput';
 import ColorInput from './inputs/ColorInput';
 import { Alert, AlertTitle } from '@/components/ui/alert';
