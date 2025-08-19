@@ -109,7 +109,9 @@ const EntityInput = memo(function EntityInput({
 
     return (
         <div className="w-full h-9 bg-[#2B3B31] rounded-md flex flex-1 flex-row p-2 gap-1 items-center justify-between cursor-pointer">
-            <span className="text-[#89A996] w-3 h-5 text-sm font-mono">x</span>
+            <span className="text-[#89A996] w-3 h-5 text-sm font-mono">
+                {entityProp.includes('.x') ? 'x' : 'y'}
+            </span>
             <input
                 type="text"
                 name="time"
