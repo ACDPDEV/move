@@ -3,22 +3,30 @@ import {
     useEntityStore,
     type EntityStore,
 } from '@/simulations/cinematica/stores/useEntityStore';
-import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { Input } from '@/components/ui/input';
+import { Entity, EntityProps } from '@/simulations/cinematica/entities/Entity';
 import { useURL } from '../../hooks/useURL';
 import { compressData } from '../../utils/encodeAndDecodeEntities';
 
-interface PositionYInputProps {
+interface EntityInputProps {
     className?: string;
     entityId: string;
+    entityProp:
+        | 'position.x'
+        | 'position.y'
+        | 'velocity.x'
+        | 'velocity.y'
+        | 'acceleration.x'
+        | 'acceleration.y'
+        | 'radius';
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const PositionYInput = memo(function PositionYInput({
+const EntityInput = memo(function EntityInput({
     className,
     entityId,
+    entityProp,
     setError,
-}: PositionYInputProps) {
+}: EntityInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
 
@@ -30,7 +38,10 @@ const PositionYInput = memo(function PositionYInput({
                 (e) => e.id === entityId,
             );
             if (!entity) return;
-            const newValue: number = entity.position.y;
+            const propsArray = entityProp.split('.');
+            const newValue = entity[propsArray[0] as keyof EntityProps][
+                propsArray[1] as keyof EntityProps[keyof EntityProps]
+            ] as number;
             const el = inputRef.current;
             // Actualiza solo si el input no está enfocado y cambió
             if (
@@ -50,23 +61,29 @@ const PositionYInput = memo(function PositionYInput({
         const initEntity = useEntityStore
             .getState()
             .entities.find((e) => e.id === entityId);
+        const propsArray = entityProp.split('.');
+        const initValue = initEntity
+            ? (initEntity[propsArray[0] as keyof EntityProps][
+                  propsArray[1] as keyof EntityProps[keyof EntityProps]
+              ] as number)
+            : 0;
         if (inputRef.current && initEntity) {
-            if (initEntity.position.y) {
-                inputRef.current.value = initEntity.position.y.toFixed(2);
+            if (initValue) {
+                inputRef.current.value = initValue.toFixed(2);
             }
-            previousRef.current = initEntity.position.y;
+            previousRef.current = initValue;
         }
 
         return unsubscribe;
     }, [entityId]);
 
     // Actualizar store cuando el usuario modifica
-    const updateY = useEntityStore((s) => s.updateSpecificPropOfEntity);
+    const updateX = useEntityStore((s) => s.updateSpecificPropOfEntity);
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const n = Number(e.target.value);
         if (isNaN(n)) {
             e.target.value = previousRef.current.toString();
-            setError('Posición Y solo puede ser un número');
+            setError(`${entityProp} solo puede ser un número`);
             return;
         }
         const cleaned = e.target.value
@@ -74,7 +91,7 @@ const PositionYInput = memo(function PositionYInput({
             .replace(/^0+$/, '');
         e.target.value = cleaned;
         previousRef.current = n;
-        updateY(entityId, 'position.y', n);
+        updateX(entityId, entityProp, n);
         setError('');
     };
     const { setURLParams } = useURL();
@@ -92,7 +109,7 @@ const PositionYInput = memo(function PositionYInput({
 
     return (
         <div className="w-full h-9 bg-[#2B3B31] rounded-md flex flex-1 flex-row p-2 gap-1 items-center justify-between cursor-pointer">
-            <span className="text-[#89A996] w-3 h-5 text-sm font-mono">y</span>
+            <span className="text-[#89A996] w-3 h-5 text-sm font-mono">x</span>
             <input
                 type="text"
                 name="time"
@@ -107,6 +124,6 @@ const PositionYInput = memo(function PositionYInput({
     );
 });
 
-PositionYInput.displayName = 'PositionYInput';
+EntityInput.displayName = 'EntityInput';
 
-export default PositionYInput;
+export default EntityInput;

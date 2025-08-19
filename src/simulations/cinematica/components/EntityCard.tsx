@@ -15,6 +15,7 @@ import DeleteEntityButton from './buttons/DeleteEntityButton';
 import { IconAlertCircle } from '@tabler/icons-react';
 import Button from './ui/button';
 import styles from '../consts/styles';
+import EntityInput from './inputs/EntityInput';
 
 interface EntityCardProps {
     entityId: string;
@@ -96,15 +97,15 @@ export default function EntityCard({
                 <Button>
                     <VectorLetterIcon letter="x" className={styles.icon} />
                 </Button>
-                <PositionXInput
+                <EntityInput
                     entityId={entityId}
+                    entityProp="position.x"
                     setError={setError}
-                    className="flex-1"
                 />
-                <PositionYInput
+                <EntityInput
                     entityId={entityId}
+                    entityProp="position.y"
                     setError={setError}
-                    className="flex-1"
                 />
             </div>
 
@@ -113,15 +114,15 @@ export default function EntityCard({
                 <Button>
                     <VectorLetterIcon letter="v" className={styles.icon} />
                 </Button>
-                <VelocityXInput
+                <EntityInput
                     entityId={entityId}
+                    entityProp="velocity.x"
                     setError={setError}
-                    className="flex-1"
                 />
-                <VelocityYInput
+                <EntityInput
                     entityId={entityId}
+                    entityProp="velocity.y"
                     setError={setError}
-                    className="flex-1"
                 />
             </div>
 
@@ -130,15 +131,15 @@ export default function EntityCard({
                 <Button>
                     <VectorLetterIcon letter="a" className={styles.icon} />
                 </Button>
-                <AccelerationXInput
+                <EntityInput
                     entityId={entityId}
+                    entityProp="acceleration.x"
                     setError={setError}
-                    className="flex-1"
                 />
-                <AccelerationYInput
+                <EntityInput
                     entityId={entityId}
+                    entityProp="acceleration.y"
                     setError={setError}
-                    className="flex-1"
                 />
             </div>
 
