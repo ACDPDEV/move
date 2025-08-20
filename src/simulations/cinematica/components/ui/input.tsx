@@ -11,6 +11,8 @@ function Input({
     tooltip,
     className,
     value,
+    defaultValue,
+    placeholder,
     type,
     name,
     ref,
@@ -23,6 +25,8 @@ function Input({
     tooltip?: string;
     className?: string;
     value?: string | number;
+    defaultValue?: string | number;
+    placeholder?: string;
     type?: string;
     name?: string;
     ref?: React.Ref<HTMLInputElement>;
@@ -37,6 +41,8 @@ function Input({
                 <input
                     className="flex grow w-full h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
                     value={value}
+                    defaultValue={defaultValue}
+                    placeholder={placeholder}
                     type={type}
                     name={name}
                     ref={ref}
@@ -55,6 +61,8 @@ function Input({
                     <input
                         className="flex grow w-full h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
                         value={value}
+                        defaultValue={defaultValue}
+                        placeholder={placeholder}
                         type={type}
                         name={name}
                         ref={ref}
