@@ -7,31 +7,24 @@ class Vector2D {
         this.y = y;
     }
 
+    // Métodos inmutables por defecto - devuelven nuevos vectores
     add(vector: Vector2D): Vector2D {
-        this.x += vector.x;
-        this.y += vector.y;
-        return this;
+        return new Vector2D(this.x + vector.x, this.y + vector.y);
     }
 
     sub(vector: Vector2D): Vector2D {
-        this.x -= vector.x;
-        this.y -= vector.y;
-        return this;
+        return new Vector2D(this.x - vector.x, this.y - vector.y);
     }
 
     mul(vector: Vector2D): Vector2D {
-        this.x *= vector.x;
-        this.y *= vector.y;
-        return this;
+        return new Vector2D(this.x * vector.x, this.y * vector.y);
     }
 
     div(vector: Vector2D): Vector2D {
         if (vector.x === 0 || vector.y === 0) {
             throw new Error('Division by zero');
         }
-        this.x /= vector.x;
-        this.y /= vector.y;
-        return this;
+        return new Vector2D(this.x / vector.x, this.y / vector.y);
     }
 
     mag(): number {
@@ -43,24 +36,24 @@ class Vector2D {
         if (mag === 0) {
             throw new Error('Cannot normalize a zero vector');
         }
-        this.x /= mag;
-        this.y /= mag;
-        return this;
+        return new Vector2D(this.x / mag, this.y / mag);
     }
 
     scale(scale: number): Vector2D {
-        this.x *= scale;
-        this.y *= scale;
-        return this;
+        return new Vector2D(this.x * scale, this.y * scale);
     }
 
     setMag(mag: number): Vector2D {
         if (this.x === 0 && this.y === 0) {
             throw new Error('Cannot set magnitude of a zero vector');
         }
-        this.normalize();
-        this.scale(mag);
-        return this;
+        const currentMag = this.mag();
+        if (currentMag === 0) {
+            throw new Error('Cannot set magnitude of a zero vector');
+        }
+
+        const scaleFactor = mag / currentMag;
+        return new Vector2D(this.x * scaleFactor, this.y * scaleFactor);
     }
 
     angle(): number {
@@ -69,9 +62,11 @@ class Vector2D {
     }
 
     setAngle(angle: number): Vector2D {
-        this.x = Math.cos(angle);
-        this.y = Math.sin(angle);
-        return this;
+        const currentMag = this.mag();
+        return new Vector2D(
+            Math.cos(angle) * currentMag,
+            Math.sin(angle) * currentMag,
+        );
     }
 
     rotate(angle: number): Vector2D {
@@ -79,25 +74,19 @@ class Vector2D {
         const sin = Math.sin(angle);
         const newX = this.x * cos - this.y * sin;
         const newY = this.x * sin + this.y * cos;
-        this.x = newX;
-        this.y = newY;
-        return this;
+        return new Vector2D(newX, newY);
     }
 
     invert(): Vector2D {
-        this.x *= -1;
-        this.y *= -1;
-        return this;
+        return new Vector2D(-this.x, -this.y);
     }
 
     invertX(): Vector2D {
-        this.x *= -1;
-        return this;
+        return new Vector2D(-this.x, this.y);
     }
 
     invertY(): Vector2D {
-        this.y *= -1;
-        return this;
+        return new Vector2D(this.x, -this.y);
     }
 
     copy(): Vector2D {
@@ -117,41 +106,134 @@ class Vector2D {
         throw new Error('Invalid type');
     }
 
+    // Métodos mutativos (sufijo Mut para indicar mutación)
+    addMut(vector: Vector2D): Vector2D {
+        this.x += vector.x;
+        this.y += vector.y;
+        return this;
+    }
+
+    subMut(vector: Vector2D): Vector2D {
+        this.x -= vector.x;
+        this.y -= vector.y;
+        return this;
+    }
+
+    mulMut(vector: Vector2D): Vector2D {
+        this.x *= vector.x;
+        this.y *= vector.y;
+        return this;
+    }
+
+    divMut(vector: Vector2D): Vector2D {
+        if (vector.x === 0 || vector.y === 0) {
+            throw new Error('Division by zero');
+        }
+        this.x /= vector.x;
+        this.y /= vector.y;
+        return this;
+    }
+
+    normalizeMut(): Vector2D {
+        const mag = this.mag();
+        if (mag === 0) {
+            throw new Error('Cannot normalize a zero vector');
+        }
+        this.x /= mag;
+        this.y /= mag;
+        return this;
+    }
+
+    scaleMut(scale: number): Vector2D {
+        this.x *= scale;
+        this.y *= scale;
+        return this;
+    }
+
+    setMagMut(mag: number): Vector2D {
+        if (this.x === 0 && this.y === 0) {
+            throw new Error('Cannot set magnitude of a zero vector');
+        }
+        const currentMag = this.mag();
+        if (currentMag === 0) {
+            throw new Error('Cannot set magnitude of a zero vector');
+        }
+
+        const scaleFactor = mag / currentMag;
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        return this;
+    }
+
+    setAngleMut(angle: number): Vector2D {
+        const currentMag = this.mag();
+        this.x = Math.cos(angle) * currentMag;
+        this.y = Math.sin(angle) * currentMag;
+        return this;
+    }
+
+    rotateMut(angle: number): Vector2D {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        const newX = this.x * cos - this.y * sin;
+        const newY = this.x * sin + this.y * cos;
+        this.x = newX;
+        this.y = newY;
+        return this;
+    }
+
+    invertMut(): Vector2D {
+        this.x *= -1;
+        this.y *= -1;
+        return this;
+    }
+
+    invertXMut(): Vector2D {
+        this.x *= -1;
+        return this;
+    }
+
+    invertYMut(): Vector2D {
+        this.y *= -1;
+        return this;
+    }
+
+    // Métodos estáticos - siempre inmutables
     static add(vectors: Vector2D[]): Vector2D {
         if (vectors.length === 0) throw new Error('No vectors provided');
-        const result = vectors[0].copy();
+        let result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
-            result.add(vectors[i]);
+            result = result.add(vectors[i]);
         }
         return result;
     }
 
     static sub(vectors: Vector2D[]): Vector2D {
         if (vectors.length === 0) throw new Error('No vectors provided');
-        const result = vectors[0].copy();
+        let result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
-            result.sub(vectors[i]);
+            result = result.sub(vectors[i]);
         }
         return result;
     }
 
     static mul(vectors: Vector2D[]): Vector2D {
         if (vectors.length === 0) throw new Error('No vectors provided');
-        const result = vectors[0].copy();
+        let result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
-            result.mul(vectors[i]);
+            result = result.mul(vectors[i]);
         }
         return result;
     }
 
     static div(vectors: Vector2D[]): Vector2D {
         if (vectors.length === 0) throw new Error('No vectors provided');
-        const result = vectors[0].copy();
+        let result = vectors[0].copy();
         for (let i = 1; i < vectors.length; i++) {
             if (vectors[i].x === 0 || vectors[i].y === 0) {
                 throw new Error('Division by zero');
             }
-            result.div(vectors[i]);
+            result = result.div(vectors[i]);
         }
         return result;
     }
@@ -186,6 +268,30 @@ class Vector2D {
 
     static fromAngleAndMag(angle: number, mag: number): Vector2D {
         return new Vector2D(Math.cos(angle) * mag, Math.sin(angle) * mag);
+    }
+
+    static zero(): Vector2D {
+        return new Vector2D(0, 0);
+    }
+
+    static one(): Vector2D {
+        return new Vector2D(1, 1);
+    }
+
+    static up(): Vector2D {
+        return new Vector2D(0, 1);
+    }
+
+    static down(): Vector2D {
+        return new Vector2D(0, -1);
+    }
+
+    static left(): Vector2D {
+        return new Vector2D(-1, 0);
+    }
+
+    static right(): Vector2D {
+        return new Vector2D(1, 0);
     }
 }
 
