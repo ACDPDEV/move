@@ -2,6 +2,7 @@
 import { Vector2D } from '@/simulations/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
 import { usePlaneStore } from '../stores/usePlaneStore';
+import { useVariablesStore } from '../stores/useVariablesStore';
 
 interface EntityProps {
     id?: string;
@@ -55,6 +56,28 @@ class Entity {
         this.shape = shape;
         this.color = color;
         this.trajectory = [this.position.copy()];
+    }
+
+    // ✅ Helper: calcular resultantes (para DIBUJAR) aplicando variables activas
+    private getAppliedVectorsForDraw(): {
+        velocityR: Vector2D;
+        accelerationR: Vector2D;
+    } {
+        let velocityR = this.velocity;
+        let accelerationR = this.acceleration;
+
+        const activeVariables = useVariablesStore
+            .getState()
+            .variables.filter((v) => v.active);
+
+        for (const variable of activeVariables) {
+            if (variable.type === 'velocity') {
+                velocityR = velocityR.add(variable.value); // inmutable
+            } else if (variable.type === 'acceleration') {
+                accelerationR = accelerationR.add(variable.value); // inmutable
+            }
+        }
+        return { velocityR, accelerationR };
     }
 
     private drawArrow(
@@ -126,25 +149,39 @@ class Entity {
     update(deltaTime: number): void {
         if (deltaTime === 0) return;
 
-        // 1) Aplica la física primero
-        this.position.x +=
-            this.velocity.x * deltaTime +
-            0.5 * this.acceleration.x * deltaTime * deltaTime;
-        this.position.y +=
-            this.velocity.y * deltaTime +
-            0.5 * this.acceleration.y * deltaTime * deltaTime;
-        this.velocity.x += this.acceleration.x * deltaTime;
-        this.velocity.y += this.acceleration.y * deltaTime;
+        // Inicializar con los valores base de la entidad (sin variables)
+        let velocityResultant = this.velocity.copy();
+        let accelerationResultant = this.acceleration.copy();
 
-        // 2) Luego guardamos snapshot (copy) de la posición actual
-        // Opcional: reducir puntos guardando solo si se movió lo suficiente (mejora rendimiento)
-        // const last = this.trajectory[this.trajectory.length - 1];
-        // const dx = this.position.x - last.x;
-        // const dy = this.position.y - last.y;
-        // const THRESHOLD_SQ = 0.01; // ajustar según escala
-        // if (dx*dx + dy*dy > THRESHOLD_SQ) this.trajectory.push(this.position.copy());
+        // Aplicar solo variables activas
+        const activeVariables = useVariablesStore
+            .getState()
+            .variables.filter((v) => v.active);
+
+        activeVariables.forEach((variable) => {
+            if (variable.type === 'velocity') {
+                velocityResultant = velocityResultant.add(variable.value);
+            }
+            if (variable.type === 'acceleration') {
+                accelerationResultant = accelerationResultant.add(
+                    variable.value,
+                );
+            }
+        });
+
+        // Aplicar cinemática con las resultantes
+        this.position = this.position.add(
+            velocityResultant
+                .scale(deltaTime)
+                .add(accelerationResultant.scale(0.5 * deltaTime * deltaTime)),
+        );
+
+        this.velocity = this.velocity.add(
+            accelerationResultant.scale(deltaTime),
+        );
+
+        // Guardar punto en trayectoria
         this.trajectory.push(this.position.copy());
-
         if (this.trajectory.length > 1000) this.trajectory.shift();
     }
 
@@ -202,7 +239,7 @@ class Entity {
                 return [
                     [a[0] + (b[0] - a[0]) * r, a[1] + (b[1] - a[1]) * r],
                     [b[0] - (b[0] - a[0]) * r, b[1] - (b[1] - a[1]) * r],
-                ];
+                ] as const;
             };
             const [s12, e12] = compute(p1, p2);
             const [s23, e23] = compute(p2, p3);
@@ -253,6 +290,7 @@ class Entity {
         this.trajectory = [this.position.copy()];
     }
 
+    // ---------- POSICIÓN (sin variables) ----------
     drawPositionVectorResultant(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
         const fromX = plane.position.x * plane.scale;
@@ -289,12 +327,14 @@ class Entity {
         );
     }
 
+    // ---------- VELOCIDAD (APLICANDO VARIABLES) ----------
     drawVelocityVectorResultant(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
+        const { velocityR } = this.getAppliedVectorsForDraw(); // ✅ usar resultante
         const sx = (this.position.x + plane.position.x) * plane.scale;
         const sy = (this.position.y + plane.position.y) * plane.scale * -1;
-        const ex = sx + this.velocity.x * plane.scale;
-        const ey = sy + this.velocity.y * plane.scale * -1;
+        const ex = sx + velocityR.x * plane.scale;
+        const ey = sy + velocityR.y * plane.scale * -1;
         ctx.strokeStyle = this.color;
         ctx.fillStyle = this.color;
         this.drawArrow(ctx, sx, sy, ex, ey, 2);
@@ -302,10 +342,11 @@ class Entity {
 
     drawVelocityVectorComponents(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
+        const { velocityR } = this.getAppliedVectorsForDraw(); // ✅
         const sx = (this.position.x + plane.position.x) * plane.scale;
         const sy = (this.position.y + plane.position.y) * plane.scale * -1;
-        const ex = sx + this.velocity.x * plane.scale;
-        const ey = sy + this.velocity.y * plane.scale * -1;
+        const ex = sx + velocityR.x * plane.scale;
+        const ey = sy + velocityR.y * plane.scale * -1;
         ctx.strokeStyle = this.color;
         ctx.fillStyle = this.color;
         this.drawArrow(ctx, sx, sy, ex, sy, 1);
@@ -314,23 +355,26 @@ class Entity {
 
     drawVelocityVectorAngle(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
+        const { velocityR } = this.getAppliedVectorsForDraw(); // ✅
         const cx = (this.position.x + plane.position.x) * plane.scale;
         const cy = (this.position.y + plane.position.y) * plane.scale * -1;
         this.drawAngle(
             ctx,
             cx,
             cy,
-            this.velocity.x * plane.scale,
-            this.velocity.y * plane.scale,
+            velocityR.x * plane.scale,
+            velocityR.y * plane.scale,
         );
     }
 
+    // ---------- ACELERACIÓN (APLICANDO VARIABLES) ----------
     drawAccelerationVectorResultant(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
+        const { accelerationR } = this.getAppliedVectorsForDraw(); // ✅
         const sx = (this.position.x + plane.position.x) * plane.scale;
         const sy = (this.position.y + plane.position.y) * plane.scale * -1;
-        const ex = sx + this.acceleration.x * plane.scale;
-        const ey = sy + this.acceleration.y * plane.scale * -1;
+        const ex = sx + accelerationR.x * plane.scale;
+        const ey = sy + accelerationR.y * plane.scale * -1;
         ctx.strokeStyle = this.color;
         ctx.fillStyle = this.color;
         this.drawArrow(ctx, sx, sy, ex, ey, 2);
@@ -338,10 +382,11 @@ class Entity {
 
     drawAccelerationVectorComponents(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
+        const { accelerationR } = this.getAppliedVectorsForDraw(); // ✅
         const sx = (this.position.x + plane.position.x) * plane.scale;
         const sy = (this.position.y + plane.position.y) * plane.scale * -1;
-        const ex = sx + this.acceleration.x * plane.scale;
-        const ey = sy + this.acceleration.y * plane.scale * -1;
+        const ex = sx + accelerationR.x * plane.scale;
+        const ey = sy + accelerationR.y * plane.scale * -1;
         ctx.strokeStyle = this.color;
         ctx.fillStyle = this.color;
         this.drawArrow(ctx, sx, sy, ex, sy, 1);
@@ -350,14 +395,15 @@ class Entity {
 
     drawAccelerationVectorAngle(ctx: CanvasRenderingContext2D): void {
         const plane = usePlaneStore.getState();
+        const { accelerationR } = this.getAppliedVectorsForDraw(); // ✅
         const cx = (this.position.x + plane.position.x) * plane.scale;
         const cy = (this.position.y + plane.position.y) * plane.scale * -1;
         this.drawAngle(
             ctx,
             cx,
             cy,
-            this.acceleration.x * plane.scale,
-            this.acceleration.y * plane.scale,
+            accelerationR.x * plane.scale,
+            accelerationR.y * plane.scale,
         );
     }
 
