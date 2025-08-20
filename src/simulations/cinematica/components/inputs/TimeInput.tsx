@@ -89,6 +89,7 @@ const TimeInput = memo(function TimeInput({
             prefix="t"
             suffix="s"
             tooltip="Tiempo"
+            placeholder="0"
             onChange={onChange}
             value={previousRef.current}
             type="text"
