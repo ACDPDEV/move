@@ -1,7 +1,12 @@
 import React, { memo, useEffect, useRef } from 'react';
-import Input from '@/simulations/cinematica/components/ui/input';
+import { Input } from '@/components/ui/input';
 import { TimeStore, useTimeStore } from '../../stores/useTimeStore';
 import { useEntityStore } from '../../stores/useEntityStore';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface TimeInputProps {
     className?: string;
@@ -62,7 +67,7 @@ const TimeInput = memo(function TimeInput({
     const update = useTimeStore((s) => s.updateTime);
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const n = Number(e.target.value);
-        if (isNaN(n)) {
+        if (isNaN(n) && e.target.value !== '' && e.target.value !== '.') {
             e.target.value = previousRef.current.toString();
             setError('Tiempo solo puede ser un número');
             return;
@@ -85,17 +90,27 @@ const TimeInput = memo(function TimeInput({
     };
 
     return (
-        <Input
-            prefix="t"
-            suffix="s"
-            tooltip="Tiempo"
-            placeholder="0"
-            onChange={onChange}
-            value={previousRef.current}
-            type="text"
-            name="time"
-            ref={inputRef}
-        />
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <div className="w-32 h-9 bg-[#2B3B31] rounded-md flex flex-row p-2 gap-1 items-center justify-between cursor-pointer">
+                    <span className="text-[#89A996] w-3 h-5 text-sm font-mono">
+                        t
+                    </span>
+                    <input
+                        type="number"
+                        name="time"
+                        ref={inputRef}
+                        onChange={onChange}
+                        placeholder="0"
+                        className="w-19 h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
+                    />
+                    <span className="text-[#567663] w-3 h-5 text-sm font-mono">
+                        s
+                    </span>
+                </div>
+            </TooltipTrigger>
+            <TooltipContent>Tiempo</TooltipContent>
+        </Tooltip>
     );
 });
 
