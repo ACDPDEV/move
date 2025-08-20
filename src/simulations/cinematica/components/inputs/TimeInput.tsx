@@ -34,11 +34,11 @@ const TimeInput = memo(function TimeInput({
                 document.activeElement !== el &&
                 newValue !== previousRef.current
             ) {
-                if (newValue.toFixed(0) === '0') {
+                if (newValue.toFixed(2) === '0') {
                     el.value = '';
                     return;
                 } else {
-                    el.value = newValue.toFixed(0);
+                    el.value = newValue.toFixed(2);
                     previousRef.current = newValue;
                 }
             }
@@ -51,10 +51,10 @@ const TimeInput = memo(function TimeInput({
         const initTime = useTimeStore.getState().time;
         if (inputRef.current && initTime) {
             if (initTime) {
-                if (initTime.toFixed(0) === '0') {
+                if (initTime.toFixed(2) === '0') {
                     inputRef.current.value = '';
                 } else {
-                    inputRef.current.value = initTime.toFixed(0);
+                    inputRef.current.value = initTime.toFixed(2);
                 }
             }
             previousRef.current = initTime;
