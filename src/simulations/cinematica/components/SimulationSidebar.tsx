@@ -26,6 +26,7 @@ import {
     IconLayoutSidebarLeftExpandFilled,
     IconMeteorFilled,
     IconPlus,
+    IconVariable,
 } from '@tabler/icons-react';
 import { useSidebarStore } from '../stores/useSidebarStore';
 import { useEntityStore } from '../stores/useEntityStore';
@@ -37,6 +38,8 @@ import {
 import { AnimatePresence, motion } from 'motion/react';
 import { useURL } from '../hooks/useURL';
 import { compressData } from '../utils/encodeAndDecodeEntities';
+import { useVariablesStore } from '../stores/useVariablesStore';
+import VariableCard from './VariableCard';
 
 function SimulationSidebar({
     className,
@@ -47,7 +50,9 @@ function SimulationSidebar({
 }) {
     const toggleIsOpen = useSidebarStore((s) => s.toggleIsOpen);
     const entities = useEntitySummaries();
+    const variables = useVariablesStore((s) => s.variables);
     const reversed = [...entities].reverse();
+    const reversedVariables = [...variables].reverse();
     const [error, setError] = useState<string>('');
     const { setURLParams } = useURL();
 
@@ -81,6 +86,9 @@ function SimulationSidebar({
                                 </TabsTrigger>
                                 <TabsTrigger value="charts">
                                     <IconChartArea /> Gráficas
+                                </TabsTrigger>
+                                <TabsTrigger value="vars">
+                                    <IconVariable /> Variables
                                 </TabsTrigger>
                             </TabsList>
                             <Tooltip>
@@ -151,6 +159,39 @@ function SimulationSidebar({
                                             color={color}
                                             key={id}
                                         />
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </TabsContent>
+
+                        {/* Variables */}
+                        <TabsContent
+                            value="vars"
+                            className="row-start-2 h-full overflow-hidden"
+                        >
+                            <ScrollArea className="w-full h-full">
+                                <div className="flex flex-col gap-4 p-4">
+                                    <Button
+                                        variant="default"
+                                        className="w-full justify-center text-left hover:border hover:border-bg-secondary"
+                                        onClick={() => {
+                                            useVariablesStore
+                                                .getState()
+                                                .addVariable(
+                                                    'variable-' +
+                                                        (
+                                                            Math.random() * 1000
+                                                        ).toFixed(0),
+                                                    'acceleration',
+                                                    { x: 0, y: 0 },
+                                                );
+                                        }}
+                                    >
+                                        <IconPlus size={20} />
+                                        Añadir Variable
+                                    </Button>
+                                    {reversedVariables.map((variable) => (
+                                        <VariableCard variable={variable} />
                                     ))}
                                 </div>
                             </ScrollArea>
