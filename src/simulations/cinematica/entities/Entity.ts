@@ -37,6 +37,9 @@ class Entity {
     radius: number;
     shape: 'circle' | 'square' | 'triangle';
     color: string;
+    private initialPosition: Vector2D;
+    private initialVelocity: Vector2D;
+    private initialAcceleration: Vector2D;
     private trajectory: Vector2D[] = [];
 
     constructor({
@@ -52,6 +55,9 @@ class Entity {
         this.position = new Vector2D(position.x, position.y);
         this.velocity = new Vector2D(velocity.x, velocity.y);
         this.acceleration = new Vector2D(acceleration.x, acceleration.y);
+        this.initialPosition = this.position.copy();
+        this.initialVelocity = this.velocity.copy();
+        this.initialAcceleration = this.acceleration.copy();
         this.radius = radius;
         this.shape = shape;
         this.color = color;
@@ -183,6 +189,12 @@ class Entity {
         // Guardar punto en trayectoria
         this.trajectory.push(this.position.copy());
         if (this.trajectory.length > 1000) this.trajectory.shift();
+    }
+
+    reset(): void {
+        this.position = this.initialPosition.copy();
+        this.velocity = this.initialVelocity.copy();
+        this.acceleration = this.initialAcceleration.copy();
     }
 
     draw(ctx: CanvasRenderingContext2D, borderColor?: string): void {

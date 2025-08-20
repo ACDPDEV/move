@@ -11,10 +11,8 @@ function useResetButton() {
     const reset = useTimeStore((s) => s.reset);
     const { setURLParams } = useURL();
     const onClick = () => {
-        useEntityStore
-            .getState()
-            .updateAllEntities(-useTimeStore.getState().time);
         useEntityStore.getState().entities.forEach((entity) => {
+            entity.reset();
             entity.resetTrajectory();
         });
         reset();
