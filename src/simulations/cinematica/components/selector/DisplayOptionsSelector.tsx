@@ -65,6 +65,7 @@ function DisplayOptionsSelector() {
         trajectory,
         coordinates,
         axes,
+        fps,
         togglePositionResultant,
         togglePositionComponents,
         togglePositionAngle,
@@ -77,6 +78,7 @@ function DisplayOptionsSelector() {
         toggleTrajectory,
         toggleCoordinates,
         toggleAxes,
+        toggleFps,
     } = useDisplayStore();
 
     const updateURL = useCallback(() => {
@@ -225,6 +227,13 @@ function DisplayOptionsSelector() {
                             'Muestra los ejes X e Y del sistema de coordenadas',
                         checked: axes,
                         toggle: createToggleHandler(toggleAxes),
+                    },
+                    {
+                        id: 'fps',
+                        label: 'FPS',
+                        description: 'Muestra el FPS del simulador',
+                        checked: fps,
+                        toggle: createToggleHandler(toggleFps),
                     },
                 ],
             },

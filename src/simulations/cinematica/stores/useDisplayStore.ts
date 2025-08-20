@@ -19,6 +19,7 @@ interface Display {
     trajectory: boolean;
     coordinates: boolean;
     axes: boolean;
+    fps: boolean;
 }
 
 type DisplayStore = {
@@ -40,6 +41,7 @@ type DisplayStore = {
     trajectory: boolean;
     coordinates: boolean;
     axes: boolean;
+    fps: boolean;
     togglePositionResultant: () => void;
     togglePositionComponents: () => void;
     togglePositionAngle: () => void;
@@ -52,6 +54,7 @@ type DisplayStore = {
     toggleTrajectory: () => void;
     toggleCoordinates: () => void;
     toggleAxes: () => void;
+    toggleFps: () => void;
     setDisplay: (display: Display) => void;
     toProps: () => Display;
 };
@@ -63,6 +66,7 @@ export const useDisplayStore = create<DisplayStore>((set, get) => ({
     trajectory: false,
     coordinates: false,
     axes: false,
+    fps: false,
     togglePositionResultant: () =>
         set({
             position: {
@@ -119,6 +123,7 @@ export const useDisplayStore = create<DisplayStore>((set, get) => ({
     toggleTrajectory: () => set({ trajectory: !get().trajectory }),
     toggleCoordinates: () => set({ coordinates: !get().coordinates }),
     toggleAxes: () => set({ axes: !get().axes }),
+    toggleFps: () => set({ fps: !get().fps }),
     setDisplay: (display) => set(display),
     toProps: () => {
         return {
@@ -140,6 +145,7 @@ export const useDisplayStore = create<DisplayStore>((set, get) => ({
             trajectory: get().trajectory,
             coordinates: get().coordinates,
             axes: get().axes,
+            fps: get().fps,
         };
     },
 }));
