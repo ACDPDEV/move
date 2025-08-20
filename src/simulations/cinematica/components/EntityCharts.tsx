@@ -2,6 +2,9 @@
 import React, { useMemo, useState } from 'react';
 import { XAxis, YAxis, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { useEntityStore } from '../stores/useEntityStore';
+import { useVariablesStore } from '../stores/useVariablesStore';
+import type { Variable } from '../stores/useVariablesStore';
+import { Vector2D } from '@/simulations/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import {
     Collapsible,
@@ -15,7 +18,7 @@ interface EntityChartsProps {
     color: string;
 }
 
-// Función para formatear números en notación científica cuando es necesario
+// Formateo de números (notación científica cuando conviene)
 const formatNumber = (num: number): string => {
     if (Math.abs(num) < 0.001 && num !== 0) {
         return num.toExponential(2);
@@ -28,67 +31,106 @@ const formatNumber = (num: number): string => {
 
 const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
     const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
+
+    // Entidad objetivo (puede ser undefined si no existe)
     const entity = useEntityStore((state) =>
         state.entities.find((e) => e.id === entityId),
     );
 
+    // 1) Leemos el array completo de variables desde el store (un solo argumento)
+    const variables = useVariablesStore((state) => state.variables);
+
+    // 2) Derivamos activeVariables con useMemo (tipado claro gracias a `Variable`)
+    const activeVariables = useMemo(
+        () => variables.filter((v: Variable) => v.active),
+        [variables],
+    );
+
+    // Calcular las resultantes (velocidad y aceleración) aplicando variables activas
+    const resultantValues = useMemo(() => {
+        if (!entity) return null;
+
+        // Usamos copias para no mutar el estado original del store/entity
+        let velocityResultant: Vector2D = entity.velocity.copy();
+        let accelerationResultant: Vector2D = entity.acceleration.copy();
+
+        activeVariables.forEach((variable: Variable) => {
+            if (variable.type === 'velocity') {
+                // Si add muta el objeto, estamos operando sobre las copias
+                velocityResultant = velocityResultant.add(variable.value);
+            }
+            if (variable.type === 'acceleration') {
+                accelerationResultant = accelerationResultant.add(
+                    variable.value,
+                );
+            }
+        });
+
+        return {
+            velocity: velocityResultant,
+            acceleration: accelerationResultant,
+        };
+    }, [entity?.velocity, entity?.acceleration, activeVariables, entity]);
+
     // Generar datos de predicción para las gráficas
     const chartData = useMemo(() => {
-        if (!entity) return [];
+        if (!entity || !resultantValues) return [];
 
-        const timePoints = [];
+        const timePoints: Array<Record<string, number>> = [];
         const maxTime = 10;
         const steps = 50;
+
+        const {
+            velocity: resultantVelocity,
+            acceleration: resultantAcceleration,
+        } = resultantValues;
 
         for (let i = 0; i <= steps; i++) {
             const t = (i / steps) * maxTime;
 
             const positionX =
                 entity.position.x +
-                entity.velocity.x * t +
-                0.5 * entity.acceleration.x * t * t;
+                resultantVelocity.x * t +
+                0.5 * resultantAcceleration.x * t * t;
             const positionY =
                 entity.position.y +
-                entity.velocity.y * t +
-                0.5 * entity.acceleration.y * t * t;
+                resultantVelocity.y * t +
+                0.5 * resultantAcceleration.y * t * t;
 
-            const velocityX = entity.velocity.x + entity.acceleration.x * t;
-            const velocityY = entity.velocity.y + entity.acceleration.y * t;
+            const velocityX = resultantVelocity.x + resultantAcceleration.x * t;
+            const velocityY = resultantVelocity.y + resultantAcceleration.y * t;
 
-            const accelerationX = entity.acceleration.x;
-            const accelerationY = entity.acceleration.y;
+            const accelerationX = resultantAcceleration.x;
+            const accelerationY = resultantAcceleration.y;
 
             timePoints.push({
                 time: t,
-                positionX: positionX,
-                positionY: positionY,
-                velocityX: velocityX,
-                velocityY: velocityY,
-                accelerationX: accelerationX,
-                accelerationY: accelerationY,
-                positionMagnitude: Math.sqrt(
-                    positionX * positionX + positionY * positionY,
-                ),
-                velocityMagnitude: Math.sqrt(
-                    velocityX * velocityX + velocityY * velocityY,
-                ),
-                accelerationMagnitude: Math.sqrt(
-                    accelerationX * accelerationX +
-                        accelerationY * accelerationY,
+                positionX,
+                positionY,
+                velocityX,
+                velocityY,
+                accelerationX,
+                accelerationY,
+                positionmag: Math.sqrt(positionX ** 2 + positionY ** 2),
+                velocitymag: Math.sqrt(velocityX ** 2 + velocityY ** 2),
+                accelerationmag: Math.sqrt(
+                    accelerationX ** 2 + accelerationY ** 2,
                 ),
             });
         }
 
         return timePoints;
-    }, [entity]);
+    }, [entity?.position, resultantValues, entity]);
 
-    // Análisis de la función
+    // Análisis de la función (vértices, ceros, etc.)
     const analysis = useMemo(() => {
-        if (!entity || chartData.length === 0) return null;
+        if (!entity || !resultantValues || chartData.length === 0) return null;
 
-        const { position, velocity, acceleration } = entity;
+        const {
+            velocity: resultantVelocity,
+            acceleration: resultantAcceleration,
+        } = resultantValues;
 
-        // Cálculos para posición (función cuadrática)
         const posAnalysis = {
             vertex: null as { t: number; value: number } | null,
             roots: [] as number[],
@@ -98,76 +140,56 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
             stopsY: null as number | null,
         };
 
-        // Vértice para posición (si hay aceleración)
-        if (acceleration.x !== 0 || acceleration.y !== 0) {
-            const accMag = Math.sqrt(
-                acceleration.x * acceleration.x +
-                    acceleration.y * acceleration.y,
-            );
-            const velMag = Math.sqrt(
-                velocity.x * velocity.x + velocity.y * velocity.y,
-            );
-            if (accMag !== 0) {
-                const tVertex = -velMag / accMag;
-                if (tVertex >= 0) {
-                    const posMag = Math.sqrt(
-                        position.x * position.x + position.y * position.y,
-                    );
-                    const vertexValue =
-                        posMag +
-                        velMag * tVertex +
-                        0.5 * accMag * tVertex * tVertex;
-                    posAnalysis.vertex = { t: tVertex, value: vertexValue };
-                }
+        // Analizamos magnitudes para posición (componente radial)
+        const accMag = resultantAcceleration.mag();
+        const velMag = resultantVelocity.mag();
+        if (accMag !== 0) {
+            const tVertex = -velMag / accMag;
+            // solo consideramos vértice en t >= 0
+            if (tVertex >= 0) {
+                const posMag = entity.position.mag();
+                const vertexValue =
+                    posMag +
+                    velMag * tVertex +
+                    0.5 * accMag * tVertex * tVertex;
+                posAnalysis.vertex = { t: tVertex, value: vertexValue };
             }
         }
 
-        // Cuándo se detiene en X
-        if (acceleration.x !== 0) {
-            const stopTimeX = -velocity.x / acceleration.x;
+        if (resultantAcceleration.x !== 0) {
+            const stopTimeX = -resultantVelocity.x / resultantAcceleration.x;
             if (stopTimeX >= 0) posAnalysis.stopsX = stopTimeX;
         }
 
-        // Cuándo se detiene en Y
-        if (acceleration.y !== 0) {
-            const stopTimeY = -velocity.y / acceleration.y;
+        if (resultantAcceleration.y !== 0) {
+            const stopTimeY = -resultantVelocity.y / resultantAcceleration.y;
             if (stopTimeY >= 0) posAnalysis.stopsY = stopTimeY;
         }
 
-        // Análisis para velocidad (función lineal)
         const velAnalysis = {
-            slope: Math.sqrt(
-                acceleration.x * acceleration.x +
-                    acceleration.y * acceleration.y,
-            ),
-            yIntercept: Math.sqrt(
-                velocity.x * velocity.x + velocity.y * velocity.y,
-            ),
+            slope: accMag,
+            yIntercept: velMag,
             domain: 'ℝ (todos los reales)',
             range: 'ℝ (todos los reales)',
             zeroTime: null as number | null,
         };
 
-        // Cuándo la velocidad es cero
-        const velMag = Math.sqrt(
-            velocity.x * velocity.x + velocity.y * velocity.y,
-        );
-        const accMag = Math.sqrt(
-            acceleration.x * acceleration.x + acceleration.y * acceleration.y,
-        );
         if (accMag !== 0) {
             const zeroTime = -velMag / accMag;
             if (zeroTime >= 0) velAnalysis.zeroTime = zeroTime;
         }
 
-        return { position: posAnalysis, velocity: velAnalysis };
-    }, [entity, chartData]);
+        return {
+            position: posAnalysis,
+            velocity: velAnalysis,
+            resultantVelocity,
+            resultantAcceleration,
+        };
+    }, [entity, resultantValues, chartData]);
 
-    if (!entity) return null;
+    if (!entity || !resultantValues) return null;
 
     const gradientId = `gradient-${entityId}`;
-
-    // Función personalizada para formatear ticks
     const formatTick = (value: number) => formatNumber(value);
 
     return (
@@ -227,7 +249,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                             />
                             <Area
                                 type="monotone"
-                                dataKey="positionMagnitude"
+                                dataKey="positionmag"
                                 stroke={color}
                                 strokeWidth={2}
                                 fill={`url(#${gradientId}-position)`}
@@ -297,7 +319,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                             />
                             <Area
                                 type="monotone"
-                                dataKey="velocityMagnitude"
+                                dataKey="velocitymag"
                                 stroke={color}
                                 strokeWidth={2}
                                 fill={`url(#${gradientId}-velocity)`}
@@ -313,7 +335,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                 </div>
             </div>
 
-            <Separator className="my-4" />
+            <Separator className="my-6" />
 
             {/* Gráfica de Aceleración */}
             <div className="space-y-2 relative">
@@ -362,7 +384,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                             />
                             <Area
                                 type="monotone"
-                                dataKey="accelerationMagnitude"
+                                dataKey="accelerationmag"
                                 stroke={color}
                                 strokeWidth={2}
                                 fill={`url(#${gradientId}-acceleration)`}
@@ -393,7 +415,64 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                 <CollapsibleContent className="mt-4 space-y-4">
                     {analysis && (
                         <>
-                            {/* Análisis de Posición */}
+                            {/* Valores Resultantes */}
+                            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
+                                <h5 className="text-sm font-semibold mb-2 text-green-800 dark:text-green-200">
+                                    Valores Resultantes (con variables)
+                                </h5>
+                                <div className="space-y-1 text-xs text-green-700 dark:text-green-300">
+                                    <div className="flex justify-between">
+                                        <span>Velocidad resultante:</span>
+                                        <span>
+                                            (
+                                            {formatNumber(
+                                                analysis.resultantVelocity.x,
+                                            )}
+                                            ,{' '}
+                                            {formatNumber(
+                                                analysis.resultantVelocity.y,
+                                            )}
+                                            ) m/s
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Aceleración resultante:</span>
+                                        <span>
+                                            (
+                                            {formatNumber(
+                                                analysis.resultantAcceleration
+                                                    .x,
+                                            )}
+                                            ,{' '}
+                                            {formatNumber(
+                                                analysis.resultantAcceleration
+                                                    .y,
+                                            )}
+                                            ) m/s²
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Magnitud vel. resultante:</span>
+                                        <span>
+                                            {formatNumber(
+                                                analysis.resultantVelocity.mag(),
+                                            )}{' '}
+                                            m/s
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Magnitud accel. resultante:</span>
+                                        <span>
+                                            {formatNumber(
+                                                analysis.resultantAcceleration.mag(),
+                                            )}{' '}
+                                            m/s²
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Posición */}
                             <div className="bg-stone-50 dark:bg-stone-800 rounded-lg p-3">
                                 <h5 className="text-sm font-semibold mb-2 dark:text-white">
                                     Posición
@@ -450,7 +529,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                 </div>
                             </div>
 
-                            {/* Análisis de Velocidad */}
+                            {/* Velocidad */}
                             <div className="bg-stone-50 dark:bg-stone-800 rounded-lg p-3">
                                 <h5 className="text-sm font-semibold mb-2 dark:text-white">
                                     Velocidad
@@ -495,7 +574,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                 </div>
                             </div>
 
-                            {/* Análisis de Aceleración */}
+                            {/* Aceleración */}
                             <div className="bg-stone-50 dark:bg-stone-800 rounded-lg p-3">
                                 <h5 className="text-sm font-semibold mb-2 dark:text-white">
                                     Aceleración
@@ -505,13 +584,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                         <span>Valor constante:</span>
                                         <span>
                                             {formatNumber(
-                                                Math.sqrt(
-                                                    entity.acceleration.x *
-                                                        entity.acceleration.x +
-                                                        entity.acceleration.y *
-                                                            entity.acceleration
-                                                                .y,
-                                                ),
+                                                analysis.resultantAcceleration.mag(),
                                             )}
                                         </span>
                                     </div>
@@ -527,13 +600,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                         <span>Rango:</span>
                                         <span>
                                             {formatNumber(
-                                                Math.sqrt(
-                                                    entity.acceleration.x *
-                                                        entity.acceleration.x +
-                                                        entity.acceleration.y *
-                                                            entity.acceleration
-                                                                .y,
-                                                ),
+                                                analysis.resultantAcceleration.mag(),
                                             )}
                                         </span>
                                     </div>
@@ -548,4 +615,3 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
 };
 
 export default EntityCharts;
-export { EntityCharts };
