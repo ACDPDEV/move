@@ -1,3 +1,4 @@
+import React, { forwardRef } from 'react';
 import {
     Tooltip,
     TooltipContent,
@@ -5,77 +6,44 @@ import {
 } from '@/components/ui/tooltip';
 import styles from '../../consts/styles';
 
-function Input({
-    prefix,
-    suffix,
-    tooltip,
-    className,
-    value,
-    defaultValue,
-    placeholder,
-    type,
-    name,
-    ref,
-    onChange,
-    onBlur,
-    onSubmit,
-}: {
-    prefix?: string;
-    suffix?: string;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    textPrefix?: string;
+    textSuffix?: string;
     tooltip?: string;
     className?: string;
-    value?: string | number;
-    defaultValue?: string | number;
-    placeholder?: string;
-    type?: string;
-    name?: string;
-    ref?: React.Ref<HTMLInputElement>;
-    onChange?: React.ChangeEventHandler<HTMLInputElement>;
-    onBlur?: React.FocusEventHandler<HTMLInputElement>;
-    onSubmit?: React.FormEventHandler<HTMLInputElement>;
-}) {
-    if (!tooltip)
-        return (
-            <div className={styles.input + ' ' + className}>
-                {prefix && <span className={styles.prefix}>{prefix}</span>}
-                <input
-                    className="flex grow w-full h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
-                    value={value}
-                    defaultValue={defaultValue}
-                    placeholder={placeholder}
-                    type={type}
-                    name={name}
-                    ref={ref}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    onSubmit={onSubmit}
-                />
-                {suffix && <span className={styles.suffix}>{suffix}</span>}
-            </div>
-        );
+}
+
+const Input = forwardRef<HTMLInputElement, InputProps>(({
+    textPrefix,
+    textSuffix,
+    tooltip,
+    className = '',
+    ...props
+}, ref) => {
+    const inputElement = (
+        <div className={`${styles.input} ${className}`.trim()}>
+            {textPrefix && <span className={styles.textPrefix}>{textPrefix}</span>}
+            <input
+                ref={ref}
+                className="flex grow w-full h-5 bg-transparent p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
+                {...props}
+            />
+            {textSuffix && <span className={styles.textSuffix}>{textSuffix}</span>}
+        </div>
+    );
+
+    if (!tooltip) return inputElement;
+
     return (
         <Tooltip>
             <TooltipTrigger asChild>
-                <div className={styles.input + ' ' + className}>
-                    {prefix && <span className={styles.prefix}>{prefix}</span>}
-                    <input
-                        className="flex grow w-full h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
-                        value={value}
-                        defaultValue={defaultValue}
-                        placeholder={placeholder}
-                        type={type}
-                        name={name}
-                        ref={ref}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        onSubmit={onSubmit}
-                    />
-                    {suffix && <span className={styles.suffix}>{suffix}</span>}
-                </div>
+                {inputElement}
             </TooltipTrigger>
             <TooltipContent>{tooltip}</TooltipContent>
         </Tooltip>
     );
-}
+});
+
+Input.displayName = 'Input';
 
 export default Input;
