@@ -35,15 +35,16 @@ function VectorLetterIcon({
                 }`}
             />
 
-            {/* Letra variable */}
+            {/* Letra variable - ajustada para evitar desbordamiento */}
             <text
                 x="50%"
-                y="75%"
-                dominantBaseline="middle"
+                y="65%"
+                dominantBaseline="central"
                 textAnchor="middle"
-                fontSize={baseSize * 0.8}
+                fontSize={baseSize * 0.6}
                 fill="currentColor"
                 stroke="none"
+                style={{ fontFamily: 'Arial, sans-serif' }}
             >
                 {letter}
             </text>
