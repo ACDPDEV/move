@@ -10,6 +10,7 @@ type EntityStore = {
     updateEntities: (entities: Entity[]) => void;
     updateAllEntities: (deltaTime: number) => void;
     updateEntity: (id: string, updates: Partial<EntityProps>) => void;
+    resetAllEntities: () => void;
     updateSpecificPropOfEntity: (
         id: string,
         prop:
@@ -45,6 +46,15 @@ const useEntityStore = create<EntityStore>((set, get) => ({
         }
 
         // Forzar una sola actualización
+        set({ entities: [...state.entities] });
+    },
+
+    resetAllEntities: () => {
+        const state = get();
+        state.entities.forEach((entity) => {
+            entity.reset();
+            entity.resetTrajectory();
+        });
         set({ entities: [...state.entities] });
     },
 
