@@ -4,11 +4,12 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { ForwardRefComponent, HTMLMotionProps, motion } from 'motion/react';
+import { HTMLMotionProps, motion } from 'motion/react';
 import styles from '../../consts/styles';
 
-interface ButtonProps extends ForwardRefComponent<HTMLButtonElement, HTMLMotionProps<'button'>> {
-    children: React.ReactNode;
+// Cambio principal: usar HTMLMotionProps directamente en lugar de ForwardRefComponent
+interface ButtonProps extends HTMLMotionProps<'button'> {
+    children?: React.ReactNode;
     tooltip?: string;
     className?: string;
 }
