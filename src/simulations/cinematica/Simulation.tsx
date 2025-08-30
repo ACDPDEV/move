@@ -25,7 +25,6 @@ import { AnimatePresence, motion } from 'motion/react';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
-    console.log(isOpen);
 
     const { getURLParams } = useURL();
 
