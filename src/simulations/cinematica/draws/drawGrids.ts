@@ -1,23 +1,5 @@
 import { usePlaneStore } from '../stores/usePlaneStore';
-
-function gapFactor(number: number): number {
-    if (number === 0) return 0;
-    const stringFromNumber = number.toString();
-    const [intPart, decimalPart = ''] = stringFromNumber.split('.');
-    if (intPart !== '0') {
-        const digits = intPart.length;
-        return digits;
-    }
-    const match = decimalPart.match(/^0+/);
-    const count = match ? match[0].length : 0;
-    return count * -1;
-}
-
-function getGap(length: number, scale: number): number {
-    const rel = length / scale;
-    const gap = Math.pow(10, gapFactor(rel) - 1) * scale;
-    return gap;
-}
+import { gapFactor, getGap } from '../utils/gap';
 
 function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const plane = usePlaneStore.getState();
@@ -33,6 +15,12 @@ function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
         width > height
             ? getGap(height, plane.scale)
             : getGap(width, plane.scale);
+
+    const rel = width > height ? height / plane.scale : width / plane.scale;
+    const step = gapFactor(rel) - 1;
+
+    if (Math.pow(10, step) !== usePlaneStore.getState().gap)
+        usePlaneStore.getState().setGap(Math.pow(10, step));
 
     ctx.strokeStyle = dark ? '#567663' : '#777';
     ctx.lineWidth = 0.5;
