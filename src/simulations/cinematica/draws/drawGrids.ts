@@ -13,10 +13,11 @@ function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
     // Separación en base diez, números de la forma 10**n
     const gap =
         width > height
-            ? getGap(height, plane.scale)
-            : getGap(width, plane.scale);
+            ? getGap(height / 2, plane.scale)
+            : getGap(width / 2, plane.scale);
 
-    const rel = width > height ? height / plane.scale : width / plane.scale;
+    const rel =
+        width > height ? height / 2 / plane.scale : width / 2 / plane.scale;
     const step = gapFactor(rel) - 1;
 
     if (Math.pow(10, step) !== usePlaneStore.getState().gap)
@@ -81,8 +82,8 @@ function drawGridLabels(ctx: CanvasRenderingContext2D, dark: boolean): void {
     // Calcular gap igual que en drawGrids
     const gap =
         width > height
-            ? getGap(height, plane.scale)
-            : getGap(width, plane.scale);
+            ? getGap(height / 2, plane.scale)
+            : getGap(width / 2, plane.scale);
 
     // Configuración de texto
     ctx.fillStyle = dark ? '#ccc' : '#333';
