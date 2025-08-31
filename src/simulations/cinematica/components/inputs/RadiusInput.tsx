@@ -4,9 +4,10 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { Input } from '@/components/ui/input';
 import { useURL } from '../../hooks/useURL';
 import { compressData } from '../../utils/encodeAndDecodeEntities';
+import Input from '../ui/input';
+import { usePlaneStore } from '../../stores/usePlaneStore';
 
 interface RadiusInputProps {
     className?: string;
@@ -21,6 +22,7 @@ const RadiusInput = memo(function RadiusInput({
 }: RadiusInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
+    const gap = usePlaneStore((s) => s.gap);
 
     // Suscripción a TODO el estado, filtrar la propiedad que interesa
     useEffect(() => {
@@ -88,27 +90,19 @@ const RadiusInput = memo(function RadiusInput({
             d: compressData(useEntityStore.getState().entities),
         });
     };
-    const onSubmit = (e: React.InputEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        setURLParams({
-            d: compressData(useEntityStore.getState().entities),
-        });
-    };
 
     return (
-        <div className="w-full h-9 bg-[#2B3B31] rounded-md flex flex-1 flex-row p-2 gap-1 items-center justify-between cursor-pointer">
-            <span className="text-[#89A996] w-3 h-5 text-sm font-mono">r</span>
-            <input
-                type="text"
-                name="time"
-                ref={inputRef}
-                onChange={onChange}
-                onBlur={onBlur}
-                onSubmit={onSubmit}
-                placeholder="0"
-                className="flex grow w-full h-5 bg-transparet p-0 text-start text-sm text-[#D3DFD8] font-mono focus:outline-none"
-            />
-        </div>
+        <Input
+            ref={inputRef}
+            name="radius"
+            type="number"
+            textPrefix="r"
+            className="flex grow"
+            placeholder="0"
+            onChange={onChange}
+            onBlur={onBlur}
+            step={gap / 10}
+        />
     );
 });
 
