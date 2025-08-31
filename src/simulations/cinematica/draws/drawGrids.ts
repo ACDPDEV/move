@@ -58,15 +58,22 @@ function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
 }
 
 function formatGridValue(value: number, gap: number): string {
+    // Redondear el valor para eliminar errores de punto flotante
+    // Usamos 10 decimales para mantener precisión pero eliminar errores
+    const roundedValue = Math.round(value * 1e10) / 1e10;
+
     // Determinar cuántos decimales mostrar basado en el gap
     if (gap >= 1) {
-        return Math.round(value).toString();
+        return Math.round(roundedValue).toString();
     } else {
         // Contar decimales necesarios basado en el gap
         const gapStr = gap.toString();
         const decimalPart = gapStr.split('.')[1] || '';
         const decimals = decimalPart.length;
-        return value.toFixed(decimals);
+
+        // Aplicar toFixed y luego eliminar ceros trailing innecesarios
+        const formatted = roundedValue.toFixed(decimals);
+        return parseFloat(formatted).toString();
     }
 }
 
