@@ -1,38 +1,38 @@
-import { useDisplayStore } from '../stores/useDisplayStore';
+import { useOptionsStore } from '../stores/useOptionsStore';
 import { useEntityStore } from '../stores/useEntityStore';
 
 function drawEntities(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const entities = useEntityStore.getState().entities;
 
     entities.forEach((entity) => {
-        if (useDisplayStore.getState().trajectory) {
+        if (useOptionsStore.getState().display.trajectory) {
             entity.drawTrajectory(ctx);
         }
-        if (useDisplayStore.getState().position.resultant) {
+        if (useOptionsStore.getState().display.positionVectorResultant) {
             entity.drawPositionVectorResultant(ctx);
         }
-        if (useDisplayStore.getState().position.components) {
+        if (useOptionsStore.getState().display.positionVectorComponents) {
             entity.drawPositionVectorComponents(ctx);
         }
-        if (useDisplayStore.getState().position.angle) {
+        if (useOptionsStore.getState().display.positionVectorAngle) {
             entity.drawPositionVectorAngle(ctx);
         }
-        if (useDisplayStore.getState().velocity.resultant) {
+        if (useOptionsStore.getState().display.velocityVectorResultant) {
             entity.drawVelocityVectorResultant(ctx);
         }
-        if (useDisplayStore.getState().velocity.components) {
+        if (useOptionsStore.getState().display.velocityVectorComponents) {
             entity.drawVelocityVectorComponents(ctx);
         }
-        if (useDisplayStore.getState().velocity.angle) {
+        if (useOptionsStore.getState().display.velocityVectorAngle) {
             entity.drawVelocityVectorAngle(ctx);
         }
-        if (useDisplayStore.getState().acceleration.resultant) {
+        if (useOptionsStore.getState().display.accelerationVectorResultant) {
             entity.drawAccelerationVectorResultant(ctx);
         }
-        if (useDisplayStore.getState().acceleration.components) {
+        if (useOptionsStore.getState().display.accelerationVectorComponents) {
             entity.drawAccelerationVectorComponents(ctx);
         }
-        if (useDisplayStore.getState().acceleration.angle) {
+        if (useOptionsStore.getState().display.accelerationVectorAngle) {
             entity.drawAccelerationVectorAngle(ctx);
         }
         entity.draw(
