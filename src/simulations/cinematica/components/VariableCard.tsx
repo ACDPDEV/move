@@ -75,7 +75,9 @@ export default function VariableCard({ variable }: Readonly<Props>) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // solo al montar
 
-    const [angleText, setAngleText] = useState<string>(initialPolar.angleText);
+    const [angleText, setAngleText] = useState<string>(
+        initialPolarVectorAngleText,
+    );
     const [magText, setMagText] = useState<string>(initialPolar.magText);
 
     // sincroniza si cambia en el store (por otros componentes)
