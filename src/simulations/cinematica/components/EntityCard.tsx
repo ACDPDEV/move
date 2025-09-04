@@ -8,6 +8,7 @@ import FlowEntityButton from './buttons/FlowEntityButton';
 import DeleteEntityButton from './buttons/DeleteEntityButton';
 import { IconAlertCircle } from '@tabler/icons-react';
 import VectorInput from './inputs/VectorInput';
+import { useOptionsStore } from '../stores/useOptionsStore';
 
 interface EntityCardProps {
     entityId: string;
@@ -19,6 +20,7 @@ export default function EntityCard({
     color,
 }: Readonly<EntityCardProps>) {
     const [error, setError] = useState<string>('');
+    const { inputs } = useOptionsStore();
 
     return (
         <div
@@ -31,36 +33,46 @@ export default function EntityCard({
                 <DeleteEntityButton entityId={entityId} />
             </div>
 
-            <VectorInput
-                entityId={entityId}
-                entityProp="position"
-                setError={setError}
-            />
+            {inputs.position && (
+                <VectorInput
+                    entityId={entityId}
+                    entityProp="position"
+                    setError={setError}
+                />
+            )}
 
-            <VectorInput
-                entityId={entityId}
-                entityProp="velocity"
-                setError={setError}
-            />
+            {inputs.velocity && (
+                <VectorInput
+                    entityId={entityId}
+                    entityProp="velocity"
+                    setError={setError}
+                />
+            )}
 
-            <VectorInput
-                entityId={entityId}
-                entityProp="acceleration"
-                setError={setError}
-            />
+            {inputs.acceleration && (
+                <VectorInput
+                    entityId={entityId}
+                    entityProp="acceleration"
+                    setError={setError}
+                />
+            )}
 
             {/* Radio y Color lado a lado */}
             <div className="flex space-x-4">
-                <RadiusInput
-                    entityId={entityId}
-                    setError={setError}
-                    className="flex flex-1 w-full"
-                />
-                <ColorInput
-                    entityId={entityId}
-                    setError={setError}
-                    className="flex flex-1 w-full"
-                />
+                {inputs.radius && (
+                    <RadiusInput
+                        entityId={entityId}
+                        setError={setError}
+                        className="flex flex-1 w-full"
+                    />
+                )}
+                {inputs.color && (
+                    <ColorInput
+                        entityId={entityId}
+                        setError={setError}
+                        className="flex flex-1 w-full"
+                    />
+                )}
             </div>
 
             {/* Error */}
