@@ -4,7 +4,7 @@ import TimeInput from './inputs/TimeInput';
 import { useState } from 'react';
 import MovementPredictionToggle from './buttons/MovementPredictionToggle';
 import TimeSpeedSelector from './selector/TimeSpeedSelector';
-import DisplayOptionsSelector from './selector/DisplayOptionsSelector';
+import DisplayOptionsSelector from './selector/OptionsSelect';
 import PlayerToggle from './buttons/PlayerToogle';
 import ResetButton from './buttons/ResetButton';
 import { toast } from 'sonner';
@@ -25,10 +25,6 @@ export default function TimeControls() {
                 <ResetButton />
                 <TimeSpeedSelector />
             </div>
-            <Separator
-                orientation="vertical"
-                className="h-6 bg-stone-600 hidden sm:flex"
-            />
             <div className="items-center gap-2 hidden sm:flex">
                 <DisplayOptionsSelector />
             </div>

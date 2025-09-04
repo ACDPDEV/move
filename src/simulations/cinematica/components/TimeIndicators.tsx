@@ -1,9 +1,9 @@
 import FPSBadge from './badges/FpsIndicator';
 import BackButton from './buttons/BackButton';
-import { useDisplayStore } from '../stores/useDisplayStore';
+import { useOptionsStore } from '../stores/useOptionsStore';
 
 function TimeIndicators({ className }: { className?: string }) {
-    const { fps } = useDisplayStore.getState();
+    const { fps } = useOptionsStore((s) => s.display);
     return (
         <div className={`${className} flex flex-col`}>
             <BackButton />
