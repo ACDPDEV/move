@@ -29,6 +29,7 @@ import { compressData } from '../utils/encodeAndDecodeEntities';
 import { useVariablesStore } from '../stores/useVariablesStore';
 import VariableCard from './VariableCard';
 import styles from '../consts/styles';
+import PredefinedVariables from './PredefinedVariables';
 
 function SimulationSidebar({
     className,
@@ -44,6 +45,7 @@ function SimulationSidebar({
     const reversedVariables = [...variables].reverse();
     const [error, setError] = useState<string>('');
     const { setURLParams } = useURL();
+    const addVariable = useVariablesStore((s) => s.addVariable);
 
     if (error) {
         toast.error(error);
@@ -156,13 +158,12 @@ function SimulationSidebar({
                         >
                             <ScrollArea className="w-full h-full">
                                 <div className="flex flex-col gap-4 p-4">
+                                    <div className='flex flex-row justify-between items-center gap-2'>
                                     <Button
                                         variant="default"
-                                        className="w-full justify-center text-left hover:border hover:border-bg-secondary"
+                                        className="flex grow justify-center text-left hover:border hover:border-bg-secondary"
                                         onClick={() => {
-                                            useVariablesStore
-                                                .getState()
-                                                .addVariable(
+                                            addVariable(
                                                     'variable-' +
                                                         (
                                                             Math.random() * 1000
@@ -175,6 +176,8 @@ function SimulationSidebar({
                                         <IconPlus size={20} />
                                         Añadir Variable
                                     </Button>
+                                    <PredefinedVariables />
+                                    </div>
                                     {reversedVariables.map((variable) => (
                                         <VariableCard
                                             key={variable.id}
