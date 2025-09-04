@@ -62,8 +62,7 @@ const VectorInput = memo(function VectorInput({
 
         const x = prop.x ?? 0;
         const y = prop.y ?? 0;
-        const angle =
-            typeof propVectorAngle === 'function' ? propVectorAngle() : 0;
+        const angle = typeof prop.angle === 'function' ? prop.angle() : 0;
         const magnitude = typeof prop.mag === 'function' ? prop.mag() : 0;
 
         if (inputXRef.current && !focus.x) {
@@ -74,9 +73,9 @@ const VectorInput = memo(function VectorInput({
             inputYRef.current.value = formatClean(y);
             previousRef.current.y = y;
         }
-        if (inputAngleRef.current && !focusVectorAngle) {
+        if (inputAngleRef.current && !focus.angle) {
             inputAngleRef.current.value = formatClean(angle);
-            previousRef.currentVectorAngle = angle;
+            previousRef.current.angle = angle;
         }
         if (inputMagnitudeRef.current && !focus.magnitude) {
             inputMagnitudeRef.current.value = formatClean(magnitude);
@@ -106,13 +105,11 @@ const VectorInput = memo(function VectorInput({
                     previousRef.current.y = y;
                 }
             } else if (mode === 'polar') {
-                if (inputAngleRef.current && !focusVectorAngle) {
+                if (inputAngleRef.current && !focus.angle) {
                     const angle =
-                        typeof propVectorAngle === 'function'
-                            ? propVectorAngle()
-                            : 0;
+                        typeof prop.angle === 'function' ? prop.angle() : 0;
                     inputAngleRef.current.value = formatClean(angle);
-                    previousRef.currentVectorAngle = angle;
+                    previousRef.current.angle = angle;
                 }
                 if (inputMagnitudeRef.current && !focus.magnitude) {
                     const magnitude =
@@ -202,8 +199,8 @@ const VectorInput = memo(function VectorInput({
                     newY = magnitude * Math.sin(numValue);
                 } else if (name === 'magnitude') {
                     const angle =
-                        typeof currentPropVectorAngle === 'function'
-                            ? currentPropVectorAngle()
+                        typeof currentProp.angle === 'function'
+                            ? currentProp.angle()
                             : 0;
                     newX = numValue * Math.cos(angle);
                     newY = numValue * Math.sin(angle);
