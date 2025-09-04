@@ -8,38 +8,27 @@ import TimeInput from './inputs/TimeInput';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import MovementPredictionToggle from './buttons/MovementPredictionToggle';
-import { Separator } from '@/components/ui/separator';
 import PlayerToggle from './buttons/PlayerToogle';
 import ResetButton from './buttons/ResetButton';
-import { ModeToggle } from '@/components/layout/ToogleTheme';
-import DisplayOptionsSelector from './selector/DisplayOptionsSelector';
+import DisplayOptionsSelector from './selector/OptionsSelect';
 import TimeSpeedSelector from './selector/TimeSpeedSelector';
-import {
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import AnimatedButton from '@/simulations/cinematica/components/ui/button';
 import {
-    IconArrowUp,
     IconChartArea,
-    IconLayoutSidebarLeftExpandFilled,
+    IconLayoutSidebarRightCollapseFilled,
     IconMeteorFilled,
     IconPlus,
     IconVariable,
 } from '@tabler/icons-react';
 import { useSidebarStore } from '../stores/useSidebarStore';
 import { useEntityStore } from '../stores/useEntityStore';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { AnimatePresence, motion } from 'motion/react';
 import { useURL } from '../hooks/useURL';
 import { compressData } from '../utils/encodeAndDecodeEntities';
 import { useVariablesStore } from '../stores/useVariablesStore';
 import VariableCard from './VariableCard';
+import styles from '../consts/styles';
 
 function SimulationSidebar({
     className,
@@ -91,23 +80,19 @@ function SimulationSidebar({
                                     <IconVariable /> Variables
                                 </TabsTrigger>
                             </TabsList>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        onClick={toggleIsOpen}
-                                        className="text-stone-700 dark:text-stone-300  dark:hover:bg-stone-700 p-2 rounded transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-stone-500"
-                                    >
-                                        <IconLayoutSidebarLeftExpandFilled
-                                            size={20}
-                                        />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    Cerrar panel lateral
-                                </TooltipContent>
-                            </Tooltip>
+
+                            <AnimatedButton
+                                className={
+                                    'absolute top-4 right-4 z-50' +
+                                    ' ' +
+                                    `${isOpen ? '' : 'hidden'}`
+                                }
+                                onClick={toggleIsOpen}
+                            >
+                                <IconLayoutSidebarRightCollapseFilled
+                                    className={styles.icon}
+                                />
+                            </AnimatedButton>
                         </div>
 
                         {/* Entities */}
@@ -191,7 +176,10 @@ function SimulationSidebar({
                                         Añadir Variable
                                     </Button>
                                     {reversedVariables.map((variable) => (
-                                        <VariableCard variable={variable} />
+                                        <VariableCard
+                                            key={variable.id}
+                                            variable={variable}
+                                        />
                                     ))}
                                 </div>
                             </ScrollArea>
