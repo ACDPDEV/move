@@ -17,6 +17,7 @@ import {
 import Input from './ui/input';
 import VectorLetterIcon from './svgs/VectorSymbol';
 import { Switch } from '@/components/ui/switch';
+import { useOptionsStore } from '../stores/useOptionsStore';
 
 type Props = {
     variable: Variable;
@@ -50,6 +51,7 @@ export default function VariableCard({ variable }: Readonly<Props>) {
 
     const updateVariable = useVariablesStore((s) => s.updateVariable);
     const deleteVariable = useVariablesStore((s) => s.deleteVariable);
+    const acceleration = useOptionsStore((s) => s.inputs.acceleration);
 
     const [error, setError] = useState<string>('');
     const [mode, setMode] = useState<'components' | 'polar'>('components');
@@ -220,9 +222,9 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                         <SelectGroup>
                             <SelectLabel>Tipo</SelectLabel>
                             <SelectItem value="velocity">Velocidad</SelectItem>
-                            <SelectItem value="acceleration">
+                            {acceleration && (<SelectItem value="acceleration">
                                 Aceleración
-                            </SelectItem>
+                            </SelectItem>)}
                         </SelectGroup>
                     </SelectContent>
                 </Select>
