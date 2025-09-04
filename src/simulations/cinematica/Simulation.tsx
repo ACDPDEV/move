@@ -10,7 +10,7 @@ import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
 import OptionsSelect from './components/selector/OptionsSelect';
 import { ModeToggle } from '@/components/layout/ToogleTheme';
 import { useTimeStore } from './stores/useTimeStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useEntityStore } from './stores/useEntityStore';
 import { decompressData } from './utils/encodeAndDecodeEntities';
 import { decompressOptions } from './utils/encodeAndDecodeOptions';
@@ -22,22 +22,26 @@ import styles from './consts/styles';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
+    const [fisrtInteraction, setFirstInteraction] = useState(true);
 
     const { getURLParams } = useURL();
 
     useEffect(() => {
-        const setTime = useTimeStore.getState().updateTime;
-        const setEntities = useEntityStore.getState().updateEntities;
-        const setOptions = useOptionsStore.getState().setOptions;
-
-        setEntities(decompressData(getURLParams('d') ?? ''));
-        setTime(parseFloat(getURLParams('t') ?? '0'));
-        if (getURLParams('o')) {
-            setOptions(
-                decompressOptions(
-                    binaryToBoolean(parseInt(getURLParams('o')!)),
-                ),
-            );
+        if (fisrtInteraction) {
+            const setTime = useTimeStore.getState().updateTime;
+            const setEntities = useEntityStore.getState().updateEntities;
+            const setOptions = useOptionsStore.getState().setOptions;
+    
+            setEntities(decompressData(getURLParams('d') ?? ''));
+            setTime(parseFloat(getURLParams('t') ?? '0'));
+            if (getURLParams('o')) {
+                setOptions(
+                    decompressOptions(
+                        binaryToBoolean(parseInt(getURLParams('o')!)),
+                    ),
+                );
+            }
+            setFirstInteraction(false);
         }
     }, [getURLParams]);
 
