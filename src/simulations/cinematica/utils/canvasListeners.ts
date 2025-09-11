@@ -3,7 +3,6 @@
 import { initializeCanvas } from '@/simulations/cinematica/utils/canvasManagment';
 import { usePlaneStore } from '../stores/usePlaneStore';
 import { useMouseStore } from '../stores/useMouseStore';
-import { use } from 'react';
 
 /**
  * Añade soporte de eventos táctiles y de mouse (incluyendo gestos de pellizco) al canvas.
