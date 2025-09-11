@@ -12,6 +12,15 @@ import { compressData } from '../../utils/encodeAndDecodeEntities';
 import styles from '../../consts/styles';
 import { formatClean } from '../../utils/formatClean';
 import { usePlaneStore } from '../../stores/usePlaneStore';
+import { useOptionsStore } from '../../stores/useOptionsStore';
+
+function radianToDegree(radian: number): number {
+    return radian * (180 / Math.PI);
+}
+
+function degreeToRadian(degree: number): number {
+    return degree * (Math.PI / 180);
+}
 
 const VectorInput = memo(function VectorInput({
     entityId,
@@ -41,6 +50,7 @@ const VectorInput = memo(function VectorInput({
     });
     const gap = usePlaneStore((s) => s.gap);
     const { setURLParams } = useURL();
+    const floatPrecision = useOptionsStore((s) => s.inputs.floatPrecision);
 
     const isValidNumber = (value: string): boolean => {
         const num = parseFloat(value);
@@ -62,23 +72,23 @@ const VectorInput = memo(function VectorInput({
 
         const x = prop.x ?? 0;
         const y = prop.y ?? 0;
-        const angle = typeof prop.angle === 'function' ? prop.angle() : 0;
+        const angle = typeof prop.angle === 'function' ? radianToDegree(prop.angle()) : 0;
         const magnitude = typeof prop.mag === 'function' ? prop.mag() : 0;
 
         if (inputXRef.current && !focus.x) {
-            inputXRef.current.value = formatClean(x);
+            inputXRef.current.value = formatClean(x, floatPrecision);
             previousRef.current.x = x;
         }
         if (inputYRef.current && !focus.y) {
-            inputYRef.current.value = formatClean(y);
+            inputYRef.current.value = formatClean(y, floatPrecision);
             previousRef.current.y = y;
         }
         if (inputAngleRef.current && !focus.angle) {
-            inputAngleRef.current.value = formatClean(angle);
+            inputAngleRef.current.value = formatClean(angle, floatPrecision);
             previousRef.current.angle = angle;
         }
         if (inputMagnitudeRef.current && !focus.magnitude) {
-            inputMagnitudeRef.current.value = formatClean(magnitude);
+            inputMagnitudeRef.current.value = formatClean(magnitude, floatPrecision);
             previousRef.current.magnitude = magnitude;
         }
     }, [entityId, entityProp, mode, focus, getCurrentEntity]);
@@ -96,25 +106,25 @@ const VectorInput = memo(function VectorInput({
             if (mode === 'cartesian') {
                 if (inputXRef.current && !focus.x) {
                     const x = prop.x ?? 0;
-                    inputXRef.current.value = formatClean(x);
+                    inputXRef.current.value = formatClean(x, floatPrecision);
                     previousRef.current.x = x;
                 }
                 if (inputYRef.current && !focus.y) {
                     const y = prop.y ?? 0;
-                    inputYRef.current.value = formatClean(y);
+                    inputYRef.current.value = formatClean(y, floatPrecision);
                     previousRef.current.y = y;
                 }
             } else if (mode === 'polar') {
                 if (inputAngleRef.current && !focus.angle) {
                     const angle =
-                        typeof prop.angle === 'function' ? prop.angle() : 0;
-                    inputAngleRef.current.value = formatClean(angle);
+                        typeof prop.angle === 'function' ? radianToDegree(prop.angle()) : 0;
+                    inputAngleRef.current.value = formatClean(angle, floatPrecision);
                     previousRef.current.angle = angle;
                 }
                 if (inputMagnitudeRef.current && !focus.magnitude) {
                     const magnitude =
                         typeof prop.mag === 'function' ? prop.mag() : 0;
-                    inputMagnitudeRef.current.value = formatClean(magnitude);
+                    inputMagnitudeRef.current.value = formatClean(magnitude, floatPrecision);
                     previousRef.current.magnitude = magnitude;
                 }
             }
@@ -187,39 +197,16 @@ const VectorInput = memo(function VectorInput({
                 mode === 'polar' &&
                 (name === 'angle' || name === 'magnitude')
             ) {
-                let newX = currentProp.x ?? 0;
-                let newY = currentProp.y ?? 0;
-
                 if (name === 'angle') {
-                    const magnitude =
-                        typeof currentProp.mag === 'function'
-                            ? currentProp.mag()
-                            : 0;
-                    newX = magnitude * Math.cos(numValue);
-                    newY = magnitude * Math.sin(numValue);
-                } else if (name === 'magnitude') {
-                    const angle =
-                        typeof currentProp.angle === 'function'
-                            ? currentProp.angle()
-                            : 0;
-                    newX = numValue * Math.cos(angle);
-                    newY = numValue * Math.sin(angle);
-                }
+                    const vector = useEntityStore.getState().entities.find((e) => e.id === entityId)![entityProp].setAngle(degreeToRadian(numValue));
+                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.x`, vector.x);
+                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.y`, vector.y);
 
-                useEntityStore
-                    .getState()
-                    .updateSpecificPropOfEntity(
-                        entityId,
-                        `${entityProp}.x`,
-                        newX,
-                    );
-                useEntityStore
-                    .getState()
-                    .updateSpecificPropOfEntity(
-                        entityId,
-                        `${entityProp}.y`,
-                        newY,
-                    );
+                } else if (name === 'magnitude') {
+                    const vector = useEntityStore.getState().entities.find((e) => e.id === entityId)![entityProp].setMag(numValue);
+                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.x`, vector.x);
+                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.y`, vector.y);
+                }
             }
 
             previousRef.current[name as keyof typeof previousRef.current] =

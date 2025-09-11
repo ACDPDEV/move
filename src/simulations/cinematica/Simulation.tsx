@@ -14,7 +14,6 @@ import { useEffect, useState } from 'react';
 import { useEntityStore } from './stores/useEntityStore';
 import { decompressData } from './utils/encodeAndDecodeEntities';
 import { decompressOptions } from './utils/encodeAndDecodeOptions';
-import { binaryToBoolean } from './utils/boleanAndBinaryConversion';
 import { useURL } from './hooks/useURL';
 import { AnimatePresence, motion } from 'motion/react';
 import { useOptionsStore } from './stores/useOptionsStore';
@@ -37,7 +36,7 @@ export default function CinematicaSimulation() {
             if (getURLParams('o')) {
                 setOptions(
                     decompressOptions(
-                        binaryToBoolean(parseInt(getURLParams('o')!)),
+                        getURLParams('o')!,
                     ),
                 );
             }

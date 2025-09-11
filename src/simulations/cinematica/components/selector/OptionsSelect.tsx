@@ -4,7 +4,7 @@ import {
     DialogContent,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Button from '../ui/button';
 import {
     Icon3dCubeSphere,
@@ -17,13 +17,14 @@ import {
     IconArrowDownRightCircle,
     IconVectorSpline,
     IconForms,
+    IconDecimal,
 } from '@tabler/icons-react';
 import styles from '../../consts/styles';
 import { Switch } from '@/components/ui/switch';
 import { Display, Inputs, useOptionsStore } from '../../stores/useOptionsStore';
 import { useURL } from '../../hooks/useURL';
 import { compressOptions } from '../../utils/encodeAndDecodeOptions';
-import { booleanToBinary } from '../../utils/boleanAndBinaryConversion';
+import Input from '../ui/input';
 
 const displayOptions = {
     key: 'display',
@@ -174,6 +175,18 @@ const inputOptions = {
             icon: <IconForms className={styles.icon} />,
             type: 'toggle',
         },
+        {
+            key: 'floatPrecision',
+            label: 'Cantidad de decimales',
+            description: 'Limita la cantidad de decimales en los valores flotantes',
+            icon: <IconDecimal className={styles.icon} />,
+            type: 'input-number',
+            options: {
+                min: 0,
+                max: 10,
+                step: 1,
+            }
+        }
     ],
 };
 
@@ -186,7 +199,7 @@ type SectionKey = 'display' | 'inputs';
 
 function OptionsSelect() {
     const [selected, setSelected] = useState<SectionKey>('display');
-    const { display, inputs, toggleProperty } = useOptionsStore();
+    const { display, inputs, toggleProperty, setProperty } = useOptionsStore();
     const { setURLParams } = useURL();
 
     return (
@@ -267,12 +280,11 @@ function OptionsSelect() {
                                                 const { display, inputs } =
                                                     useOptionsStore.getState();
                                                 setURLParams({
-                                                    o: booleanToBinary(
+                                                    o: 
                                                         compressOptions(
                                                             display,
                                                             inputs,
-                                                        ),
-                                                    ).toString(),
+                                                    ),
                                                 });
                                             }}
                                         />
@@ -294,12 +306,12 @@ function OptionsSelect() {
                                         </div>
                                         <p>{option.description}</p>
                                     </div>
-                                    {option.type === 'toggle' ? (
+                                    {option.type === 'toggle' && (
                                         <Switch
                                             checked={
                                                 inputs[
                                                     option.key as keyof Inputs
-                                                ]
+                                                ] as boolean
                                             }
                                             onCheckedChange={() => {
                                                 toggleProperty(
@@ -308,16 +320,44 @@ function OptionsSelect() {
                                                 const { display, inputs } =
                                                     useOptionsStore.getState();
                                                 setURLParams({
-                                                    o: booleanToBinary(
+                                                    o:
                                                         compressOptions(
                                                             display,
                                                             inputs,
-                                                        ),
-                                                    ).toString(),
+                                                    ),
                                                 });
                                             }}
                                         />
-                                    ) : null}
+                                    )}
+                                    {option.type === 'input-number' && (
+                                        <Input
+                                            name={option.key}
+                                            type='number'
+                                            value={
+                                                inputs[
+                                                    option.key as keyof Inputs
+                                                ] as number
+                                            }
+                                            max={option.options!.max}
+                                            onChange={
+                                                (value: React.ChangeEvent<HTMLInputElement>) => {
+                                                    setProperty(
+                                                        option.key as keyof Inputs,
+                                                        Number(value.target.value),
+                                                    );
+                                                    const { display, inputs } =
+                                                        useOptionsStore.getState();
+                                                    setURLParams({
+                                                        o:
+                                                            compressOptions(
+                                                                display,
+                                                                inputs,
+                                                            ),
+                                                    });
+                                                }
+                                            }
+                                        />
+                                    )}
                                 </div>
                             ))}
                     </div>

@@ -22,6 +22,7 @@ interface Inputs {
     acceleration: boolean;
     radius: boolean;
     color: boolean;
+    floatPrecision: number;
 }
 
 type Option = keyof Display | keyof Inputs;
@@ -30,6 +31,10 @@ type OptionsStore = {
     display: Display;
     inputs: Inputs;
     toggleProperty: (property: keyof Display | keyof Inputs) => void;
+    setProperty: (
+        property: keyof Display | keyof Inputs,
+        value: boolean | number,
+    ) => void;
     setOptions: (options: { display: Display; inputs: Inputs }) => void;
     toProps: () => { display: Display; inputs: Inputs };
 };
@@ -56,6 +61,7 @@ export const useOptionsStore = create<OptionsStore>((set, get) => ({
         acceleration: true,
         radius: true,
         color: true,
+        floatPrecision: 2,
     },
     toggleProperty: (property: Option) => {
         if (property in get().display) {
@@ -70,6 +76,23 @@ export const useOptionsStore = create<OptionsStore>((set, get) => ({
                 inputs: {
                     ...state.inputs,
                     [property]: !state.inputs[property as keyof Inputs],
+                },
+            }));
+        }
+    },
+    setProperty: (property, value) => {
+        if (property in get().display) {
+            set((state) => ({
+                display: {
+                    ...state.display,
+                    [property]: value,
+                },
+            }));
+        } else if (property in get().inputs) {
+            set((state) => ({
+                inputs: {
+                    ...state.inputs,
+                    [property]: value,
                 },
             }));
         }
