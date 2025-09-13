@@ -133,7 +133,7 @@ const simulations: Simulation[] = [
         image: '/mvcl.avif',
         previewLink: '/simulations/cinematica/mvcl',
         playLink:
-            '/simulations/cinematica/play?t=0X00&d=yy0X5x0x3X19x2X41x0x0x0X05x~c~x~w3d82db~Yxy2x0x-2X41x3X19x0x0x0X05x~c~x~weab308~YY&o=0000000000000111112',
+            '/simulations/cinematica/play?t=0X00&d=yy0X5x0x3X19x2X41x0x0x0X05x%7Ec%7Ex%7Ew3d82db%7EYxy2x0x-2X41x3X19x0x0x0X05x%7Ec%7Ex%7Eweab308%7EYY&o=0000000000000111112&v=yy%7EGravedad+de+la+Tierra%7Ex%7Ea%7Ex0x-9X81x1YY',
         isAvaible: true,
         difficulty: 'Intermedio',
         rating: 4.5,
@@ -187,7 +187,7 @@ const simulations: Simulation[] = [
         image: '/mp.avif',
         previewLink: '/simulations/cinematica/mp',
         playLink:
-            '/simulations/cinematica/play?t=0X00&d=yy0X5x0x3X19x2X41x0x0x0X05x~c~x~w3d82db~Yxy2x0x-2X41x3X19x0x0x0X05x~c~x~weab308~YY&o=0000000000000111112',
+            '/simulations/cinematica/play?t=0X00&d=yy0X5x0x3X19x2X41x0x0x0X05x%7Ec%7Ex%7Ew3d82db%7EYxy2x0x-2X41x3X19x0x0x0X05x%7Ec%7Ex%7Eweab308%7EYY&o=0000000000000111112&v=yy%7EGravedad+de+la+Tierra%7Ex%7Ea%7Ex0x-9X81x1YY',
         isAvaible: true,
         difficulty: 'Avanzado',
         rating: 4.9,
