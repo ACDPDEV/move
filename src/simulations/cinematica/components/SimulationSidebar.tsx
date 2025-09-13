@@ -30,6 +30,7 @@ import { useVariablesStore } from '../stores/useVariablesStore';
 import VariableCard from './VariableCard';
 import styles from '../consts/styles';
 import PredefinedVariables from './PredefinedVariables';
+import { compressVars } from '../utils/encodeAndDecodeVariables';
 
 function SimulationSidebar({
     className,
@@ -170,7 +171,8 @@ function SimulationSidebar({
                                                         ).toFixed(0),
                                                     'acceleration',
                                                     { x: 0, y: 0 },
-                                                );
+                                            );
+                                            setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
                                         }}
                                     >
                                         <IconPlus size={20} />

@@ -18,6 +18,8 @@ import Input from './ui/input';
 import VectorLetterIcon from './svgs/VectorSymbol';
 import { Switch } from '@/components/ui/switch';
 import { useOptionsStore } from '../stores/useOptionsStore';
+import { useURL } from '../hooks/useURL';
+import { compressVars } from '../utils/encodeAndDecodeVariables';
 
 type Props = {
     variable: Variable;
@@ -52,6 +54,7 @@ export default function VariableCard({ variable }: Readonly<Props>) {
     const updateVariable = useVariablesStore((s) => s.updateVariable);
     const deleteVariable = useVariablesStore((s) => s.deleteVariable);
     const acceleration = useOptionsStore((s) => s.inputs.acceleration);
+    const { setURLParams } = useURL();
 
     const [error, setError] = useState<string>('');
     const [mode, setMode] = useState<'components' | 'polar'>('components');
@@ -185,6 +188,11 @@ export default function VariableCard({ variable }: Readonly<Props>) {
         }
     };
 
+    const handleBlur = () => { 
+        setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
+    }
+
+
     return (
         <div className="flex flex-col gap-2 p-2 bg-[#202C25] rounded-lg">
             {error && (
@@ -211,8 +219,10 @@ export default function VariableCard({ variable }: Readonly<Props>) {
 
                 <Select
                     value={typeValue}
-                    onValueChange={(v) =>
+                    onValueChange={(v) => {
                         handleTypeChange(v as 'velocity' | 'acceleration')
+                        setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
+                    }
                     }
                 >
                     <SelectTrigger className="w-[180px]">
@@ -269,6 +279,7 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                             prefix="x"
                             placeholder="0"
                             onChange={(e) => handleXChange(e.target.value)}
+                            onBlur={handleBlur}
                             className="flex flex-1 w-full"
                         />
                         <Input
@@ -277,6 +288,7 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                             prefix="y"
                             placeholder="0"
                             onChange={(e) => handleYChange(e.target.value)}
+                            onBlur={handleBlur}
                             className="flex flex-1 w-full"
                         />
                     </>
@@ -288,7 +300,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                             textPrefix="θ"
                             textSuffix="°"
                             placeholder="0"
-                            onChange={(e) => handleAngleChange(e.target.value)}
+                                onChange={(e) => handleAngleChange(e.target.value)}
+                                onBlur={handleBlur}
                             className="flex flex-1 w-full"
                         />
                         <Input
@@ -296,7 +309,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                             type="text"
                             prefix="m"
                             placeholder="0"
-                            onChange={(e) => handleMagChange(e.target.value)}
+                                onChange={(e) => handleMagChange(e.target.value)}
+                                onBlur={handleBlur}
                             className="flex flex-1 w-full"
                         />
                     </>

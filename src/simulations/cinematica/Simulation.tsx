@@ -18,6 +18,8 @@ import { useURL } from './hooks/useURL';
 import { AnimatePresence, motion } from 'motion/react';
 import { useOptionsStore } from './stores/useOptionsStore';
 import styles from './consts/styles';
+import { useVariablesStore } from './stores/useVariablesStore';
+import { decompressVars } from './utils/encodeAndDecodeVariables';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();
@@ -30,6 +32,7 @@ export default function CinematicaSimulation() {
             const setTime = useTimeStore.getState().updateTime;
             const setEntities = useEntityStore.getState().updateEntities;
             const setOptions = useOptionsStore.getState().setOptions;
+            const addVariable = useVariablesStore.getState().addVariable;
     
             setEntities(decompressData(getURLParams('d') ?? ''));
             setTime(parseFloat(getURLParams('t') ?? '0'));
@@ -41,8 +44,9 @@ export default function CinematicaSimulation() {
                 );
             }
             setFirstInteraction(false);
+            decompressVars(getURLParams('v') ?? '').forEach((v) => addVariable(v.name, v.type, v.value));
         }
-    }, [getURLParams]);
+    }, [getURLParams, fisrtInteraction]);
 
     return (
         <>
