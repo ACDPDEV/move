@@ -72,7 +72,8 @@ const VectorInput = memo(function VectorInput({
 
         const x = prop.x ?? 0;
         const y = prop.y ?? 0;
-        const angle = typeof prop.angle === 'function' ? radianToDegree(prop.angle()) : 0;
+        const angle =
+            typeof prop.angle === 'function' ? radianToDegree(prop.angle()) : 0;
         const magnitude = typeof prop.mag === 'function' ? prop.mag() : 0;
 
         if (inputXRef.current && !focus.x) {
@@ -88,10 +89,13 @@ const VectorInput = memo(function VectorInput({
             previousRef.current.angle = angle;
         }
         if (inputMagnitudeRef.current && !focus.magnitude) {
-            inputMagnitudeRef.current.value = formatClean(magnitude, floatPrecision);
+            inputMagnitudeRef.current.value = formatClean(
+                magnitude,
+                floatPrecision,
+            );
             previousRef.current.magnitude = magnitude;
         }
-    }, [entityId, entityProp, mode, focus, getCurrentEntity]);
+    }, [entityId, entityProp, mode, focus, getCurrentEntity, floatPrecision]);
 
     useEffect(() => {
         const subscriber = (state: EntityStore) => {
@@ -117,14 +121,22 @@ const VectorInput = memo(function VectorInput({
             } else if (mode === 'polar') {
                 if (inputAngleRef.current && !focus.angle) {
                     const angle =
-                        typeof prop.angle === 'function' ? radianToDegree(prop.angle()) : 0;
-                    inputAngleRef.current.value = formatClean(angle, floatPrecision);
+                        typeof prop.angle === 'function'
+                            ? radianToDegree(prop.angle())
+                            : 0;
+                    inputAngleRef.current.value = formatClean(
+                        angle,
+                        floatPrecision,
+                    );
                     previousRef.current.angle = angle;
                 }
                 if (inputMagnitudeRef.current && !focus.magnitude) {
                     const magnitude =
                         typeof prop.mag === 'function' ? prop.mag() : 0;
-                    inputMagnitudeRef.current.value = formatClean(magnitude, floatPrecision);
+                    inputMagnitudeRef.current.value = formatClean(
+                        magnitude,
+                        floatPrecision,
+                    );
                     previousRef.current.magnitude = magnitude;
                 }
             }
@@ -132,7 +144,7 @@ const VectorInput = memo(function VectorInput({
 
         const unsubscribe = useEntityStore.subscribe(subscriber);
         return unsubscribe;
-    }, [entityId, entityProp, mode, focus]);
+    }, [entityId, entityProp, mode, focus, floatPrecision]);
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
         const { name } = e.target;
@@ -179,8 +191,6 @@ const VectorInput = memo(function VectorInput({
         }
 
         try {
-            const currentProp = entity[entityProp];
-
             if (mode === 'cartesian' && (name === 'x' || name === 'y')) {
                 const propPath = `${entityProp}.${name}` as
                     | 'position.x'
@@ -198,14 +208,43 @@ const VectorInput = memo(function VectorInput({
                 (name === 'angle' || name === 'magnitude')
             ) {
                 if (name === 'angle') {
-                    const vector = useEntityStore.getState().entities.find((e) => e.id === entityId)![entityProp].setAngle(degreeToRadian(numValue));
-                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.x`, vector.x);
-                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.y`, vector.y);
-
+                    const vector = useEntityStore
+                        .getState()
+                        .entities.find((e) => e.id === entityId)!
+                        [entityProp].setAngle(degreeToRadian(numValue));
+                    useEntityStore
+                        .getState()
+                        .updateSpecificPropOfEntity(
+                            entityId,
+                            `${entityProp}.x`,
+                            vector.x,
+                        );
+                    useEntityStore
+                        .getState()
+                        .updateSpecificPropOfEntity(
+                            entityId,
+                            `${entityProp}.y`,
+                            vector.y,
+                        );
                 } else if (name === 'magnitude') {
-                    const vector = useEntityStore.getState().entities.find((e) => e.id === entityId)![entityProp].setMag(numValue);
-                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.x`, vector.x);
-                    useEntityStore.getState().updateSpecificPropOfEntity(entityId, `${entityProp}.y`, vector.y);
+                    const vector = useEntityStore
+                        .getState()
+                        .entities.find((e) => e.id === entityId)!
+                        [entityProp].setMag(numValue);
+                    useEntityStore
+                        .getState()
+                        .updateSpecificPropOfEntity(
+                            entityId,
+                            `${entityProp}.x`,
+                            vector.x,
+                        );
+                    useEntityStore
+                        .getState()
+                        .updateSpecificPropOfEntity(
+                            entityId,
+                            `${entityProp}.y`,
+                            vector.y,
+                        );
                 }
             }
 
