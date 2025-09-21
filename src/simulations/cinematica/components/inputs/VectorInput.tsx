@@ -54,6 +54,7 @@ const VectorInput = memo(function VectorInput({
 
     const isValidNumber = (value: string): boolean => {
         const num = parseFloat(value);
+        if (value === '-' || value === '') return true;
         return !isNaN(num) && isFinite(num);
     };
 
@@ -171,10 +172,6 @@ const VectorInput = memo(function VectorInput({
             return;
         }
 
-        if (value === '' || value === '-') {
-            return;
-        }
-
         if (!isValidNumber(value)) {
             target.value = formatClean(
                 previousRef.current[name as keyof typeof previousRef.current],
@@ -183,7 +180,8 @@ const VectorInput = memo(function VectorInput({
             return;
         }
 
-        const numValue = parseFloat(value);
+        const parse = parseFloat(value);
+        const numValue = value === '' || value === '-' ? 0 : parse;
         const entity = getCurrentEntity();
         if (!entity) {
             setError('Entidad no encontrada');
