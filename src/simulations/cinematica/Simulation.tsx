@@ -8,7 +8,6 @@ import SimulationSidebar from './components/SimulationSidebar';
 import Button from '@/simulations/cinematica/components/ui/button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
 import OptionsSelect from './components/selector/OptionsSelect';
-import { ModeToggle } from '@/components/layout/ToogleTheme';
 import { useTimeStore } from './stores/useTimeStore';
 import { useEffect, useState } from 'react';
 import { useEntityStore } from './stores/useEntityStore';
@@ -33,18 +32,16 @@ export default function CinematicaSimulation() {
             const setEntities = useEntityStore.getState().updateEntities;
             const setOptions = useOptionsStore.getState().setOptions;
             const addVariable = useVariablesStore.getState().addVariable;
-    
+
             setEntities(decompressData(getURLParams('d') ?? ''));
             setTime(parseFloat(getURLParams('t') ?? '0'));
             if (getURLParams('o')) {
-                setOptions(
-                    decompressOptions(
-                        getURLParams('o')!,
-                    ),
-                );
+                setOptions(decompressOptions(getURLParams('o')!));
             }
             setFirstInteraction(false);
-            decompressVars(getURLParams('v') ?? '').forEach((v) => addVariable(v.name, v.type, v.value));
+            decompressVars(getURLParams('v') ?? '').forEach((v) =>
+                addVariable(v.name, v.type, v.value),
+            );
         }
     }, [getURLParams, fisrtInteraction]);
 
@@ -84,7 +81,6 @@ export default function CinematicaSimulation() {
                     <FloatBar />
                     <div className="text-stone-900 dark:text-stone-100 dark:bg-stone-800/90 bg-stone-200 border dark:border-stone-700 border-stone-300 items-center justify-center p-3 gap-2 rounded-lg backdrop-blur-md shadow-lg sm:hidden flex flex-col">
                         <OptionsSelect />
-                        <ModeToggle />
                     </div>
                 </div>
                 <AnimatePresence>
