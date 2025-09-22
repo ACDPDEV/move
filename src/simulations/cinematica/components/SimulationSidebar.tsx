@@ -31,6 +31,9 @@ import VariableCard from './VariableCard';
 import styles from '../consts/styles';
 import PredefinedVariables from './PredefinedVariables';
 import { compressVars } from '../utils/encodeAndDecodeVariables';
+import { useConditionalsStore } from '../stores/useConditionalsStore';
+import { IconBraces } from '@tabler/icons-react';
+import ConditionalCard, { compressConditionals } from './ConditionalCard';
 
 function SimulationSidebar({
     className,
@@ -42,8 +45,11 @@ function SimulationSidebar({
     const toggleIsOpen = useSidebarStore((s) => s.toggleIsOpen);
     const entities = useEntitySummaries();
     const variables = useVariablesStore((s) => s.variables);
+    const conditionals = useConditionalsStore((s) => s.conditionals);
+    const addConditional = useConditionalsStore((s) => s.addConditional);
     const reversed = [...entities].reverse();
     const reversedVariables = [...variables].reverse();
+    const reversedConditionals = [...conditionals].reverse();
     const [error, setError] = useState<string>('');
     const { setURLParams } = useURL();
     const addVariable = useVariablesStore((s) => s.addVariable);
@@ -81,6 +87,9 @@ function SimulationSidebar({
                                 </TabsTrigger>
                                 <TabsTrigger value="vars">
                                     <IconVariable /> Variables
+                                </TabsTrigger>
+                                <TabsTrigger value="conditionals">
+                                    <IconBraces /> Condicionales
                                 </TabsTrigger>
                             </TabsList>
 
@@ -159,31 +168,84 @@ function SimulationSidebar({
                         >
                             <ScrollArea className="w-full h-full">
                                 <div className="flex flex-col gap-4 p-4">
-                                    <div className='flex flex-row justify-between items-center gap-2'>
-                                    <Button
-                                        variant="default"
-                                        className="flex grow justify-center text-left hover:border hover:border-bg-secondary"
-                                        onClick={() => {
-                                            addVariable(
+                                    <div className="flex flex-row justify-between items-center gap-2">
+                                        <Button
+                                            variant="default"
+                                            className="flex grow justify-center text-left hover:border hover:border-bg-secondary"
+                                            onClick={() => {
+                                                addVariable(
                                                     'variable-' +
                                                         (
                                                             Math.random() * 1000
                                                         ).toFixed(0),
                                                     'acceleration',
                                                     { x: 0, y: 0 },
-                                            );
-                                            setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
-                                        }}
-                                    >
-                                        <IconPlus size={20} />
-                                        Añadir Variable
-                                    </Button>
-                                    <PredefinedVariables />
+                                                );
+                                                setURLParams({
+                                                    v: compressVars(
+                                                        useVariablesStore.getState()
+                                                            .variables,
+                                                    ),
+                                                });
+                                            }}
+                                        >
+                                            <IconPlus size={20} />
+                                            Añadir Variable
+                                        </Button>
+                                        <PredefinedVariables />
                                     </div>
                                     {reversedVariables.map((variable) => (
                                         <VariableCard
                                             key={variable.id}
                                             variable={variable}
+                                        />
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </TabsContent>
+                        <TabsContent
+                            value="conditionals"
+                            className="row-start-2 h-full overflow-hidden"
+                        >
+                            <ScrollArea className="w-full h-full">
+                                <div className="flex flex-col gap-4 p-4">
+                                    <div className="flex flex-row justify-between items-center gap-2">
+                                        <Button
+                                            variant="default"
+                                            className="flex grow justify-center text-left hover:border hover:border-bg-secondary"
+                                            onClick={() => {
+                                                addConditional({
+                                                    name:
+                                                        'condición-' +
+                                                        (
+                                                            Math.random() * 1000
+                                                        ).toFixed(0),
+                                                    expression: {
+                                                        id:
+                                                            'temp-' +
+                                                            Date.now(),
+                                                        var1: 0,
+                                                        mathOperator: '==',
+                                                        var2: 0,
+                                                    },
+                                                });
+                                                setURLParams({
+                                                    c: compressConditionals(
+                                                        useConditionalsStore.getState()
+                                                            .conditionals,
+                                                    ),
+                                                });
+                                            }}
+                                        >
+                                            <IconPlus size={20} />
+                                            Añadir Condicional
+                                        </Button>
+                                    </div>
+
+                                    {reversedConditionals.map((conditional) => (
+                                        <ConditionalCard
+                                            key={conditional.id}
+                                            condition={conditional}
                                         />
                                     ))}
                                 </div>
