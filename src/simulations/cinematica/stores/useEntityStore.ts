@@ -123,16 +123,16 @@ const useEntityStore = create<EntityStore>((set, get) => ({
                 ...state.entities,
                 new Entity({
                     position: {
-                        x: Math.random() * 1 - 0.5,
-                        y: Math.random() * 1 - 0.5,
+                        x: 0,
+                        y: 0,
                     },
                     velocity: {
-                        x: Math.random() * 1 - 0.5,
-                        y: Math.random() * 1 - 0.5,
+                        x: 0,
+                        y: 0,
                     },
                     acceleration: {
-                        x: Math.random() * 1 - 0.5,
-                        y: Math.random() * 1 - 0.5,
+                        x: 0,
+                        y: 0,
                     },
                     radius: 0.05,
                     // random shape
