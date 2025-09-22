@@ -32,6 +32,7 @@ export default function CinematicaSimulation() {
             const setEntities = useEntityStore.getState().updateEntities;
             const setOptions = useOptionsStore.getState().setOptions;
             const addVariable = useVariablesStore.getState().addVariable;
+            const deleteAllVariables = useVariablesStore.getState().deleteAllVariables;
 
             setEntities(decompressData(getURLParams('d') ?? ''));
             setTime(parseFloat(getURLParams('t') ?? '0'));
@@ -39,6 +40,7 @@ export default function CinematicaSimulation() {
                 setOptions(decompressOptions(getURLParams('o')!));
             }
             setFirstInteraction(false);
+            deleteAllVariables();
             decompressVars(getURLParams('v') ?? '').forEach((v) =>
                 addVariable(v.name, v.type, v.value),
             );

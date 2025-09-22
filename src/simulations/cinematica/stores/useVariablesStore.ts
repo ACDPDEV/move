@@ -28,6 +28,7 @@ type VariablesStore = {
     getVariableById: (id: string) => Variable | undefined;
     getVariablesByType: (type: 'velocity' | 'acceleration') => Variable[];
     getActiveVariables: () => Variable[];
+    deleteAllVariables: () => void;
 };
 
 const useVariablesStore = create<VariablesStore>((set, get) => ({
@@ -152,6 +153,11 @@ const useVariablesStore = create<VariablesStore>((set, get) => ({
     getActiveVariables: () => {
         return get().variables.filter((v) => v.active);
     },
+
+    deleteAllVariables: () =>
+        set({
+            variables: [],
+        }),
 }));
 
 // Hook personalizado para inicializar variables por defecto
