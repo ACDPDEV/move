@@ -67,7 +67,7 @@ function SimulationSidebar({
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 50 }}
                     transition={{ duration: 0.2 }}
-                    className={`w-full sm:w-[28rem] h-full bg-[#151E19] overflow-hidden ${
+                    className={`w-full sm:w-[28rem] h-full bg-dark-green-900 overflow-hidden ${
                         className ?? ''
                     }`}
                 >
