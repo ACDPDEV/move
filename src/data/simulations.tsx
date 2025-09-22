@@ -356,6 +356,23 @@ const simulations: Simulation[] = [
             </>
         ),
     },
+    // añadir una plantilla vacía
+    {
+        slug: 'cinematica/blank',
+        name: 'Plantilla en blanco - Cinemática',
+        description: 'Plantilla en blanco para crear tu propia simulación desde cero.',
+        area: ['Mecánica', 'Cinemática'],
+        image: '/blank.avif',
+        previewLink: '/simulations/cinematica/blank',
+        playLink: '/simulations/cinematica/play',
+        isAvaible: true,
+        difficulty: 'Avanzado',
+        rating: 0,
+        userCount: '0',
+        features: [
+        ],
+        content: (<></>),
+    },
 ];
 
 export { simulations, type Simulation };
