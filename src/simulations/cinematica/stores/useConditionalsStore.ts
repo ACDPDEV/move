@@ -1,8 +1,7 @@
-import { Vector2D } from '@/simulations/lib/utils';
 import { create } from 'zustand';
 
-// Tipos base mejorados
-type Var = number | Vector2D;
+// Tipos base
+type Var = number;
 type MathOperator = '==' | '>' | '<' | '>=' | '<=' | '!=';
 type LogicOperator = 'and' | 'or' | 'not';
 
@@ -27,11 +26,11 @@ type ConditionalExpression = Unit | LogicExpression;
 // Interfaz principal para condiciones
 interface Condition {
     id: string;
-    name?: string; // Nombre opcional para identificar fácilmente
+    name?: string;
     expression: ConditionalExpression;
-    result?: boolean; // Opcional hasta que se calcule
-    isValid: boolean; // Para validar la expresión
-    error?: string; // Mensaje de error si la validación falla
+    result?: boolean;
+    isValid: boolean;
+    error?: string;
 }
 
 // Utilidades para trabajar con expresiones
@@ -53,29 +52,19 @@ class ExpressionUtils {
         try {
             const { var1, mathOperator, var2 } = unit;
 
-            // Si son Vector2D, comparar magnitud
-            const val1 =
-                typeof var1 === 'object'
-                    ? Math.sqrt(var1.x * var1.x + var1.y * var1.y)
-                    : var1;
-            const val2 =
-                typeof var2 === 'object'
-                    ? Math.sqrt(var2.x * var2.x + var2.y * var2.y)
-                    : var2;
-
             switch (mathOperator) {
                 case '==':
-                    return Math.abs(val1 - val2) < 1e-10; // Comparación con tolerancia para flotantes
+                    return Math.abs(var1 - var2) < 1e-10;
                 case '!=':
-                    return Math.abs(val1 - val2) >= 1e-10;
+                    return Math.abs(var1 - var2) >= 1e-10;
                 case '>':
-                    return val1 > val2;
+                    return var1 > var2;
                 case '<':
-                    return val1 < val2;
+                    return var1 < var2;
                 case '>=':
-                    return val1 >= val2;
+                    return var1 >= var2;
                 case '<=':
-                    return val1 <= val2;
+                    return var1 <= var2;
                 default:
                     throw new Error(
                         `Operador matemático desconocido: ${mathOperator}`,
@@ -98,9 +87,15 @@ class ExpressionUtils {
 
             switch (operator) {
                 case 'and':
-                    return operands.every((op) => this.evaluateExpression(op));
+                    return (
+                        operands.length > 0 &&
+                        operands.every((op) => this.evaluateExpression(op))
+                    );
                 case 'or':
-                    return operands.some((op) => this.evaluateExpression(op));
+                    return (
+                        operands.length > 0 &&
+                        operands.some((op) => this.evaluateExpression(op))
+                    );
                 case 'not':
                     if (operands.length !== 1) {
                         throw new Error(
@@ -125,11 +120,16 @@ class ExpressionUtils {
             if (this.isUnit(expression)) {
                 const { var1, var2, mathOperator } = expression;
 
-                // Validar que las variables sean del tipo correcto
-                if (var1 == null || var2 == null) {
+                // Validar que las variables sean números válidos
+                if (
+                    typeof var1 !== 'number' ||
+                    typeof var2 !== 'number' ||
+                    isNaN(var1) ||
+                    isNaN(var2)
+                ) {
                     return {
                         isValid: false,
-                        error: 'Las variables no pueden ser null o undefined',
+                        error: 'Las variables deben ser números válidos',
                     };
                 }
 
@@ -210,11 +210,13 @@ class ExpressionUtils {
 
     // Genera un ID único
     static generateId(): string {
-        return `expr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        return `expr_${Date.now()}_${Math.random()
+            .toString(36)
+            .substring(2, 11)}`;
     }
 }
 
-// Store mejorado
+// Store
 type ConditionalStore = {
     conditionals: Condition[];
 
@@ -392,9 +394,9 @@ export const createLogicExpression = (
 
 // Ejemplo de uso:
 /*
-const store = useConditionalsStore();
+const store = useConditionalsStore.getState();
 
-// Crear una expresión simple
+// Crear una expresión simple: 5 > 3
 const simpleCondition = createUnit(5, '>', 3);
 
 // Crear una expresión compleja anidada: (5 > 3) AND ((2 < 4) OR (1 == 1))
@@ -416,4 +418,5 @@ const id = store.addConditional({
 
 // Evaluar
 const result = store.evaluateConditional(id);
+console.log(result); // true
 */

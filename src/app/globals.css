@@ -48,6 +48,25 @@
     --radius-xl: calc(var(--radius) + 4px);
     --color-main-background: var(--main-background);
     --animate-meteor-effect: meteor 5s linear infinite;
+    --color-dark-green-950: hsl(144, 16%, 5%);
+    --color-dark-green-900: hsl(144, 16%, 10%);
+    --color-dark-green-850: hsl(144, 16%, 15%);
+    --color-dark-green-800: hsl(144, 16%, 20%);
+    --color-dark-green-750: hsl(144, 16%, 25%);
+    --color-dark-green-700: hsl(144, 16%, 30%);
+    --color-dark-green-650: hsl(144, 16%, 35%);
+    --color-dark-green-600: hsl(144, 16%, 40%);
+    --color-dark-green-550: hsl(144, 16%, 45%);
+    --color-dark-green-500: hsl(144, 16%, 50%);
+    --color-dark-green-450: hsl(144, 16%, 55%);
+    --color-dark-green-400: hsl(144, 16%, 60%);
+    --color-dark-green-350: hsl(144, 16%, 65%);
+    --color-dark-green-300: hsl(144, 16%, 70%);
+    --color-dark-green-250: hsl(144, 16%, 75%);
+    --color-dark-green-200: hsl(144, 16%, 80%);
+    --color-dark-green-150: hsl(144, 16%, 85%);
+    --color-dark-green-100: hsl(144, 16%, 90%);
+    --color-dark-green-50: hsl(144, 16%, 95%);
 
     @keyframes meteor {
         0% {
