@@ -88,9 +88,9 @@ function SimulationSidebar({
                                 <TabsTrigger value="vars">
                                     <IconVariable /> Variables
                                 </TabsTrigger>
-                                <TabsTrigger value="conditionals">
+                                {/* <TabsTrigger value="conditionals">
                                     <IconBraces /> Condicionales
-                                </TabsTrigger>
+                                </TabsTrigger> */}
                             </TabsList>
 
                             <AnimatedButton
@@ -203,7 +203,9 @@ function SimulationSidebar({
                                 </div>
                             </ScrollArea>
                         </TabsContent>
-                        <TabsContent
+
+                        {/* Conditionals */}
+                        {/* <TabsContent
                             value="conditionals"
                             className="row-start-2 h-full overflow-hidden"
                         >
@@ -250,7 +252,7 @@ function SimulationSidebar({
                                     ))}
                                 </div>
                             </ScrollArea>
-                        </TabsContent>
+                        </TabsContent> */}
 
                         {/* Footer */}
                         <footer className="row-start-3 p-4 border-t flex flex-row items-center justify-center gap-3">
