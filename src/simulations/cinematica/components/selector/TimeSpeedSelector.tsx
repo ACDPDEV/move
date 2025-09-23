@@ -55,7 +55,7 @@ const TimeSpeedSelector = memo(
                                 onClick={changeOpen}
                                 whileHover={{ scale: 1.25 }}
                                 whileTap={{ scale: 0.75 }}
-                                className={styles.button}
+                                className={styles.defaultButton}
                             >
                                 <span className="w-[5ch] overflow-hidden font-mono text-[12px] text-[#89A996]">
                                     x{speed}
@@ -106,7 +106,7 @@ const TimeSpeedSelector = memo(
                                             scale: 1.1,
                                             transition: { delay: 0 },
                                         }}
-                                        className={styles.button}
+                                        className={styles.defaultButton}
                                         onClick={() => {
                                             updateSpeed(speed);
                                         }}
