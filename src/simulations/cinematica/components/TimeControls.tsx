@@ -1,5 +1,4 @@
 'use client';
-import { Separator } from '@/components/ui/separator';
 import TimeInput from './inputs/TimeInput';
 import { useState } from 'react';
 import MovementPredictionToggle from './buttons/MovementPredictionToggle';

@@ -20,7 +20,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { compressData } from '../utils/encodeAndDecodeEntities';
 import { useURL } from '../hooks/useURL';
 
