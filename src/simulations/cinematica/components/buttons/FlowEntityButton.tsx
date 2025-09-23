@@ -3,12 +3,7 @@ import {
     IconCurrentLocation,
     IconCurrentLocationFilled,
 } from '@tabler/icons-react';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
-import Button from '../ui/button';
+import Button from '@/components/ui/better-button';
 import styles from '../../consts/styles';
 
 function FlowEntityButton({ entityId }: { entityId: string }) {

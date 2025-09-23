@@ -6,17 +6,16 @@ import {
 import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { useURL } from '../../hooks/useURL';
 import { compressData } from '../../utils/encodeAndDecodeEntities';
-import Input from '../ui/input';
+import Input from '@/components/ui/better-input';
 import { usePlaneStore } from '../../stores/usePlaneStore';
+import styles from '../../consts/styles';
 
 interface RadiusInputProps {
-    className?: string;
     entityId: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RadiusInput = memo(function RadiusInput({
-    className,
     entityId,
     setError,
 }: RadiusInputProps) {
@@ -97,7 +96,7 @@ const RadiusInput = memo(function RadiusInput({
             name="radius"
             type="number"
             textPrefix="r"
-            className="flex grow"
+            className={styles.vectorInput}
             placeholder="0"
             onChange={onChange}
             onBlur={onBlur}

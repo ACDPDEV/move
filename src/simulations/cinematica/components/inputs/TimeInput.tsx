@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useRef } from 'react';
-import { Input } from '@/components/ui/input';
 import { TimeStore, useTimeStore } from '../../stores/useTimeStore';
 import { useEntityStore } from '../../stores/useEntityStore';
 import {
@@ -9,14 +8,10 @@ import {
 } from '@/components/ui/tooltip';
 
 interface TimeInputProps {
-    className?: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const TimeInput = memo(function TimeInput({
-    className,
-    setError,
-}: TimeInputProps) {
+const TimeInput = memo(function TimeInput({ setError }: TimeInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const previousRef = useRef<number>(0);
     const isMovementPrediction = useTimeStore((s) => s.movementPrediction);

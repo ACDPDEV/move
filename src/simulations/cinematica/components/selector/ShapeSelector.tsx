@@ -17,18 +17,16 @@ import {
     IconTriangle,
     IconTriangleFilled,
 } from '@tabler/icons-react';
-import Button from '../ui/button';
+import Button from '@/components/ui/better-button';
 
 interface ShapeSelectorProps {
     className?: string;
     entityId: string;
-    setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ShapeSelector = memo(function ShapeSelector({
     className,
     entityId,
-    setError,
 }: ShapeSelectorProps) {
     const shape = useEntityStore(
         (s) => s.entities.find((e) => e.id === entityId)?.shape,

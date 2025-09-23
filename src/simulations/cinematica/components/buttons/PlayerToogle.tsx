@@ -4,7 +4,7 @@ import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 import { useURL } from '@/simulations/cinematica/hooks/useURL';
 import { compressData } from '../../utils/encodeAndDecodeEntities';
 import { useEntityStore } from '../../stores/useEntityStore';
-import Button from '../ui/button';
+import Button from '@/components/ui/better-button';
 import styles from '../../consts/styles';
 
 function usePlayerToggle() {

@@ -1,6 +1,6 @@
 import { IconLink, IconLinkOff } from '@tabler/icons-react';
 import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
-import Button from '../ui/button';
+import Button from '@/components/ui/better-button';
 import styles from '../../consts/styles';
 
 function useMovementPredictionToggle() {

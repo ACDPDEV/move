@@ -5,7 +5,7 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { useEntitySummaries } from '../hooks/useEntityISummaries';
-import EntityCard from './EntityCard';
+import EntityCard from './card/EntityCard';
 import { Button } from '@/components/ui/button';
 import { useEntityStore } from '../stores/useEntityStore';
 
@@ -20,7 +20,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { compressData } from '../utils/encodeAndDecodeEntities';
 import { useURL } from '../hooks/useURL';
 

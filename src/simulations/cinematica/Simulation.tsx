@@ -5,7 +5,7 @@ import FloatBar from './components/FloatBar';
 import TimeIndicators from './components/TimeIndicators';
 import { useSidebarStore } from './stores/useSidebarStore';
 import SimulationSidebar from './components/SimulationSidebar';
-import Button from '@/simulations/cinematica/components/ui/button';
+import Button from '@/components/ui/better-button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
 import OptionsSelect from './components/selector/OptionsSelect';
 import { useTimeStore } from './stores/useTimeStore';
@@ -32,7 +32,8 @@ export default function CinematicaSimulation() {
             const setEntities = useEntityStore.getState().updateEntities;
             const setOptions = useOptionsStore.getState().setOptions;
             const addVariable = useVariablesStore.getState().addVariable;
-            const deleteAllVariables = useVariablesStore.getState().deleteAllVariables;
+            const deleteAllVariables =
+                useVariablesStore.getState().deleteAllVariables;
 
             setEntities(decompressData(getURLParams('d') ?? ''));
             setTime(parseFloat(getURLParams('t') ?? '0'));

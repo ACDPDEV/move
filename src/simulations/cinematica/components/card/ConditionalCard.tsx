@@ -1,10 +1,16 @@
 // ConditionalCard.tsx
 'use client';
 import React, { useState, useCallback, useEffect } from 'react';
-import { useConditionalsStore, type Condition, createUnit, createLogicExpression, ExpressionUtils } from '../stores/useConditionalsStore';
-import { useVariablesStore } from '../stores/useVariablesStore';
-import styles from '../consts/styles';
-import Button from './ui/button';
+import {
+    useConditionalsStore,
+    type Condition,
+    createUnit,
+    createLogicExpression,
+    ExpressionUtils,
+} from '../../stores/useConditionalsStore';
+import { useVariablesStore } from '../../stores/useVariablesStore';
+import styles from '../../consts/styles';
+import Button from '../ui/button';
 import { IconTrash, IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
 import {
     Select,
@@ -15,7 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import Input from './ui/input';
+import Input from '../ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 
@@ -31,12 +37,14 @@ const parseNum = (s: string): number | null => {
 
 export default function ConditionalCard({ condition }: Readonly<Props>) {
     const storeCondition = useConditionalsStore((s) =>
-        s.conditionals.find((c) => c.id === condition.id)
+        s.conditionals.find((c) => c.id === condition.id),
     );
 
     const updateConditional = useConditionalsStore((s) => s.updateConditional);
     const removeConditional = useConditionalsStore((s) => s.removeConditional);
-    const evaluateConditional = useConditionalsStore((s) => s.evaluateConditional);
+    const evaluateConditional = useConditionalsStore(
+        (s) => s.evaluateConditional,
+    );
     const variables = useVariablesStore((s) => s.variables);
 
     // Estado local
@@ -71,7 +79,7 @@ export default function ConditionalCard({ condition }: Readonly<Props>) {
                 );
             }
         },
-        [updateConditional, condition.id]
+        [updateConditional, condition.id],
     );
 
     // Handlers
@@ -100,7 +108,9 @@ export default function ConditionalCard({ condition }: Readonly<Props>) {
                 setError('No se pudo evaluar la condición');
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Error en evaluación');
+            setError(
+                err instanceof Error ? err.message : 'Error en evaluación',
+            );
         } finally {
             setIsEvaluating(false);
         }
@@ -109,17 +119,13 @@ export default function ConditionalCard({ condition }: Readonly<Props>) {
     const handleCreateSimpleExpression = () => {
         const var1 = parseNum(var1Text);
         const var2 = parseNum(var2Text);
-        
+
         if (var1 === null || var2 === null) {
             setError('Ambas variables deben ser números válidos');
             return;
         }
 
-        const newExpression = createUnit(
-            var1, 
-            operatorValue as any, 
-            var2
-        );
+        const newExpression = createUnit(var1, operatorValue as any, var2);
 
         safeUpdate({ expression: newExpression });
         setError('');
@@ -127,13 +133,15 @@ export default function ConditionalCard({ condition }: Readonly<Props>) {
 
     const getResultBadge = () => {
         if (!storeCondition) return null;
-        
+
         if (storeCondition.result === undefined) {
             return <Badge variant="secondary">No evaluado</Badge>;
         }
-        
+
         return storeCondition.result ? (
-            <Badge variant="default" className="bg-green-600">Verdadero</Badge>
+            <Badge variant="default" className="bg-green-600">
+                Verdadero
+            </Badge>
         ) : (
             <Badge variant="destructive">Falso</Badge>
         );
@@ -141,11 +149,18 @@ export default function ConditionalCard({ condition }: Readonly<Props>) {
 
     const getValidationBadge = () => {
         if (!storeCondition) return null;
-        
+
         return storeCondition.isValid ? (
-            <Badge variant="outline" className="text-green-400 border-green-400">Válido</Badge>
+            <Badge
+                variant="outline"
+                className="text-green-400 border-green-400"
+            >
+                Válido
+            </Badge>
         ) : (
-            <Badge variant="outline" className="text-red-400 border-red-400">Inválido</Badge>
+            <Badge variant="outline" className="text-red-400 border-red-400">
+                Inválido
+            </Badge>
         );
     };
 
@@ -185,8 +200,10 @@ export default function ConditionalCard({ condition }: Readonly<Props>) {
 
             {/* Simple Expression Builder */}
             <div className="flex flex-col gap-2">
-                <div className="text-sm text-stone-400">Crear expresión simple:</div>
-                
+                <div className="text-sm text-stone-400">
+                    Crear expresión simple:
+                </div>
+
                 <div className="flex items-center gap-2">
                     <Input
                         value={var1Text}
@@ -238,11 +255,9 @@ export default function ConditionalCard({ condition }: Readonly<Props>) {
                 <div className="bg-stone-800/50 p-2 rounded text-sm">
                     <div className="text-stone-400 mb-1">Expresión actual:</div>
                     <div className="font-mono text-stone-200">
-                        {ExpressionUtils.isUnit(storeCondition.expression) ? (
-                            `${storeCondition.expression.var1} ${storeCondition.expression.mathOperator} ${storeCondition.expression.var2}`
-                        ) : (
-                            'Expresión compleja'
-                        )}
+                        {ExpressionUtils.isUnit(storeCondition.expression)
+                            ? `${storeCondition.expression.var1} ${storeCondition.expression.mathOperator} ${storeCondition.expression.var2}`
+                            : 'Expresión compleja'}
                     </div>
                 </div>
             )}
