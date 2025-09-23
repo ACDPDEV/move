@@ -3,19 +3,13 @@ import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 import Button from '@/components/ui/better-button';
 import styles from '@/simulations/cinematica/consts/styles';
 
-function useMovementPredictionToggle() {
+function MovementPredictionToggle() {
     const togglePrediction = useTimeStore((s) => s.togglePrediction);
     const movementPrediction = useTimeStore((s) => s.movementPrediction);
 
     const onClick = () => {
         togglePrediction();
     };
-
-    return { onClick, movementPrediction };
-}
-
-function MovementPredictionToggle() {
-    const { onClick, movementPrediction } = useMovementPredictionToggle();
 
     return (
         <Button
