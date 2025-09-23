@@ -130,7 +130,7 @@ const ColorPickerInner = forwardRef<HTMLInputElement, ColorPickerProps>(
                             <div className="flex gap-2 items-center">
                                 <div className="relative flex-1">
                                     <Input
-                                        ref={ref as any}
+                                        ref={ref}
                                         type="text"
                                         value={customColor}
                                         onChange={handleCustomInput}
