@@ -4,50 +4,43 @@ import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 
 interface FPSBadgeProps {
     className?: string;
+    interval?: number;
 }
 
-const FPSBadge = memo(function FPSBadge({ className }: FPSBadgeProps) {
+const FPSBadge = memo(function FPSBadge({
+    className = 'px-4 py-1 rounded text-sm text-center bg-dark-green-900 shadow-md shadow-dark-green-950 w-fit justify-center items-center h-fit',
+    interval = 3000,
+}: FPSBadgeProps) {
     const spanRef = useRef<HTMLDivElement>(null);
-    const previousRef = useRef<number>(0);
 
     useEffect(() => {
         const updateFPS = () => {
             const fps = useTimeStore.getState().fps;
-            if (!fps) return;
+            const badgeValue = spanRef.current;
 
-            const newValue = fps;
-            const el = spanRef.current;
-            if (el) {
-                el.textContent = newValue.toFixed(0);
-                previousRef.current = newValue;
-            }
+            if (!fps || !badgeValue) return;
+
+            badgeValue.textContent = fps.toFixed(0);
         };
 
-        // Actualización inicial
         updateFPS();
 
-        // Configurar intervalo para actualizar cada segundo
-        const intervalId = setInterval(updateFPS, 1000);
+        const intervalId = setInterval(updateFPS, interval);
 
-        // Cleanup
         return () => {
             clearInterval(intervalId);
         };
-    }, []);
+    }, [interval]);
 
     return (
-        <div
-            className={`px-4 py-1 border rounded text-sm text-center bg-stone-200 dark:bg-stone-800 w-fit justify-center items-center h-fit ${
-                className ?? ''
-            }`}
-        >
+        <div className={className}>
             <span
                 ref={spanRef}
-                className="text-stone-500 dark:text-stone-400 justify-center items-center"
+                className="text-dark-green-500 justify-center items-center"
             >
                 60
             </span>
-            <span className="text-stone-500 dark:text-stone-400 justify-center items-center">
+            <span className="text-dark-green-500 justify-center items-center">
                 {' '}
                 FPS
             </span>
