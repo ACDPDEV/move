@@ -59,7 +59,8 @@ export default function CinematicaSimulation() {
             >
                 <Button
                     className={
-                        'absolute top-4 right-4 z-50' +
+                        styles.defaultButton +
+                        ' absolute top-4 right-4 z-50' +
                         ' ' +
                         `${isOpen ? 'hidden' : ''}`
                     }
