@@ -285,20 +285,20 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                         <Input
                             value={xText}
                             type="text"
-                            prefix="x"
+                            textPrefix="x"
                             placeholder="0"
                             onChange={(e) => handleXChange(e.target.value)}
                             onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            className={styles.vectorInput}
                         />
                         <Input
                             value={yText}
                             type="text"
-                            prefix="y"
+                            textPrefix="y"
                             placeholder="0"
                             onChange={(e) => handleYChange(e.target.value)}
                             onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            className={styles.vectorInput}
                         />
                     </>
                 ) : (
@@ -306,21 +306,21 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                         <Input
                             value={angleText}
                             type="text"
-                            textPrefix="θ"
+                            texttextPrefix="θ"
                             textSuffix="°"
                             placeholder="0"
                             onChange={(e) => handleAngleChange(e.target.value)}
                             onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            className={styles.vectorInput}
                         />
                         <Input
                             value={magText}
                             type="text"
-                            prefix="m"
+                            textPrefix="m"
                             placeholder="0"
                             onChange={(e) => handleMagChange(e.target.value)}
                             onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            className={styles.vectorInput}
                         />
                     </>
                 )}

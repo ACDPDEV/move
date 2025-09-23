@@ -8,6 +8,7 @@ import { useURL } from '../../hooks/useURL';
 import { compressData } from '../../utils/encodeAndDecodeEntities';
 import Input from '@/components/ui/better-input';
 import { usePlaneStore } from '../../stores/usePlaneStore';
+import styles from '../../consts/styles';
 
 interface RadiusInputProps {
     className?: string;
@@ -97,7 +98,7 @@ const RadiusInput = memo(function RadiusInput({
             name="radius"
             type="number"
             textPrefix="r"
-            className="flex grow"
+            className={styles.vectorInput}
             placeholder="0"
             onChange={onChange}
             onBlur={onBlur}
