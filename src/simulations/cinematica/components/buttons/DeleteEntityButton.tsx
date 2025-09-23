@@ -19,7 +19,7 @@ function DeleteEntityButton({ entityId }: { entityId: string }) {
         <Button
             onClick={onClick}
             tooltip="Eliminar Móvil"
-            className="bg-[#712828]"
+            className={styles.destructiveButton}
         >
             <IconTrash className={styles.icon + ' ' + 'text-[#CA6868]'} />
         </Button>
