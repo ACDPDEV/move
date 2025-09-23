@@ -1,14 +1,14 @@
 'use client';
 import React, { useState } from 'react';
-import RadiusInput from './inputs/RadiusInput';
-import ColorInput from './inputs/ColorInput';
+import RadiusInput from '../inputs/RadiusInput';
+import ColorInput from '../inputs/ColorInput';
 import { Alert, AlertTitle } from '@/components/ui/alert';
-import ShapeSelector from './selector/ShapeSelector';
-import FlowEntityButton from './buttons/FlowEntityButton';
-import DeleteEntityButton from './buttons/DeleteEntityButton';
+import ShapeSelector from '../selector/ShapeSelector';
+import FlowEntityButton from '../buttons/FlowEntityButton';
+import DeleteEntityButton from '../buttons/DeleteEntityButton';
 import { IconAlertCircle } from '@tabler/icons-react';
-import VectorInput from './inputs/VectorInput';
-import { useOptionsStore } from '../stores/useOptionsStore';
+import VectorInput from '../inputs/VectorInput';
+import { useOptionsStore } from '../../stores/useOptionsStore';
 
 interface EntityCardProps {
     entityId: string;

@@ -1,9 +1,12 @@
 // VariableCard.tsx
 'use client';
-import React, { useEffect, useMemo, useState, useCallback, use } from 'react';
-import { useVariablesStore, type Variable } from '../stores/useVariablesStore';
-import styles from '../consts/styles';
-import Button from './ui/button';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import {
+    useVariablesStore,
+    type Variable,
+} from '../../stores/useVariablesStore';
+import styles from '../../consts/styles';
+import Button from '@/components/ui/better-button';
 import { IconTrash } from '@tabler/icons-react';
 import {
     Select,
@@ -14,12 +17,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import Input from './ui/input';
-import VectorLetterIcon from './svgs/VectorSymbol';
+import Input from '@/components/ui/better-input';
+import VectorLetterIcon from '../svgs/VectorSymbol';
 import { Switch } from '@/components/ui/switch';
-import { useOptionsStore } from '../stores/useOptionsStore';
-import { useURL } from '../hooks/useURL';
-import { compressVars } from '../utils/encodeAndDecodeVariables';
+import { useOptionsStore } from '../../stores/useOptionsStore';
+import { useURL } from '../../hooks/useURL';
+import { compressVars } from '../../utils/encodeAndDecodeVariables';
 
 type Props = {
     variable: Variable;
@@ -188,10 +191,11 @@ export default function VariableCard({ variable }: Readonly<Props>) {
         }
     };
 
-    const handleBlur = () => { 
-        setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
-    }
-
+    const handleBlur = () => {
+        setURLParams({
+            v: compressVars(useVariablesStore.getState().variables),
+        });
+    };
 
     return (
         <div className="flex flex-col gap-2 p-2 bg-[#202C25] rounded-lg">
@@ -220,10 +224,13 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                 <Select
                     value={typeValue}
                     onValueChange={(v) => {
-                        handleTypeChange(v as 'velocity' | 'acceleration')
-                        setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
-                    }
-                    }
+                        handleTypeChange(v as 'velocity' | 'acceleration');
+                        setURLParams({
+                            v: compressVars(
+                                useVariablesStore.getState().variables,
+                            ),
+                        });
+                    }}
                 >
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Tipo" />
@@ -232,9 +239,11 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                         <SelectGroup>
                             <SelectLabel>Tipo</SelectLabel>
                             <SelectItem value="velocity">Velocidad</SelectItem>
-                            {acceleration && (<SelectItem value="acceleration">
-                                Aceleración
-                            </SelectItem>)}
+                            {acceleration && (
+                                <SelectItem value="acceleration">
+                                    Aceleración
+                                </SelectItem>
+                            )}
                         </SelectGroup>
                     </SelectContent>
                 </Select>
@@ -300,8 +309,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                             textPrefix="θ"
                             textSuffix="°"
                             placeholder="0"
-                                onChange={(e) => handleAngleChange(e.target.value)}
-                                onBlur={handleBlur}
+                            onChange={(e) => handleAngleChange(e.target.value)}
+                            onBlur={handleBlur}
                             className="flex flex-1 w-full"
                         />
                         <Input
@@ -309,8 +318,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                             type="text"
                             prefix="m"
                             placeholder="0"
-                                onChange={(e) => handleMagChange(e.target.value)}
-                                onBlur={handleBlur}
+                            onChange={(e) => handleMagChange(e.target.value)}
+                            onBlur={handleBlur}
                             className="flex flex-1 w-full"
                         />
                     </>
