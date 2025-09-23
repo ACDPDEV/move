@@ -11,13 +11,11 @@ import { usePlaneStore } from '../../stores/usePlaneStore';
 import styles from '../../consts/styles';
 
 interface RadiusInputProps {
-    className?: string;
     entityId: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RadiusInput = memo(function RadiusInput({
-    className,
     entityId,
     setError,
 }: RadiusInputProps) {
