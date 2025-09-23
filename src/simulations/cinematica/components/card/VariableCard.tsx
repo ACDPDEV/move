@@ -306,7 +306,7 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                         <Input
                             value={angleText}
                             type="text"
-                            texttextPrefix="θ"
+                            textPrefix="θ"
                             textSuffix="°"
                             placeholder="0"
                             onChange={(e) => handleAngleChange(e.target.value)}
