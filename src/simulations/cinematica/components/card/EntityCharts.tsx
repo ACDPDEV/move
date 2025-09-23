@@ -70,7 +70,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
             velocity: velocityResultant,
             acceleration: accelerationResultant,
         };
-    }, [entity?.velocity, entity?.acceleration, activeVariables, entity]);
+    }, [activeVariables, entity]);
 
     // Generar datos de predicción para las gráficas
     const chartData = useMemo(() => {
@@ -120,7 +120,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
         }
 
         return timePoints;
-    }, [entity?.position, resultantValues, entity]);
+    }, [resultantValues, entity]);
 
     // Análisis de la función (vértices, ceros, etc.)
     const analysis = useMemo(() => {
