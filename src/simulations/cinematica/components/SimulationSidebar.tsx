@@ -1,9 +1,9 @@
 'use client';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEntitySummaries } from '../hooks/useEntityISummaries';
-import EntityCard from './EntityCard';
+import EntityCard from './card/EntityCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import EntityCharts from './EntityCharts';
+import EntityCharts from './card/EntityCharts';
 import TimeInput from './inputs/TimeInput';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -13,7 +13,7 @@ import ResetButton from './buttons/ResetButton';
 import DisplayOptionsSelector from './selector/OptionsSelect';
 import TimeSpeedSelector from './selector/TimeSpeedSelector';
 import { Button } from '@/components/ui/button';
-import AnimatedButton from '@/simulations/cinematica/components/ui/button';
+import AnimatedButton from '@/components/ui/better-button';
 import {
     IconChartArea,
     IconLayoutSidebarRightCollapseFilled,
@@ -27,13 +27,13 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useURL } from '../hooks/useURL';
 import { compressData } from '../utils/encodeAndDecodeEntities';
 import { useVariablesStore } from '../stores/useVariablesStore';
-import VariableCard from './VariableCard';
+import VariableCard from './card/VariableCard';
 import styles from '../consts/styles';
 import PredefinedVariables from './PredefinedVariables';
 import { compressVars } from '../utils/encodeAndDecodeVariables';
 import { useConditionalsStore } from '../stores/useConditionalsStore';
 import { IconBraces } from '@tabler/icons-react';
-import ConditionalCard, { compressConditionals } from './ConditionalCard';
+import ConditionalCard, { compressConditionals } from './card/ConditionalCard';
 
 function SimulationSidebar({
     className,

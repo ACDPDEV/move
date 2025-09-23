@@ -1,8 +1,16 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import Button from "./ui/button";
-import { IconArrowDownRightCircle, IconComponents, IconPlus } from "@tabler/icons-react";
-import styles from "../consts/styles";
-import { useVariablesStore } from "../stores/useVariablesStore";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import Button from '@/components/ui/better-button';
+import {
+    IconArrowDownRightCircle,
+    IconComponents,
+    IconPlus,
+} from '@tabler/icons-react';
+import styles from '../consts/styles';
+import { useVariablesStore } from '../stores/useVariablesStore';
 
 const predefinedVariables = [
     {
@@ -60,37 +68,49 @@ function PredefinedVariables() {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button
-                    tooltip="Variables predefinidas"
-                >
+                <Button tooltip="Variables predefinidas">
                     <IconComponents className={styles.icon} />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent  className="p-0" asChild>
+            <PopoverContent className="p-0" asChild>
                 <div className="flex flex-col bg-[#202C25] w-16 h-fit max-h-72 overflow-y-scroll p-2 gap-2 border-0">
-                {
-                        predefinedVariables.map((variable) => { 
-                        const disabled = variables.find((v) => v.name === variable.name) ? true : false;
+                    {predefinedVariables.map((variable) => {
+                        const disabled = variables.find(
+                            (v) => v.name === variable.name,
+                        )
+                            ? true
+                            : false;
                         return (
-                        <button key={variable.name} className="flex flex-row w-full items-center justify-between bg-[#202C25] p-2 gap-1 rounded-md" onClick={() => addVariable(
-                            variable.name,
-                            variable.type as VariableType,
-                            variable.value,
-                        )}
-                            disabled={disabled}
-                        >
-                            <span className="flex flex-row gap-3 items-center">
-                                <IconArrowDownRightCircle className={styles.icon} />
-                                <span className={disabled ? 'text-[#567663] font-mono text-sm' : 'text-[#89A996] font-mono text-sm'}>
-                                    {variable.name}
+                            <button
+                                key={variable.name}
+                                className="flex flex-row w-full items-center justify-between bg-[#202C25] p-2 gap-1 rounded-md"
+                                onClick={() =>
+                                    addVariable(
+                                        variable.name,
+                                        variable.type as VariableType,
+                                        variable.value,
+                                    )
+                                }
+                                disabled={disabled}
+                            >
+                                <span className="flex flex-row gap-3 items-center">
+                                    <IconArrowDownRightCircle
+                                        className={styles.icon}
+                                    />
+                                    <span
+                                        className={
+                                            disabled
+                                                ? 'text-[#567663] font-mono text-sm'
+                                                : 'text-[#89A996] font-mono text-sm'
+                                        }
+                                    >
+                                        {variable.name}
+                                    </span>
                                 </span>
-                            </span>
-                            <IconPlus className={styles.iconSecondary} />
-                        </button>
-                        ) 
-                    }
-                    )
-                }
+                                <IconPlus className={styles.iconSecondary} />
+                            </button>
+                        );
+                    })}
                 </div>
             </PopoverContent>
         </Popover>

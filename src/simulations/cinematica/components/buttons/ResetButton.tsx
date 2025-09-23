@@ -4,7 +4,7 @@ import { IconReload } from '@tabler/icons-react';
 import { useEntityStore } from '../../stores/useEntityStore';
 import { useURL } from '../../hooks/useURL';
 import { compressData } from '../../utils/encodeAndDecodeEntities';
-import Button from '../ui/button';
+import Button from '@/components/ui/better-button';
 import styles from '../../consts/styles';
 
 function useResetButton() {

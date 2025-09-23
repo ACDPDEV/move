@@ -17,7 +17,7 @@ import {
     IconTriangle,
     IconTriangleFilled,
 } from '@tabler/icons-react';
-import Button from '../ui/button';
+import Button from '@/components/ui/better-button';
 
 interface ShapeSelectorProps {
     className?: string;

@@ -1,5 +1,5 @@
-import Input from '@/simulations/cinematica/components/ui/input';
-import Button from '@/simulations/cinematica/components/ui/button';
+import Input from '@/components/ui/better-input';
+import Button from '@/components/ui/better-button';
 import VectorLetterIcon from '../svgs/VectorSymbol';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {

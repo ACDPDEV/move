@@ -6,7 +6,7 @@ import {
 import { Entity } from '@/simulations/cinematica/entities/Entity';
 import { useURL } from '../../hooks/useURL';
 import { compressData } from '../../utils/encodeAndDecodeEntities';
-import Input from '../ui/input';
+import Input from '@/components/ui/better-input';
 import { usePlaneStore } from '../../stores/usePlaneStore';
 
 interface RadiusInputProps {
