@@ -1,14 +1,14 @@
 'use client';
 import React, { useState } from 'react';
-import RadiusInput from '../inputs/RadiusInput';
-import ColorInput from '../inputs/ColorInput';
+import RadiusInput from '@/simulations/cinematica/components/inputs/RadiusInput';
+import ColorInput from '@/simulations/cinematica/components/inputs/ColorInput';
 import { Alert, AlertTitle } from '@/components/ui/alert';
-import ShapeSelector from '../selector/ShapeSelector';
-import FlowEntityButton from '../buttons/FlowEntityButton';
-import DeleteEntityButton from '../buttons/DeleteEntityButton';
+import ShapeSelector from '@/simulations/cinematica/components/selector/ShapeSelector';
+import FlowEntityButton from '@/simulations/cinematica/components/buttons/FlowEntityButton';
+import DeleteEntityButton from '@/simulations/cinematica/components/buttons/DeleteEntityButton';
 import { IconAlertCircle } from '@tabler/icons-react';
-import VectorInput from '../inputs/VectorInput';
-import { useOptionsStore } from '../../stores/useOptionsStore';
+import VectorInput from '@/simulations/cinematica/components/inputs/VectorInput';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
 
 interface EntityCardProps {
     entityId: string;
@@ -29,7 +29,7 @@ export default function EntityCard({
         >
             <div className="flex justify-between">
                 <FlowEntityButton entityId={entityId} />
-                <ShapeSelector entityId={entityId} setError={setError} />
+                <ShapeSelector entityId={entityId} />
                 <DeleteEntityButton entityId={entityId} />
             </div>
 
@@ -60,11 +60,7 @@ export default function EntityCard({
             {/* Radio y Color lado a lado */}
             <div className="flex space-x-4">
                 {inputs.radius && (
-                    <RadiusInput
-                        entityId={entityId}
-                        setError={setError}
-                        className="flex flex-1 w-full"
-                    />
+                    <RadiusInput entityId={entityId} setError={setError} />
                 )}
                 {inputs.color && (
                     <ColorInput

@@ -4,8 +4,8 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import {
     useVariablesStore,
     type Variable,
-} from '../../stores/useVariablesStore';
-import styles from '../../consts/styles';
+} from '@/simulations/cinematica/stores/useVariablesStore';
+import styles from '@/simulations/cinematica/consts/styles';
 import Button from '@/components/ui/better-button';
 import { IconTrash } from '@tabler/icons-react';
 import {
@@ -20,9 +20,9 @@ import {
 import Input from '@/components/ui/better-input';
 import VectorLetterIcon from '../svgs/VectorSymbol';
 import { Switch } from '@/components/ui/switch';
-import { useOptionsStore } from '../../stores/useOptionsStore';
-import { useURL } from '../../hooks/useURL';
-import { compressVars } from '../../utils/encodeAndDecodeVariables';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressVars } from '@/simulations/cinematica/utils/encodeAndDecodeVariables';
 
 type Props = {
     variable: Variable;

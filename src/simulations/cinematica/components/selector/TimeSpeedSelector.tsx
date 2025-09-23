@@ -1,7 +1,7 @@
 'use client';
 import React, { memo, useState } from 'react';
-import { useTimeStore } from '../../stores/useTimeStore';
-import styles from '../../consts/styles';
+import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
+import styles from '@/simulations/cinematica/consts/styles';
 import { IconChevronDown } from '@tabler/icons-react';
 import {
     Popover,

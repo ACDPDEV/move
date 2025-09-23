@@ -1,10 +1,10 @@
-import { useEntityStore } from '../../stores/useEntityStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
 import {
     IconCurrentLocation,
     IconCurrentLocationFilled,
 } from '@tabler/icons-react';
 import Button from '@/components/ui/better-button';
-import styles from '../../consts/styles';
+import styles from '@/simulations/cinematica/consts/styles';
 
 function FlowEntityButton({ entityId }: { entityId: string }) {
     const selectedEntityId = useEntityStore((s) => s.selectedEntityId);

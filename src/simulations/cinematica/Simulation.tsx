@@ -1,24 +1,24 @@
 'use client';
 import TimeControls from '@/simulations/cinematica/components/TimeControls';
 import Canvas from '@/simulations/cinematica/components/Canvas';
-import FloatBar from './components/FloatBar';
-import TimeIndicators from './components/TimeIndicators';
-import { useSidebarStore } from './stores/useSidebarStore';
-import SimulationSidebar from './components/SimulationSidebar';
+import FloatBar from '@/simulations/cinematica/components/FloatBar';
+import TimeIndicators from '@/simulations/cinematica/components/TimeIndicators';
+import { useSidebarStore } from '@/simulations/cinematica/stores/useSidebarStore';
+import SimulationSidebar from '@/simulations/cinematica/components/SimulationSidebar';
 import Button from '@/components/ui/better-button';
 import { IconLayoutSidebarLeftCollapseFilled } from '@tabler/icons-react';
-import OptionsSelect from './components/selector/OptionsSelect';
-import { useTimeStore } from './stores/useTimeStore';
+import OptionsSelect from '@/simulations/cinematica/components/selector/OptionsSelect';
+import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 import { useEffect, useState } from 'react';
-import { useEntityStore } from './stores/useEntityStore';
-import { decompressData } from './utils/encodeAndDecodeEntities';
-import { decompressOptions } from './utils/encodeAndDecodeOptions';
-import { useURL } from './hooks/useURL';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
+import { decompressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
+import { decompressOptions } from '@/simulations/cinematica/utils/encodeAndDecodeOptions';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
 import { AnimatePresence, motion } from 'motion/react';
-import { useOptionsStore } from './stores/useOptionsStore';
-import styles from './consts/styles';
-import { useVariablesStore } from './stores/useVariablesStore';
-import { decompressVars } from './utils/encodeAndDecodeVariables';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
+import styles from '@/simulations/cinematica/consts/styles';
+import { useVariablesStore } from '@/simulations/cinematica/stores/useVariablesStore';
+import { decompressVars } from '@/simulations/cinematica/utils/encodeAndDecodeVariables';
 
 export default function CinematicaSimulation() {
     const { isOpen, toggleIsOpen } = useSidebarStore();

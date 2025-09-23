@@ -1,8 +1,8 @@
 // /simulations/entities/Entity.ts
 import { Vector2D } from '@/simulations/lib/utils';
 import { v4 as uuidv4 } from 'uuid';
-import { usePlaneStore } from '../stores/usePlaneStore';
-import { useVariablesStore } from '../stores/useVariablesStore';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
+import { useVariablesStore } from '@/simulations/cinematica/stores/useVariablesStore';
 
 interface EntityProps {
     id?: string;

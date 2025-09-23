@@ -1,9 +1,9 @@
 'use client';
 import React, { useMemo, useState } from 'react';
 import { XAxis, YAxis, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { useEntityStore } from '../../stores/useEntityStore';
-import { useVariablesStore } from '../../stores/useVariablesStore';
-import type { Variable } from '../../stores/useVariablesStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
+import { useVariablesStore } from '@/simulations/cinematica/stores/useVariablesStore';
+import type { Variable } from '@/simulations/cinematica/stores/useVariablesStore';
 import { Vector2D } from '@/simulations/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import {

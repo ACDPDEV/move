@@ -19,11 +19,15 @@ import {
     IconForms,
     IconDecimal,
 } from '@tabler/icons-react';
-import styles from '../../consts/styles';
+import styles from '@/simulations/cinematica/consts/styles';
 import { Switch } from '@/components/ui/switch';
-import { Display, Inputs, useOptionsStore } from '../../stores/useOptionsStore';
-import { useURL } from '../../hooks/useURL';
-import { compressOptions } from '../../utils/encodeAndDecodeOptions';
+import {
+    Display,
+    Inputs,
+    useOptionsStore,
+} from '@/simulations/cinematica/stores/useOptionsStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressOptions } from '@/simulations/cinematica/utils/encodeAndDecodeOptions';
 import Input from '@/components/ui/better-input';
 
 const displayOptions = {

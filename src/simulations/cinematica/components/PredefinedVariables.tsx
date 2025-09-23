@@ -9,8 +9,8 @@ import {
     IconComponents,
     IconPlus,
 } from '@tabler/icons-react';
-import styles from '../consts/styles';
-import { useVariablesStore } from '../stores/useVariablesStore';
+import styles from '@/simulations/cinematica/consts/styles';
+import { useVariablesStore } from '@/simulations/cinematica/stores/useVariablesStore';
 
 const predefinedVariables = [
     {

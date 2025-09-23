@@ -1,6 +1,9 @@
 'use client';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { decodeURLParam, encodeURLParam } from '../utils/URLToken';
+import {
+    decodeURLParam,
+    encodeURLParam,
+} from '@/simulations/cinematica/utils/URLToken';
 
 function useURL() {
     const searchParams = useSearchParams();

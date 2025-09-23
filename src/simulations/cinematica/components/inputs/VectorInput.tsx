@@ -7,12 +7,12 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { useURL } from '../../hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
-import styles from '../../consts/styles';
-import { formatClean } from '../../utils/formatClean';
-import { usePlaneStore } from '../../stores/usePlaneStore';
-import { useOptionsStore } from '../../stores/useOptionsStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
+import styles from '@/simulations/cinematica/consts/styles';
+import { formatClean } from '@/simulations/cinematica/utils/formatClean';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
 
 function radianToDegree(radian: number): number {
     return radian * (180 / Math.PI);

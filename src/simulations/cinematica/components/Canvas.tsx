@@ -1,14 +1,17 @@
 'use client';
 import React, { useEffect, useRef, useCallback } from 'react';
 import { listenEvents } from '@/simulations/cinematica/utils/canvasListeners';
-import { useTimeStore } from '../stores/useTimeStore';
-import { useEntityStore } from '../stores/useEntityStore';
+import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
 import { useTheme } from 'next-themes';
-import { drawOriginPoint } from '../draws/drawOriginPoint';
-import { drawAxes } from '../draws/drawAxes';
-import { drawEntities } from '../draws/drawEntities';
-import { drawGridLabels, drawGrids } from '../draws/drawGrids';
-import { usePlaneStore } from '../stores/usePlaneStore';
+import { drawOriginPoint } from '@/simulations/cinematica/draws/drawOriginPoint';
+import { drawAxes } from '@/simulations/cinematica/draws/drawAxes';
+import { drawEntities } from '@/simulations/cinematica/draws/drawEntities';
+import {
+    drawGridLabels,
+    drawGrids,
+} from '@/simulations/cinematica/draws/drawGrids';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
 
 interface CanvasProps {
     style?: React.CSSProperties;
