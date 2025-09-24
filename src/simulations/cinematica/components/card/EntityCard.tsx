@@ -20,7 +20,7 @@ export default function EntityCard({
     color,
 }: Readonly<EntityCardProps>) {
     const [error, setError] = useState<string>('');
-    const { inputs } = useOptionsStore();
+    const inputs = useOptionsStore((s) => s.inputs);
 
     return (
         <div
@@ -57,7 +57,6 @@ export default function EntityCard({
                 />
             )}
 
-            {/* Radio y Color lado a lado */}
             <div className="flex space-x-4">
                 {inputs.radius && (
                     <RadiusInput entityId={entityId} setError={setError} />
