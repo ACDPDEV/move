@@ -1,4 +1,4 @@
-import { Variable } from "../stores/useVariablesStore";
+import { Variable } from '@/simulations/cinematica/stores/useVariablesStore';
 
 export function compressVars(data: Variable[]): string {
     const a = [];
@@ -17,19 +17,19 @@ export function compressVars(data: Variable[]): string {
             type,
             Number(v.value.x.toFixed(2)),
             Number(v.value.y.toFixed(2)),
-            Number(v.active)
+            Number(v.active),
         ];
         a.push(arr);
     }
     return JSON.stringify(a);
 }
 
-interface VariableWithoutId { 
+interface VariableWithoutId {
     name: string;
     type: 'velocity' | 'acceleration';
     value: { x: number; y: number };
     active: boolean;
-};
+}
 
 export function decompressVars(data: string): VariableWithoutId[] {
     if (!data) return [];

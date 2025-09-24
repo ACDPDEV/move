@@ -4,8 +4,8 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import {
     useVariablesStore,
     type Variable,
-} from '../../stores/useVariablesStore';
-import styles from '../../consts/styles';
+} from '@/simulations/cinematica/stores/useVariablesStore';
+import styles from '@/simulations/cinematica/consts/styles';
 import Button from '@/components/ui/better-button';
 import { IconTrash } from '@tabler/icons-react';
 import {
@@ -20,33 +20,17 @@ import {
 import Input from '@/components/ui/better-input';
 import VectorLetterIcon from '../svgs/VectorSymbol';
 import { Switch } from '@/components/ui/switch';
-import { useOptionsStore } from '../../stores/useOptionsStore';
-import { useURL } from '../../hooks/useURL';
-import { compressVars } from '../../utils/encodeAndDecodeVariables';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressVars } from '@/simulations/cinematica/utils/encodeAndDecodeVariables';
+import {
+    cartesianToPolar,
+    polarToCartesian,
+    parseNumber,
+} from '@/simulations/lib/math';
 
 type Props = {
     variable: Variable;
-};
-
-const toDeg = (rad: number) => (rad * 180) / Math.PI;
-const toRad = (deg: number) => (deg * Math.PI) / 180;
-
-function cartesianToPolar(x: number, y: number) {
-    const angleRad = Math.atan2(y, x);
-    const mag = Math.hypot(x, y);
-    return { angleDeg: toDeg(angleRad), mag };
-}
-
-function polarToCartesian(angleDeg: number, mag: number) {
-    const a = toRad(angleDeg);
-    return { x: mag * Math.cos(a), y: mag * Math.sin(a) };
-}
-
-// parsea número o devuelve null si es inválido
-const parseNum = (s: string): number | null => {
-    if (s.trim() === '') return null;
-    const n = Number(s);
-    return Number.isFinite(n) ? n : null;
 };
 
 export default function VariableCard({ variable }: Readonly<Props>) {
@@ -142,8 +126,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
 
     // Actualiza store si x e y son válidos
     const pushCartesianIfValid = (xStr: string, yStr: string) => {
-        const xNum = parseNum(xStr);
-        const yNum = parseNum(yStr);
+        const xNum = parseNumber(xStr);
+        const yNum = parseNumber(yStr);
         if (xNum === null || yNum === null) {
             setError('x e y deben ser numéricos');
             return;
@@ -163,8 +147,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
 
     // Actualiza store si ángulo y magnitud son válidos
     const pushPolarIfValid = (angStr: string, magStr: string) => {
-        const a = parseNum(angStr);
-        const m = parseNum(magStr);
+        const a = parseNumber(angStr);
+        const m = parseNumber(magStr);
         if (a === null || m === null) {
             setError('θ y m deben ser numéricos');
             return;

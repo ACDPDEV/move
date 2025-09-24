@@ -1,9 +1,9 @@
 import { IconTrash } from '@tabler/icons-react';
 import { useEntityStore } from '../../stores/useEntityStore';
 import Button from '@/components/ui/better-button';
-import styles from '../../consts/styles';
-import { useURL } from '../../hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
+import styles from '@/simulations/cinematica/consts/styles';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
 
 function DeleteEntityButton({ entityId }: { entityId: string }) {
     const { setURLParams } = useURL();
@@ -21,7 +21,9 @@ function DeleteEntityButton({ entityId }: { entityId: string }) {
             tooltip="Eliminar Móvil"
             className={styles.destructiveButton}
         >
-            <IconTrash className={styles.icon + ' ' + 'text-[#CA6868]'} />
+            <IconTrash
+                className={styles.icon + ' ' + 'text-destructive-red-300'}
+            />
         </Button>
     );
 }

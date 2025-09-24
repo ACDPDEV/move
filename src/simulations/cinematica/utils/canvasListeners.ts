@@ -1,8 +1,8 @@
 'use client';
 
 import { initializeCanvas } from '@/simulations/cinematica/utils/canvasManagment';
-import { usePlaneStore } from '../stores/usePlaneStore';
-import { useMouseStore } from '../stores/useMouseStore';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
+import { useMouseStore } from '@/simulations/cinematica/stores/useMouseStore';
 
 function getDistance(touch1: Touch, touch2: Touch): number {
     const dx = touch1.clientX - touch2.clientX;

@@ -1,6 +1,9 @@
 import React, { memo, useEffect, useRef } from 'react';
-import { TimeStore, useTimeStore } from '../../stores/useTimeStore';
-import { useEntityStore } from '../../stores/useEntityStore';
+import {
+    TimeStore,
+    useTimeStore,
+} from '@/simulations/cinematica/stores/useTimeStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
 import {
     Tooltip,
     TooltipContent,

@@ -4,11 +4,11 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { useURL } from '../../hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
 import Input from '@/components/ui/better-input';
-import { usePlaneStore } from '../../stores/usePlaneStore';
-import styles from '../../consts/styles';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
+import styles from '@/simulations/cinematica/consts/styles';
 
 interface RadiusInputProps {
     entityId: string;

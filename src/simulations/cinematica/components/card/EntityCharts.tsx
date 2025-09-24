@@ -1,10 +1,9 @@
 'use client';
 import React, { useMemo, useState } from 'react';
 import { XAxis, YAxis, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { useEntityStore } from '../../stores/useEntityStore';
-import { useVariablesStore } from '../../stores/useVariablesStore';
-import type { Variable } from '../../stores/useVariablesStore';
-import { Vector2D } from '@/simulations/lib/utils';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
+import { useVariablesStore } from '@/simulations/cinematica/stores/useVariablesStore';
+import type { Variable } from '@/simulations/cinematica/stores/useVariablesStore';
 import { Separator } from '@/components/ui/separator';
 import {
     Collapsible,
@@ -12,35 +11,107 @@ import {
     CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { ChevronDown, ChevronRight } from 'lucide-react';
+import { scientificNotation } from '@/simulations/lib/math';
 
 interface EntityChartsProps {
     entityId: string;
     color: string;
 }
 
-// Formateo de números (notación científica cuando conviene)
-const formatNumber = (num: number): string => {
-    if (Math.abs(num) < 0.001 && num !== 0) {
-        return num.toExponential(2);
-    }
-    if (Math.abs(num) > 10000) {
-        return num.toExponential(2);
-    }
-    return num.toFixed(2);
-};
+function Graph({
+    type,
+    chartData,
+    gradientId,
+    color,
+    formatTick,
+    axisXName,
+    axisYName,
+}: {
+    type: 'position' | 'velocity' | 'acceleration';
+    chartData: Record<string, number>[];
+    gradientId: string;
+    color: string;
+    formatTick: (value: number) => string;
+    axisXName: string;
+    axisYName: string;
+}) {
+    return (
+        <div className="space-y-3 relative mb-8">
+            <div
+                className="h-48 w-full pl-8"
+                style={{ width: '350px', height: '192px' }}
+            >
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                        data={chartData}
+                        margin={{
+                            top: 10,
+                            right: 20,
+                            left: 20,
+                            bottom: 20,
+                        }}
+                    >
+                        <defs>
+                            <linearGradient
+                                id={`${gradientId}-${type}`}
+                                x1="0"
+                                y1="0"
+                                x2="0"
+                                y2="1"
+                            >
+                                <stop
+                                    offset="5%"
+                                    stopColor={color}
+                                    stopOpacity={0.3}
+                                />
+                                <stop
+                                    offset="95%"
+                                    stopColor={color}
+                                    stopOpacity={0.05}
+                                />
+                            </linearGradient>
+                        </defs>
+                        <XAxis
+                            dataKey="time"
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fontSize: 11, fill: 'currentColor' }}
+                            tickFormatter={formatTick}
+                        />
+                        <YAxis
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fontSize: 11, fill: 'currentColor' }}
+                            tickFormatter={formatTick}
+                            width={40}
+                        />
+                        <Area
+                            type="monotone"
+                            dataKey={`${type}mag`}
+                            stroke={color}
+                            strokeWidth={2}
+                            fill={`url(#${gradientId}-${type})`}
+                        />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
+            <div className="text-xs text-stone-500 dark:text-stone-400 text-center pl-8">
+                {axisXName}
+            </div>
+            <div className="absolute left-0 top-24 transform -rotate-90 text-xs text-stone-500 dark:text-stone-400 origin-center whitespace-nowrap">
+                {axisYName}
+            </div>
+        </div>
+    );
+}
 
 const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
     const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
-
-    // Entidad objetivo (puede ser undefined si no existe)
     const entity = useEntityStore((state) =>
         state.entities.find((e) => e.id === entityId),
     );
-
-    // 1) Leemos el array completo de variables desde el store (un solo argumento)
     const variables = useVariablesStore((state) => state.variables);
 
-    // 2) Derivamos activeVariables con useMemo (tipado claro gracias a `Variable`)
     const activeVariables = useMemo(
         () => variables.filter((v: Variable) => v.active),
         [variables],
@@ -51,24 +122,23 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
         if (!entity) return null;
 
         // Usamos copias para no mutar el estado original del store/entity
-        let velocityResultant: Vector2D = entity.velocity.copy();
-        let accelerationResultant: Vector2D = entity.acceleration.copy();
+        let resultingVelocity = entity.velocity.copy();
+        let resultingAcceleration = entity.acceleration.copy();
 
         activeVariables.forEach((variable: Variable) => {
             if (variable.type === 'velocity') {
-                // Si add muta el objeto, estamos operando sobre las copias
-                velocityResultant = velocityResultant.add(variable.value);
+                resultingVelocity = resultingVelocity.add(variable.value);
             }
             if (variable.type === 'acceleration') {
-                accelerationResultant = accelerationResultant.add(
+                resultingAcceleration = resultingAcceleration.add(
                     variable.value,
                 );
             }
         });
 
         return {
-            velocity: velocityResultant,
-            acceleration: accelerationResultant,
+            resultingVelocity,
+            resultingAcceleration,
         };
     }, [activeVariables, entity]);
 
@@ -80,28 +150,25 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
         const maxTime = 10;
         const steps = 50;
 
-        const {
-            velocity: resultantVelocity,
-            acceleration: resultantAcceleration,
-        } = resultantValues;
+        const { resultingVelocity, resultingAcceleration } = resultantValues;
 
         for (let i = 0; i <= steps; i++) {
             const t = (i / steps) * maxTime;
 
             const positionX =
                 entity.position.x +
-                resultantVelocity.x * t +
-                0.5 * resultantAcceleration.x * t * t;
+                resultingVelocity.x * t +
+                0.5 * resultingAcceleration.x * t * t;
             const positionY =
                 entity.position.y +
-                resultantVelocity.y * t +
-                0.5 * resultantAcceleration.y * t * t;
+                resultingVelocity.y * t +
+                0.5 * resultingAcceleration.y * t * t;
 
-            const velocityX = resultantVelocity.x + resultantAcceleration.x * t;
-            const velocityY = resultantVelocity.y + resultantAcceleration.y * t;
+            const velocityX = resultingVelocity.x + resultingAcceleration.x * t;
+            const velocityY = resultingVelocity.y + resultingAcceleration.y * t;
 
-            const accelerationX = resultantAcceleration.x;
-            const accelerationY = resultantAcceleration.y;
+            const accelerationX = resultingAcceleration.x;
+            const accelerationY = resultingAcceleration.y;
 
             timePoints.push({
                 time: t,
@@ -126,10 +193,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
     const analysis = useMemo(() => {
         if (!entity || !resultantValues || chartData.length === 0) return null;
 
-        const {
-            velocity: resultantVelocity,
-            acceleration: resultantAcceleration,
-        } = resultantValues;
+        const { resultingVelocity, resultingAcceleration } = resultantValues;
 
         const posAnalysis = {
             vertex: null as { t: number; value: number } | null,
@@ -141,8 +205,8 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
         };
 
         // Analizamos magnitudes para posición (componente radial)
-        const accMag = resultantAcceleration.mag();
-        const velMag = resultantVelocity.mag();
+        const accMag = resultingAcceleration.mag();
+        const velMag = resultingVelocity.mag();
         if (accMag !== 0) {
             const tVertex = -velMag / accMag;
             // solo consideramos vértice en t >= 0
@@ -156,13 +220,13 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
             }
         }
 
-        if (resultantAcceleration.x !== 0) {
-            const stopTimeX = -resultantVelocity.x / resultantAcceleration.x;
+        if (resultingAcceleration.x !== 0) {
+            const stopTimeX = -resultingVelocity.x / resultingAcceleration.x;
             if (stopTimeX >= 0) posAnalysis.stopsX = stopTimeX;
         }
 
-        if (resultantAcceleration.y !== 0) {
-            const stopTimeY = -resultantVelocity.y / resultantAcceleration.y;
+        if (resultingAcceleration.y !== 0) {
+            const stopTimeY = -resultingVelocity.y / resultingAcceleration.y;
             if (stopTimeY >= 0) posAnalysis.stopsY = stopTimeY;
         }
 
@@ -182,15 +246,15 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
         return {
             position: posAnalysis,
             velocity: velAnalysis,
-            resultantVelocity,
-            resultantAcceleration,
+            resultingVelocity,
+            resultingAcceleration,
         };
     }, [entity, resultantValues, chartData]);
 
     if (!entity || !resultantValues) return null;
 
     const gradientId = `gradient-${entityId}`;
-    const formatTick = (value: number) => formatNumber(value);
+    const formatTick = (value: number) => scientificNotation(value);
 
     return (
         <div
@@ -198,207 +262,41 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
             style={{ borderColor: color }}
         >
             {/* Gráfica de Posición */}
-            <div className="space-y-3 relative mb-8">
-                <div
-                    className="h-48 w-full pl-8"
-                    style={{ width: '350px', height: '192px' }}
-                >
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
-                            data={chartData}
-                            margin={{
-                                top: 10,
-                                right: 20,
-                                left: 20,
-                                bottom: 20,
-                            }}
-                        >
-                            <defs>
-                                <linearGradient
-                                    id={`${gradientId}-position`}
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                >
-                                    <stop
-                                        offset="5%"
-                                        stopColor={color}
-                                        stopOpacity={0.3}
-                                    />
-                                    <stop
-                                        offset="95%"
-                                        stopColor={color}
-                                        stopOpacity={0.05}
-                                    />
-                                </linearGradient>
-                            </defs>
-                            <XAxis
-                                dataKey="time"
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 11, fill: 'currentColor' }}
-                                tickFormatter={formatTick}
-                            />
-                            <YAxis
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 11, fill: 'currentColor' }}
-                                tickFormatter={formatTick}
-                                width={40}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="positionmag"
-                                stroke={color}
-                                strokeWidth={2}
-                                fill={`url(#${gradientId}-position)`}
-                            />
-                        </AreaChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="text-xs text-stone-500 dark:text-stone-400 text-center pl-8">
-                    Tiempo (s)
-                </div>
-                <div className="absolute left-0 top-24 transform -rotate-90 text-xs text-stone-500 dark:text-stone-400 origin-center whitespace-nowrap">
-                    Posición
-                </div>
-            </div>
+            <Graph
+                type="position"
+                chartData={chartData}
+                gradientId={gradientId}
+                color={color}
+                formatTick={formatTick}
+                axisXName="Tiempo (s)"
+                axisYName="Posición"
+            />
 
             <Separator className="my-6" />
 
             {/* Gráfica de Velocidad */}
-            <div className="space-y-3 relative mb-8">
-                <div
-                    className="h-48 w-full pl-8"
-                    style={{ width: '350px', height: '192px' }}
-                >
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
-                            data={chartData}
-                            margin={{
-                                top: 10,
-                                right: 20,
-                                left: 20,
-                                bottom: 20,
-                            }}
-                        >
-                            <defs>
-                                <linearGradient
-                                    id={`${gradientId}-velocity`}
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                >
-                                    <stop
-                                        offset="5%"
-                                        stopColor={color}
-                                        stopOpacity={0.3}
-                                    />
-                                    <stop
-                                        offset="95%"
-                                        stopColor={color}
-                                        stopOpacity={0.05}
-                                    />
-                                </linearGradient>
-                            </defs>
-                            <XAxis
-                                dataKey="time"
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 11, fill: 'currentColor' }}
-                                tickFormatter={formatTick}
-                            />
-                            <YAxis
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 11, fill: 'currentColor' }}
-                                tickFormatter={formatTick}
-                                width={40}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="velocitymag"
-                                stroke={color}
-                                strokeWidth={2}
-                                fill={`url(#${gradientId}-velocity)`}
-                            />
-                        </AreaChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="text-xs text-stone-500 dark:text-stone-400 text-center pl-8">
-                    Tiempo (s)
-                </div>
-                <div className="absolute left-0 top-24 transform -rotate-90 text-xs text-stone-500 dark:text-stone-400 origin-center whitespace-nowrap">
-                    Velocidad
-                </div>
-            </div>
+            <Graph
+                type="velocity"
+                chartData={chartData}
+                gradientId={gradientId}
+                color={color}
+                formatTick={formatTick}
+                axisXName="Tiempo (s)"
+                axisYName="Velocidad"
+            />
 
             <Separator className="my-6" />
 
             {/* Gráfica de Aceleración */}
-            <div className="space-y-2 relative">
-                <div
-                    className="h-40 w-full"
-                    style={{ width: '350px', height: '192px' }}
-                >
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
-                            data={chartData}
-                            margin={{ top: 5, right: 30, left: 60, bottom: 35 }}
-                        >
-                            <defs>
-                                <linearGradient
-                                    id={`${gradientId}-acceleration`}
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                >
-                                    <stop
-                                        offset="5%"
-                                        stopColor={color}
-                                        stopOpacity={0.3}
-                                    />
-                                    <stop
-                                        offset="95%"
-                                        stopColor={color}
-                                        stopOpacity={0.05}
-                                    />
-                                </linearGradient>
-                            </defs>
-                            <XAxis
-                                dataKey="time"
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 11, fill: 'currentColor' }}
-                                tickFormatter={formatTick}
-                            />
-                            <YAxis
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 11, fill: 'currentColor' }}
-                                tickFormatter={formatTick}
-                                width={50}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="accelerationmag"
-                                stroke={color}
-                                strokeWidth={2}
-                                fill={`url(#${gradientId}-acceleration)`}
-                            />
-                        </AreaChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                    Tiempo (s)
-                </div>
-                <div className="absolute left-2 top-20 transform -rotate-90 text-xs text-gray-500 dark:text-gray-400 origin-center">
-                    Aceleración
-                </div>
-            </div>
+            <Graph
+                type="acceleration"
+                chartData={chartData}
+                gradientId={gradientId}
+                color={color}
+                formatTick={formatTick}
+                axisXName="Tiempo (s)"
+                axisYName="Aceleración"
+            />
 
             <Separator className="my-6" />
 
@@ -425,12 +323,12 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                         <span>Velocidad resultante:</span>
                                         <span>
                                             (
-                                            {formatNumber(
-                                                analysis.resultantVelocity.x,
+                                            {scientificNotation(
+                                                analysis.resultingVelocity.x,
                                             )}
                                             ,{' '}
-                                            {formatNumber(
-                                                analysis.resultantVelocity.y,
+                                            {scientificNotation(
+                                                analysis.resultingVelocity.y,
                                             )}
                                             ) m/s
                                         </span>
@@ -439,13 +337,13 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                         <span>Aceleración resultante:</span>
                                         <span>
                                             (
-                                            {formatNumber(
-                                                analysis.resultantAcceleration
+                                            {scientificNotation(
+                                                analysis.resultingAcceleration
                                                     .x,
                                             )}
                                             ,{' '}
-                                            {formatNumber(
-                                                analysis.resultantAcceleration
+                                            {scientificNotation(
+                                                analysis.resultingAcceleration
                                                     .y,
                                             )}
                                             ) m/s²
@@ -454,8 +352,8 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                     <div className="flex justify-between">
                                         <span>Magnitud vel. resultante:</span>
                                         <span>
-                                            {formatNumber(
-                                                analysis.resultantVelocity.mag(),
+                                            {scientificNotation(
+                                                analysis.resultingVelocity.mag(),
                                             )}{' '}
                                             m/s
                                         </span>
@@ -463,8 +361,8 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                     <div className="flex justify-between">
                                         <span>Magnitud accel. resultante:</span>
                                         <span>
-                                            {formatNumber(
-                                                analysis.resultantAcceleration.mag(),
+                                            {scientificNotation(
+                                                analysis.resultingAcceleration.mag(),
                                             )}{' '}
                                             m/s²
                                         </span>
@@ -491,11 +389,11 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                             <span>Vértice:</span>
                                             <span>
                                                 t ={' '}
-                                                {formatNumber(
+                                                {scientificNotation(
                                                     analysis.position.vertex.t,
                                                 )}
                                                 s, pos ={' '}
-                                                {formatNumber(
+                                                {scientificNotation(
                                                     analysis.position.vertex
                                                         .value,
                                                 )}
@@ -507,7 +405,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                             <span>Se detiene en X:</span>
                                             <span>
                                                 t ={' '}
-                                                {formatNumber(
+                                                {scientificNotation(
                                                     analysis.position.stopsX,
                                                 )}
                                                 s
@@ -519,7 +417,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                             <span>Se detiene en Y:</span>
                                             <span>
                                                 t ={' '}
-                                                {formatNumber(
+                                                {scientificNotation(
                                                     analysis.position.stopsY,
                                                 )}
                                                 s
@@ -538,7 +436,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                     <div className="flex justify-between">
                                         <span>Pendiente:</span>
                                         <span>
-                                            {formatNumber(
+                                            {scientificNotation(
                                                 analysis.velocity.slope,
                                             )}
                                         </span>
@@ -546,7 +444,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                     <div className="flex justify-between">
                                         <span>Intersección Y:</span>
                                         <span>
-                                            {formatNumber(
+                                            {scientificNotation(
                                                 analysis.velocity.yIntercept,
                                             )}
                                         </span>
@@ -564,7 +462,7 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                             <span>Velocidad = 0:</span>
                                             <span>
                                                 t ={' '}
-                                                {formatNumber(
+                                                {scientificNotation(
                                                     analysis.velocity.zeroTime,
                                                 )}
                                                 s
@@ -583,8 +481,8 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                     <div className="flex justify-between">
                                         <span>Valor constante:</span>
                                         <span>
-                                            {formatNumber(
-                                                analysis.resultantAcceleration.mag(),
+                                            {scientificNotation(
+                                                analysis.resultingAcceleration.mag(),
                                             )}
                                         </span>
                                     </div>
@@ -599,8 +497,8 @@ const EntityCharts = ({ entityId, color }: EntityChartsProps) => {
                                     <div className="flex justify-between">
                                         <span>Rango:</span>
                                         <span>
-                                            {formatNumber(
-                                                analysis.resultantAcceleration.mag(),
+                                            {scientificNotation(
+                                                analysis.resultingAcceleration.mag(),
                                             )}
                                         </span>
                                     </div>

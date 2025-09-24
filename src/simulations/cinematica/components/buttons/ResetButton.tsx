@@ -1,11 +1,11 @@
 'use client';
-import { useTimeStore } from '../../stores/useTimeStore';
+import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 import { IconReload } from '@tabler/icons-react';
-import { useEntityStore } from '../../stores/useEntityStore';
-import { useURL } from '../../hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
 import Button from '@/components/ui/better-button';
-import styles from '../../consts/styles';
+import styles from '@/simulations/cinematica/consts/styles';
 
 function useResetButton() {
     const reset = useTimeStore((s) => s.reset);

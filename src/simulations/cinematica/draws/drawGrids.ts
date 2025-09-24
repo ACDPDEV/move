@@ -1,5 +1,5 @@
-import { usePlaneStore } from '../stores/usePlaneStore';
-import { gapFactor, getGap } from '../utils/gap';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
+import { gapFactor, getGap } from '@/simulations/cinematica/utils/gap';
 
 function drawGrids(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const plane = usePlaneStore.getState();

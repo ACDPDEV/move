@@ -1,11 +1,11 @@
 'use client';
-import TimeInput from './inputs/TimeInput';
+import TimeInput from '@/simulations/cinematica/components/inputs/TimeInput';
 import { useState } from 'react';
-import MovementPredictionToggle from './buttons/MovementPredictionToggle';
-import TimeSpeedSelector from './selector/TimeSpeedSelector';
-import DisplayOptionsSelector from './selector/OptionsSelect';
-import PlayerToggle from './buttons/PlayerToogle';
-import ResetButton from './buttons/ResetButton';
+import MovementPredictionToggle from '@/simulations/cinematica/components/buttons/MovementPredictionToggle';
+import TimeSpeedSelector from '@/simulations/cinematica/components/selector/TimeSpeedSelector';
+import DisplayOptionsSelector from '@/simulations/cinematica/components/selector/OptionsSelect';
+import PlayerToggle from '@/simulations/cinematica/components/buttons/PlayerToogle';
+import ResetButton from '@/simulations/cinematica/components/buttons/ResetButton';
 import { toast } from 'sonner';
 
 export default function TimeControls() {
