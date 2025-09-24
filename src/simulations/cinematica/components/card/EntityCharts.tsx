@@ -11,7 +11,7 @@ import {
     CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { scientificNotation } from '@/simulations/lib/numbers';
+import { scientificNotation } from '@/simulations/lib/math';
 
 interface EntityChartsProps {
     entityId: string;
