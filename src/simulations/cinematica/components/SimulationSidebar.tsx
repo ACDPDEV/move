@@ -1,19 +1,19 @@
 'use client';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useEntitySummaries } from '../hooks/useEntityISummaries';
-import EntityCard from './EntityCard';
+import { useEntitySummaries } from '@/simulations/cinematica/hooks/useEntityISummaries';
+import EntityCard from '@/simulations/cinematica/components/card/EntityCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import EntityCharts from './EntityCharts';
-import TimeInput from './inputs/TimeInput';
+import EntityCharts from '@/simulations/cinematica/components/card/EntityCharts';
+import TimeInput from '@/simulations/cinematica/components/inputs/TimeInput';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import MovementPredictionToggle from './buttons/MovementPredictionToggle';
-import PlayerToggle from './buttons/PlayerToogle';
-import ResetButton from './buttons/ResetButton';
-import DisplayOptionsSelector from './selector/OptionsSelect';
-import TimeSpeedSelector from './selector/TimeSpeedSelector';
+import MovementPredictionToggle from '@/simulations/cinematica/components/buttons/MovementPredictionToggle';
+import PlayerToggle from '@/simulations/cinematica/components/buttons/PlayerToogle';
+import ResetButton from '@/simulations/cinematica/components/buttons/ResetButton';
+import DisplayOptionsSelector from '@/simulations/cinematica/components/selector/OptionsSelect';
+import TimeSpeedSelector from '@/simulations/cinematica/components/selector/TimeSpeedSelector';
 import { Button } from '@/components/ui/button';
-import AnimatedButton from '@/simulations/cinematica/components/ui/button';
+import AnimatedButton from '@/components/ui/better-button';
 import {
     IconChartArea,
     IconLayoutSidebarRightCollapseFilled,
@@ -21,19 +21,21 @@ import {
     IconPlus,
     IconVariable,
 } from '@tabler/icons-react';
-import { useSidebarStore } from '../stores/useSidebarStore';
-import { useEntityStore } from '../stores/useEntityStore';
+import { useSidebarStore } from '@/simulations/cinematica/stores/useSidebarStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
 import { AnimatePresence, motion } from 'motion/react';
-import { useURL } from '../hooks/useURL';
-import { compressData } from '../utils/encodeAndDecodeEntities';
-import { useVariablesStore } from '../stores/useVariablesStore';
-import VariableCard from './VariableCard';
-import styles from '../consts/styles';
-import PredefinedVariables from './PredefinedVariables';
-import { compressVars } from '../utils/encodeAndDecodeVariables';
-import { useConditionalsStore } from '../stores/useConditionalsStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
+import { useVariablesStore } from '@/simulations/cinematica/stores/useVariablesStore';
+import VariableCard from '@/simulations/cinematica/components/card/VariableCard';
+import styles from '@/simulations/cinematica/consts/styles';
+import PredefinedVariables from '@/simulations/cinematica/components/PredefinedVariables';
+import { compressVars } from '@/simulations/cinematica/utils/encodeAndDecodeVariables';
+import { useConditionalsStore } from '@/simulations/cinematica/stores/useConditionalsStore';
 import { IconBraces } from '@tabler/icons-react';
-import ConditionalCard, { compressConditionals } from './ConditionalCard';
+import ConditionalCard, {
+    compressConditionals,
+} from '@/simulations/cinematica/components/card/ConditionalCard';
 
 function SimulationSidebar({
     className,
@@ -95,7 +97,8 @@ function SimulationSidebar({
 
                             <AnimatedButton
                                 className={
-                                    'absolute top-4 right-4 z-50' +
+                                    styles.defaultButton +
+                                    ' absolute top-4 right-4 z-50' +
                                     ' ' +
                                     `${isOpen ? '' : 'hidden'}`
                                 }

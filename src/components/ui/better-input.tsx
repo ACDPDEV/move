@@ -20,7 +20,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             textPrefix,
             textSuffix,
             tooltip,
-            className = '',
+            className = 'w-32 h-9 bg-[#2B3B31] rounded-md flex flex-row p-2 gap-1 items-center justify-between text-sm text-[#D3DFD8] font-mono cursor-pointer',
             classNamePrefix = 'text-[#89A996] w-3 h-5 text-sm font-mono',
             classNameSuffix = 'text-[#567663] w-3 h-5 text-sm font-mono',
             ...props
@@ -28,7 +28,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         ref,
     ) => {
         const inputElement = (
-            <div className={className.trim()}>
+            <div className={className}>
                 {textPrefix && (
                     <span className={classNamePrefix}>{textPrefix}</span>
                 )}

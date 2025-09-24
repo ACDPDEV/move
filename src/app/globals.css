@@ -67,6 +67,9 @@
     --color-dark-green-150: hsl(144, 16%, 85%);
     --color-dark-green-100: hsl(144, 16%, 90%);
     --color-dark-green-50: hsl(144, 16%, 95%);
+    --color-destructive-red-700: hsl(0, 48%, 30%);
+    --color-destructive-red-300: hsl(0, 48%, 60%);
+    --color-destructive-red-200: hsl(0, 48%, 80%);
 
     @keyframes meteor {
         0% {

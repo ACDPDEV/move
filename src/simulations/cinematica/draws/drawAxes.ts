@@ -1,4 +1,4 @@
-import { usePlaneStore } from '../stores/usePlaneStore';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
 
 function drawAxes(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const plane = usePlaneStore.getState();

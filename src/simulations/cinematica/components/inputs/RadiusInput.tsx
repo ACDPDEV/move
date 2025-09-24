@@ -4,19 +4,18 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { useURL } from '../../hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
-import Input from '../ui/input';
-import { usePlaneStore } from '../../stores/usePlaneStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
+import Input from '@/components/ui/better-input';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
+import styles from '@/simulations/cinematica/consts/styles';
 
 interface RadiusInputProps {
-    className?: string;
     entityId: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RadiusInput = memo(function RadiusInput({
-    className,
     entityId,
     setError,
 }: RadiusInputProps) {
@@ -97,7 +96,7 @@ const RadiusInput = memo(function RadiusInput({
             name="radius"
             type="number"
             textPrefix="r"
-            className="flex grow"
+            className={styles.vectorInput}
             placeholder="0"
             onChange={onChange}
             onBlur={onBlur}

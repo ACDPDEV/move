@@ -6,10 +6,7 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { Input } from '@/components/ui/input';
 import ColorPicker from '@/simulations/cinematica/components/ColorPicker';
-import { useURL } from '../../hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
 
 interface ColorInputProps {
     className?: string;

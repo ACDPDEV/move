@@ -1,6 +1,6 @@
-import FPSBadge from './badges/FpsIndicator';
-import BackButton from './buttons/BackButton';
-import { useOptionsStore } from '../stores/useOptionsStore';
+import FPSBadge from '@/simulations/cinematica/components/badges/FpsIndicator';
+import BackButton from '@/simulations/cinematica/components/buttons/BackButton';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
 
 function TimeIndicators({ className }: { className?: string }) {
     const { fps } = useOptionsStore((s) => s.display);

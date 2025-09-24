@@ -4,10 +4,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { useEntitySummaries } from '../hooks/useEntityISummaries';
-import EntityCard from './EntityCard';
+import { useEntitySummaries } from '@/simulations/cinematica/hooks/useEntityISummaries';
+import EntityCard from '@/simulations/cinematica/components/card/EntityCard';
 import { Button } from '@/components/ui/button';
-import { useEntityStore } from '../stores/useEntityStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
 
 import {
     IconCircleFilled,
@@ -20,9 +20,8 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { compressData } from '../utils/encodeAndDecodeEntities';
-import { useURL } from '../hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
 
 function FloatBar({ className }: { className?: string }) {
     const entities = useEntitySummaries();

@@ -1,4 +1,7 @@
-import { Display, Inputs } from '../stores/useOptionsStore';
+import {
+    Display,
+    Inputs,
+} from '@/simulations/cinematica/stores/useOptionsStore';
 
 function compressOptions(display: Display, inputs: Inputs): string {
     const displayOptions = Object.values(display).map((value) =>

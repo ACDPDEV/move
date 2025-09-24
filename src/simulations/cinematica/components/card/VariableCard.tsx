@@ -1,9 +1,12 @@
 // VariableCard.tsx
 'use client';
-import React, { useEffect, useMemo, useState, useCallback, use } from 'react';
-import { useVariablesStore, type Variable } from '../stores/useVariablesStore';
-import styles from '../consts/styles';
-import Button from './ui/button';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import {
+    useVariablesStore,
+    type Variable,
+} from '@/simulations/cinematica/stores/useVariablesStore';
+import styles from '@/simulations/cinematica/consts/styles';
+import Button from '@/components/ui/better-button';
 import { IconTrash } from '@tabler/icons-react';
 import {
     Select,
@@ -14,36 +17,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import Input from './ui/input';
-import VectorLetterIcon from './svgs/VectorSymbol';
+import Input from '@/components/ui/better-input';
+import VectorLetterIcon from '../svgs/VectorSymbol';
 import { Switch } from '@/components/ui/switch';
-import { useOptionsStore } from '../stores/useOptionsStore';
-import { useURL } from '../hooks/useURL';
-import { compressVars } from '../utils/encodeAndDecodeVariables';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressVars } from '@/simulations/cinematica/utils/encodeAndDecodeVariables';
+import {
+    cartesianToPolar,
+    polarToCartesian,
+    parseNumber,
+} from '@/simulations/lib/math';
 
 type Props = {
     variable: Variable;
-};
-
-const toDeg = (rad: number) => (rad * 180) / Math.PI;
-const toRad = (deg: number) => (deg * Math.PI) / 180;
-
-function cartesianToPolar(x: number, y: number) {
-    const angleRad = Math.atan2(y, x);
-    const mag = Math.hypot(x, y);
-    return { angleDeg: toDeg(angleRad), mag };
-}
-
-function polarToCartesian(angleDeg: number, mag: number) {
-    const a = toRad(angleDeg);
-    return { x: mag * Math.cos(a), y: mag * Math.sin(a) };
-}
-
-// parsea número o devuelve null si es inválido
-const parseNum = (s: string): number | null => {
-    if (s.trim() === '') return null;
-    const n = Number(s);
-    return Number.isFinite(n) ? n : null;
 };
 
 export default function VariableCard({ variable }: Readonly<Props>) {
@@ -139,8 +126,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
 
     // Actualiza store si x e y son válidos
     const pushCartesianIfValid = (xStr: string, yStr: string) => {
-        const xNum = parseNum(xStr);
-        const yNum = parseNum(yStr);
+        const xNum = parseNumber(xStr);
+        const yNum = parseNumber(yStr);
         if (xNum === null || yNum === null) {
             setError('x e y deben ser numéricos');
             return;
@@ -160,8 +147,8 @@ export default function VariableCard({ variable }: Readonly<Props>) {
 
     // Actualiza store si ángulo y magnitud son válidos
     const pushPolarIfValid = (angStr: string, magStr: string) => {
-        const a = parseNum(angStr);
-        const m = parseNum(magStr);
+        const a = parseNumber(angStr);
+        const m = parseNumber(magStr);
         if (a === null || m === null) {
             setError('θ y m deben ser numéricos');
             return;
@@ -188,10 +175,11 @@ export default function VariableCard({ variable }: Readonly<Props>) {
         }
     };
 
-    const handleBlur = () => { 
-        setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
-    }
-
+    const handleBlur = () => {
+        setURLParams({
+            v: compressVars(useVariablesStore.getState().variables),
+        });
+    };
 
     return (
         <div className="flex flex-col gap-2 p-2 bg-[#202C25] rounded-lg">
@@ -220,10 +208,13 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                 <Select
                     value={typeValue}
                     onValueChange={(v) => {
-                        handleTypeChange(v as 'velocity' | 'acceleration')
-                        setURLParams({ v: compressVars(useVariablesStore.getState().variables) });
-                    }
-                    }
+                        handleTypeChange(v as 'velocity' | 'acceleration');
+                        setURLParams({
+                            v: compressVars(
+                                useVariablesStore.getState().variables,
+                            ),
+                        });
+                    }}
                 >
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Tipo" />
@@ -232,9 +223,11 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                         <SelectGroup>
                             <SelectLabel>Tipo</SelectLabel>
                             <SelectItem value="velocity">Velocidad</SelectItem>
-                            {acceleration && (<SelectItem value="acceleration">
-                                Aceleración
-                            </SelectItem>)}
+                            {acceleration && (
+                                <SelectItem value="acceleration">
+                                    Aceleración
+                                </SelectItem>
+                            )}
                         </SelectGroup>
                     </SelectContent>
                 </Select>
@@ -276,20 +269,20 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                         <Input
                             value={xText}
                             type="text"
-                            prefix="x"
+                            textPrefix="x"
                             placeholder="0"
                             onChange={(e) => handleXChange(e.target.value)}
                             onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            className={styles.vectorInput}
                         />
                         <Input
                             value={yText}
                             type="text"
-                            prefix="y"
+                            textPrefix="y"
                             placeholder="0"
                             onChange={(e) => handleYChange(e.target.value)}
                             onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            className={styles.vectorInput}
                         />
                     </>
                 ) : (
@@ -300,18 +293,18 @@ export default function VariableCard({ variable }: Readonly<Props>) {
                             textPrefix="θ"
                             textSuffix="°"
                             placeholder="0"
-                                onChange={(e) => handleAngleChange(e.target.value)}
-                                onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            onChange={(e) => handleAngleChange(e.target.value)}
+                            onBlur={handleBlur}
+                            className={styles.vectorInput}
                         />
                         <Input
                             value={magText}
                             type="text"
-                            prefix="m"
+                            textPrefix="m"
                             placeholder="0"
-                                onChange={(e) => handleMagChange(e.target.value)}
-                                onBlur={handleBlur}
-                            className="flex flex-1 w-full"
+                            onChange={(e) => handleMagChange(e.target.value)}
+                            onBlur={handleBlur}
+                            className={styles.vectorInput}
                         />
                     </>
                 )}

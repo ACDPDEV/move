@@ -2,10 +2,10 @@
 import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react';
 import { useTimeStore } from '@/simulations/cinematica/stores/useTimeStore';
 import { useURL } from '@/simulations/cinematica/hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
-import { useEntityStore } from '../../stores/useEntityStore';
-import Button from '../ui/button';
-import styles from '../../consts/styles';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
+import Button from '@/components/ui/better-button';
+import styles from '@/simulations/cinematica/consts/styles';
 
 function usePlayerToggle() {
     const { setURLParams } = useURL();

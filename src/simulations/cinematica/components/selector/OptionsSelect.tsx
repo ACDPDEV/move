@@ -5,7 +5,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import React, { useState } from 'react';
-import Button from '../ui/button';
+import Button from '@/components/ui/better-button';
 import {
     Icon3dCubeSphere,
     IconAngle,
@@ -19,12 +19,16 @@ import {
     IconForms,
     IconDecimal,
 } from '@tabler/icons-react';
-import styles from '../../consts/styles';
+import styles from '@/simulations/cinematica/consts/styles';
 import { Switch } from '@/components/ui/switch';
-import { Display, Inputs, useOptionsStore } from '../../stores/useOptionsStore';
-import { useURL } from '../../hooks/useURL';
-import { compressOptions } from '../../utils/encodeAndDecodeOptions';
-import Input from '../ui/input';
+import {
+    Display,
+    Inputs,
+    useOptionsStore,
+} from '@/simulations/cinematica/stores/useOptionsStore';
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressOptions } from '@/simulations/cinematica/utils/encodeAndDecodeOptions';
+import Input from '@/components/ui/better-input';
 
 const displayOptions = {
     key: 'display',
@@ -178,15 +182,16 @@ const inputOptions = {
         {
             key: 'floatPrecision',
             label: 'Cantidad de decimales',
-            description: 'Limita la cantidad de decimales en los valores flotantes',
+            description:
+                'Limita la cantidad de decimales en los valores flotantes',
             icon: <IconDecimal className={styles.icon} />,
             type: 'input-number',
             options: {
                 min: 0,
                 max: 10,
                 step: 1,
-            }
-        }
+            },
+        },
     ],
 };
 
@@ -222,7 +227,6 @@ function OptionsSelect() {
                                 onClick={() =>
                                     setSelected(section.key as SectionKey)
                                 }
-                                defaultClassName={false}
                                 className="w-auto h-fit bg-[#202c25] rounded-md flex flex-row p-2 gap-1 items-center justify-between cursor-pointer"
                             >
                                 <span className="block md:hidden">
@@ -280,10 +284,9 @@ function OptionsSelect() {
                                                 const { display, inputs } =
                                                     useOptionsStore.getState();
                                                 setURLParams({
-                                                    o: 
-                                                        compressOptions(
-                                                            display,
-                                                            inputs,
+                                                    o: compressOptions(
+                                                        display,
+                                                        inputs,
                                                     ),
                                                 });
                                             }}
@@ -320,10 +323,9 @@ function OptionsSelect() {
                                                 const { display, inputs } =
                                                     useOptionsStore.getState();
                                                 setURLParams({
-                                                    o:
-                                                        compressOptions(
-                                                            display,
-                                                            inputs,
+                                                    o: compressOptions(
+                                                        display,
+                                                        inputs,
                                                     ),
                                                 });
                                             }}
@@ -332,30 +334,29 @@ function OptionsSelect() {
                                     {option.type === 'input-number' && (
                                         <Input
                                             name={option.key}
-                                            type='number'
+                                            type="number"
                                             value={
                                                 inputs[
                                                     option.key as keyof Inputs
                                                 ] as number
                                             }
                                             max={option.options!.max}
-                                            onChange={
-                                                (value: React.ChangeEvent<HTMLInputElement>) => {
-                                                    setProperty(
-                                                        option.key as keyof Inputs,
-                                                        Number(value.target.value),
-                                                    );
-                                                    const { display, inputs } =
-                                                        useOptionsStore.getState();
-                                                    setURLParams({
-                                                        o:
-                                                            compressOptions(
-                                                                display,
-                                                                inputs,
-                                                            ),
-                                                    });
-                                                }
-                                            }
+                                            onChange={(
+                                                value: React.ChangeEvent<HTMLInputElement>,
+                                            ) => {
+                                                setProperty(
+                                                    option.key as keyof Inputs,
+                                                    Number(value.target.value),
+                                                );
+                                                const { display, inputs } =
+                                                    useOptionsStore.getState();
+                                                setURLParams({
+                                                    o: compressOptions(
+                                                        display,
+                                                        inputs,
+                                                    ),
+                                                });
+                                            }}
                                         />
                                     )}
                                 </div>

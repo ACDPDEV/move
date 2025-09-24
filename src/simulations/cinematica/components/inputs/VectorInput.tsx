@@ -1,5 +1,5 @@
-import Input from '@/simulations/cinematica/components/ui/input';
-import Button from '@/simulations/cinematica/components/ui/button';
+import Input from '@/components/ui/better-input';
+import Button from '@/components/ui/better-button';
 import VectorLetterIcon from '../svgs/VectorSymbol';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -7,20 +7,13 @@ import {
     type EntityStore,
 } from '@/simulations/cinematica/stores/useEntityStore';
 import { Entity } from '@/simulations/cinematica/entities/Entity';
-import { useURL } from '../../hooks/useURL';
-import { compressData } from '../../utils/encodeAndDecodeEntities';
-import styles from '../../consts/styles';
-import { formatClean } from '../../utils/formatClean';
-import { usePlaneStore } from '../../stores/usePlaneStore';
-import { useOptionsStore } from '../../stores/useOptionsStore';
-
-function radianToDegree(radian: number): number {
-    return radian * (180 / Math.PI);
-}
-
-function degreeToRadian(degree: number): number {
-    return degree * (Math.PI / 180);
-}
+import { useURL } from '@/simulations/cinematica/hooks/useURL';
+import { compressData } from '@/simulations/cinematica/utils/encodeAndDecodeEntities';
+import styles from '@/simulations/cinematica/consts/styles';
+import { formatClean } from '@/simulations/cinematica/utils/formatClean';
+import { usePlaneStore } from '@/simulations/cinematica/stores/usePlaneStore';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
+import { radiansToDegrees, degreesToRadians } from '@/simulations/lib/math';
 
 const VectorInput = memo(function VectorInput({
     entityId,
@@ -74,7 +67,9 @@ const VectorInput = memo(function VectorInput({
         const x = prop.x ?? 0;
         const y = prop.y ?? 0;
         const angle =
-            typeof prop.angle === 'function' ? radianToDegree(prop.angle()) : 0;
+            typeof prop.angle === 'function'
+                ? radiansToDegrees(prop.angle())
+                : 0;
         const magnitude = typeof prop.mag === 'function' ? prop.mag() : 0;
 
         if (inputXRef.current && !focus.x) {
@@ -123,7 +118,7 @@ const VectorInput = memo(function VectorInput({
                 if (inputAngleRef.current && !focus.angle) {
                     const angle =
                         typeof prop.angle === 'function'
-                            ? radianToDegree(prop.angle())
+                            ? radiansToDegrees(prop.angle())
                             : 0;
                     inputAngleRef.current.value = formatClean(
                         angle,
@@ -209,7 +204,7 @@ const VectorInput = memo(function VectorInput({
                     const vector = useEntityStore
                         .getState()
                         .entities.find((e) => e.id === entityId)!
-                        [entityProp].setAngle(degreeToRadian(numValue));
+                        [entityProp].setAngle(degreesToRadians(numValue));
                     useEntityStore
                         .getState()
                         .updateSpecificPropOfEntity(
@@ -278,7 +273,7 @@ const VectorInput = memo(function VectorInput({
                         ref={inputXRef}
                         type="number"
                         textPrefix="x"
-                        className="flex grow"
+                        className={styles.vectorInput}
                         placeholder="0"
                         onChange={handleChange}
                         onFocus={handleFocus}
@@ -290,7 +285,7 @@ const VectorInput = memo(function VectorInput({
                         ref={inputYRef}
                         type="number"
                         textPrefix="y"
-                        className="flex grow"
+                        className={styles.vectorInput}
                         placeholder="0"
                         onChange={handleChange}
                         onFocus={handleFocus}
@@ -306,7 +301,7 @@ const VectorInput = memo(function VectorInput({
                         ref={inputAngleRef}
                         type="number"
                         textPrefix="∠"
-                        className="flex grow"
+                        className={styles.vectorInput}
                         placeholder="0"
                         onChange={handleChange}
                         onFocus={handleFocus}
@@ -318,7 +313,7 @@ const VectorInput = memo(function VectorInput({
                         ref={inputMagnitudeRef}
                         type="number"
                         textPrefix="m"
-                        className="flex grow"
+                        className={styles.vectorInput}
                         placeholder="0"
                         onChange={handleChange}
                         onFocus={handleFocus}

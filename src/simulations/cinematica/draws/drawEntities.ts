@@ -1,5 +1,5 @@
-import { useOptionsStore } from '../stores/useOptionsStore';
-import { useEntityStore } from '../stores/useEntityStore';
+import { useOptionsStore } from '@/simulations/cinematica/stores/useOptionsStore';
+import { useEntityStore } from '@/simulations/cinematica/stores/useEntityStore';
 
 function drawEntities(ctx: CanvasRenderingContext2D, dark: boolean): void {
     const entities = useEntityStore.getState().entities;
