@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> El desarrollo de este proyecto está en pausa, si te interesa el desarrollo del proyecyo hazlo saber en issues
+
 # MOVE 
 
 **MOVE** es una plataforma educativa interactiva diseñada para facilitar el aprendizaje de física y matemáticas mediante simulaciones visuales accesibles desde la web. Está construida con [Nextjs](https://nextjs.org), lo que garantiza un rendimiento óptimo y una arquitectura moderna orientada a componentes.
